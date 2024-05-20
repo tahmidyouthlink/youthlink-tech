@@ -2,7 +2,8 @@
 import { MdLogout } from "react-icons/md";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { MdViewKanban } from "react-icons/md";
-import { FiPlus } from "react-icons/fi";
+import { SiPolywork } from "react-icons/si";
+import { FaBlog } from "react-icons/fa";
 import Image from "next/image";
 import { FaHome } from "react-icons/fa";
 import logo from "../../assets/YouthLink-removebg-preview (1).png";
@@ -23,34 +24,19 @@ const SideNavbar = () => {
             path: "/dashboard",
         },
         {
-            name : "Add New Project",
-            icon : <FiPlus />,
-            path : "/dashboard/addWork",
+            name: "Our Work",
+            icon: <SiPolywork />,
+            path: "/dashboard/allWork",
         },
         {
-            name : "Projects Overview",
-            icon : <MdViewKanban />,
-            path : "/dashboard/allWork",
+            name: "Blogs Overview",
+            icon: <FaBlog />,
+            path: "/dashboard/allBlog"
         },
         {
-            name : "Publish Blog",
-            icon : <FiPlus />,
-            path : "/dashboard/addBlog"
-        },
-        {
-            name : "Blogs Overview",
-            icon : <MdViewKanban />,
-            path : "/dashboard/allBlog"
-        },
-        {
-            name : "Job Posting Form",
-            icon : <FiPlus />,
-            path : "/dashboard/addJob"
-        },
-        {
-            name : "All Jobs Listings",
-            icon : <MdViewKanban />,
-            path : "/dashboard/allJob"
+            name: "Carriers",
+            icon: <MdViewKanban />,
+            path: "/dashboard/allJob"
         }
     ];
 

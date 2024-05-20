@@ -39,6 +39,8 @@ const UpdatePage = ({ params }) => {
         const aboutTheProject = data.aboutTheProject;
         const ourSolution = data.ourSolution;
         const theResults = data.theResults;
+        const keyword = data.keyword;
+        const category = data.category;
         let imageURL = details.imageURL; // Default to current imageURL
         if (data.photo && data.photo[0]) {
             const photo = data.photo[0];
@@ -51,14 +53,14 @@ const UpdatePage = ({ params }) => {
             });
             imageURL = uploadImage?.data?.data?.display_url;
         }
-        const workInfo = { title, heading, aboutTheProject, ourSolution, theResults, imageURL };
+        const workInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL };
         const res = await axiosPublic.put(`/allWork/${details?._id}`, workInfo);
-        if(res?.data?.modifiedCount){
+        if (res?.data?.modifiedCount) {
             toast.success("Updated Successfully");
             refetch();
             router.push("/dashboard/allWork")
         }
-        else{
+        else {
             toast.error("Change something first!")
         }
     }
@@ -71,7 +73,7 @@ const UpdatePage = ({ params }) => {
         <PrivateRoute>
             <div>
                 <form className='flex flex-col gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
-                <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Edit work details</h1>
+                    <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Edit work details</h1>
                     <input defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Work Title..." />
                     {errors.title?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Title is required</p>
@@ -80,6 +82,21 @@ const UpdatePage = ({ params }) => {
                     {errors.heading?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Heading is required</p>
                     )}
+                    <input defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Work Title..." />
+                    {errors.keyword?.type === "required" && (
+                        <p className="text-red-600 text-left pt-1">Keyword is required</p>
+                    )}
+                    <select defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1">
+                        <option value="Digital Marketing">Digital Marketing</option>
+                        <option value="E-Commerce">E-Commerce</option>
+                        <option value="Digital Transformation">Digital Transformation</option>
+                        <option value="Content Management">Content Management</option>
+                        <option value="Experience Design">Experience Design</option>
+                        <option value="Data Strategy">Data Strategy</option>
+                        <option value="Product Information Management">Product Information Management</option>
+                        <option value="Strategy and Organization">Strategy and Organization</option>
+                        <option value="Experience Design">Experience Design</option>
+                    </select>
                     <textarea defaultValue={details?.aboutTheProject} {...register("aboutTheProject", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={8} placeholder='Enter work details...' />
                     {errors.aboutTheProject?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">About The Project is required</p>
@@ -92,14 +109,14 @@ const UpdatePage = ({ params }) => {
                     {errors.theResults?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">The Results is required</p>
                     )}
-                    
+
                     {/* Display the current image */}
                     {details?.imageURL && (
                         <div className="mb-4">
                             <Image height={300} width={300} src={details.imageURL} alt="Current" className="w-full max-w-xs mx-auto" />
                         </div>
                     )}
-                    
+
                     {/* File input for new photo */}
                     <input {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
                     {errors.photo?.type === "required" && (

@@ -35,7 +35,7 @@ const AuthorizedLogin = () => {
 
     return (
         <div>
-            <div className="flex flex-col-reverse lg:flex-row-reverse items-center bg-gradient-to-b from-black via-black to-[#b63327] px-4 pb-8 lg:pb-0 md:px-0 min-h-screen lg:-mt-[41px]">
+            <div className="flex flex-col-reverse lg:flex-row-reverse items-center bg-gradient-to-b from-black via-black to-[#b63327] px-4 pb-8 lg:pb-0 md:px-0 min-h-screen">
                 <div className="mx-auto space-y-8 rounded-lg p-5 md:p-12 xl:p-24 glass">
                     <div>
                         <p className="text-white text-2xl md:text-3xl lg:text-4xl font-semibold flex items-center gap-4">Login to <Image className="w-[100px]" src={logo} alt="image" /></p>
@@ -53,7 +53,7 @@ const AuthorizedLogin = () => {
                         </form>
                     </div>
                 </div>
-                <div className="w-1/2 mx-auto">
+                <div className="md:w-1/2 mx-auto">
                     <Lottie animationData={animation} loop={true} />
                 </div>
             </div>
