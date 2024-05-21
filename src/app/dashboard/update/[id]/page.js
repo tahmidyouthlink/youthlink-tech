@@ -86,6 +86,7 @@ const UpdatePage = ({ params }) => {
                     {errors.keyword?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Keyword is required</p>
                     )}
+                    <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Category</label>
                     <select defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1">
                         <option value="Digital Marketing">Digital Marketing</option>
                         <option value="E-Commerce">E-Commerce</option>

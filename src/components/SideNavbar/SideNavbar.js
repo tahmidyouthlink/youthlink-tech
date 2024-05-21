@@ -63,9 +63,9 @@ const SideNavbar = () => {
                         <Link
                             href={item?.path}
                             key={index}
-                            className={`${pathname === item.path ? "text-[#0D6EFD] bg-[#0d6dfd17]" : "text-neutral-600"} mx-4 rounded-lg`}>
+                            className={`${pathname === item.path ? "text-white bg-gradient-to-t from-[#EA580C] to-[#EAB308]" : "text-neutral-600"} mx-4 rounded-lg`}>
                             <button
-                                className={`flex items-center gap-2 w-full hover:text-[#0d6efd] px-4 py-2 rounded-md font-medium`}>
+                                className={`flex items-center gap-2 w-full hover:text-[#EA580C] px-4 py-2 rounded-md font-medium`}>
                                 <h2 className="p-2 text-2xl rounded-xl">
                                     {item?.icon}
                                 </h2>
@@ -78,7 +78,7 @@ const SideNavbar = () => {
             <hr className="my-5" />
             <div className="flex gap-2 justify-evenly items-center">
                 <Link href={'/'}>
-                    <button className="flex justify-between gap-1 items-center rounded-lg bg-blue-700 hover:bg-blue-800 text-white px-5 py-2.5"><FaHome /></button>
+                    <button className="flex justify-between gap-1 items-center rounded-lg bg-gradient-to-t from-[#EA580C] to-[#EAB308] hover:bg-gradient-to-t hover:from-[#EAB308] hover:to-[#EA580C] text-white px-5 py-2.5"><FaHome /></button>
                 </Link>
                 {user &&
                     <button className="flex justify-between gap-2 items-center p-3 rounded-lg bg-red-700 hover:bg-red-800 text-white" onClick={handleLogout}><MdLogout /></button>

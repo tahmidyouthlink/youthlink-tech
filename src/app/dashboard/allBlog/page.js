@@ -34,6 +34,8 @@ const AllBlog = () => {
 
     const onSubmit = async (data) => {
         const title = data.title;
+        const keyword = data.keyword;
+        const category = data.category;
         const description = data.description;
         const photo = data.photo[0];
         const photoObj = { image: photo }
@@ -43,8 +45,8 @@ const AllBlog = () => {
             }
         })
         const imageURL = uploadImage?.data?.data?.display_url;
-        const workInfo = { title, description, imageURL };
-        const res = await axiosPublic.post("/addBlog", workInfo);
+        const blogInfo = { title, keyword, category, description, imageURL };
+        const res = await axiosPublic.post("/addBlog", blogInfo);
         if (res?.data?.insertedId) {
             reset();
             refetch();
@@ -95,6 +97,25 @@ const AllBlog = () => {
                                 {errors.title?.type === "required" && (
                                     <p className="text-red-600 text-left pt-1">Title is required</p>
                                 )}
+                                <input {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Keywords..." />
+                                {errors.keyword?.type === "required" && (
+                                    <p className="text-red-600 text-left pt-1">Keyword is required</p>
+                                )}
+                                <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Select Category</label>
+                                <select id='category' {...register("category")} className="select select-bordered w-full flex-1">
+                                    <option value="Digital Marketing">Digital Marketing</option>
+                                    <option value="E-Commerce">E-Commerce</option>
+                                    <option value="Digital Transformation">Digital Transformation</option>
+                                    <option value="Content Management">Content Management</option>
+                                    <option value="Experience Design">Experience Design</option>
+                                    <option value="Data Strategy">Data Strategy</option>
+                                    <option value="Product Information Management">Product Information Management</option>
+                                    <option value="Strategy and Organization">Strategy and Organization</option>
+                                    <option value="Experience Design">Experience Design</option>
+                                </select>
+                                {errors.category?.type === "required" && (
+                                    <p className="text-red-600 text-left pt-1">Category is required</p>
+                                )}
                                 <textarea {...register("description", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={12} placeholder='Enter blog details...' />
                                 {errors.description?.type === "required" && (
                                     <p className="text-red-600 text-left pt-1">Description is required</ p>
@@ -103,7 +124,7 @@ const AllBlog = () => {
                                 {errors.photo?.type === "required" && (
                                     <p className="text-red-600 text-left pt-1">Photo is required.</p>
                                 )}
-                                <input type='submit' className='block w-full font-bold bg-gradient-to-r from-[#1089D3] to-[#12B1D1] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#85BDD7E0]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#85BDD7E0]/80 active:scale-95 active:shadow-md active:shadow-[#85BDD7E0]/80' />
+                                <input type='submit' className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
                             </form>
                         </div>
                     </div>
@@ -118,7 +139,8 @@ const AllBlog = () => {
                         </div>
                         <div className="mx-auto w-[85%] space-y-2 text-center font-semibold">
                             <h6 className="text-sm font-bold md:text-base lg:text-lg">{blog?.title}</h6>
-                            <p className="text-xs font-medium text-gray-400 md:text-sm">{blog?.description?.length > 50 ? blog?.description.slice(0, 50) : blog?.description}...</p>
+                            <p className="text-xs font-medium text-gray-400 md:text-sm">{blog?.description?.length > 150 ? blog?.description.slice(0, 150) : blog?.description}...</p>
+                            <div className='flex'><p className="mt-4 text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{blog?.category}</p></div>
                         </div>
                         <div className="flex flex-wrap items-center justify-center gap-3 lg:gap-6 text-sm md:text-base">
                             <button onClick={() => handleDelete(blog?._id)} className="rounded bg-gradient-to-t from-[#EA580C] to-[#EAB308] px-2 py-1 lg:px-5 lg:py-1.5 font-medium text-white duration-300 hover:scale-105 hover:bg-red-800 text-xs lg:text-sm flex gap-2 justify-center items-center">Delete <MdOutlineDelete className='text-xl' /></button>
@@ -133,6 +155,10 @@ const AllBlog = () => {
                                     <div className="text-base px-8 font-black text-center mt-6">
                                         {details?.title}
                                     </div>
+                                    <p className="mt-4 px-8 text-sm text-center font-bold">
+                                        Keywords :  {details?.keyword}
+                                    </p>
+                                    <div className='flex justify-center py-3'><p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{details?.category}</p></div>
                                     <p className="mt-4 px-8 text-sm text-center font-medium">
                                         {details?.description}
                                     </p>

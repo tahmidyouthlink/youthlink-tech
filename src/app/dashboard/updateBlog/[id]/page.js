@@ -35,6 +35,8 @@ const UpdateBlogPage = ({ params }) => {
 
     const onSubmit = async (data) => {
         const title = data.title;
+        const keyword = data.keyword;
+        const category = data.category;
         const description = data.description;
         let imageURL = details.imageURL; // Default to current imageURL
         if (data.photo && data.photo[0]) {
@@ -48,14 +50,14 @@ const UpdateBlogPage = ({ params }) => {
             });
             imageURL = uploadImage?.data?.data?.display_url;
         }
-        const BlogInfo = { title, description, imageURL };
-        const res = await axiosPublic.put(`/allBlog/${details?._id}`, BlogInfo);
-        if(res?.data?.modifiedCount){
+        const blogInfo = { title, keyword, category, description, imageURL };;
+        const res = await axiosPublic.put(`/allBlog/${details?._id}`, blogInfo);
+        if (res?.data?.modifiedCount) {
             toast.success("Updated Successfully");
             refetch();
             router.push("/dashboard/allBlog")
         }
-        else{
+        else {
             toast.error("Change something first!")
         }
     }
@@ -68,23 +70,42 @@ const UpdateBlogPage = ({ params }) => {
         <PrivateRoute>
             <div>
                 <form className='flex flex-col gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
-                <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Enter work details</h1>
+                    <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Enter work details</h1>
                     <input defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Job Title..." />
                     {errors.title?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Title is required</p>
+                    )}
+                    <input defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Keywords..." />
+                    {errors.keyword?.type === "required" && (
+                        <p className="text-red-600 text-left pt-1">Keyword is required</p>
+                    )}
+                    <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Category</label>
+                    <select defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1">
+                        <option value="Digital Marketing">Digital Marketing</option>
+                        <option value="E-Commerce">E-Commerce</option>
+                        <option value="Digital Transformation">Digital Transformation</option>
+                        <option value="Content Management">Content Management</option>
+                        <option value="Experience Design">Experience Design</option>
+                        <option value="Data Strategy">Data Strategy</option>
+                        <option value="Product Information Management">Product Information Management</option>
+                        <option value="Strategy and Organization">Strategy and Organization</option>
+                        <option value="Experience Design">Experience Design</option>
+                    </select>
+                    {errors.category?.type === "required" && (
+                        <p className="text-red-600 text-left pt-1">Category is required</p>
                     )}
                     <textarea defaultValue={details?.description} {...register("description", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={12} placeholder='Enter job details...' />
                     {errors.description?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Description is required</p>
                     )}
-                    
+
                     {/* Display the current image */}
                     {details?.imageURL && (
                         <div className="mb-4">
                             <Image height={300} width={300} src={details?.imageURL} alt="Current" className="w-full max-w-xs mx-auto" />
                         </div>
                     )}
-                    
+
                     {/* File input for new photo */}
                     <input {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
                     {errors.photo?.type === "required" && (

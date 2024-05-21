@@ -108,7 +108,8 @@ const AllWork = () => {
                                 {errors.keyword?.type === "required" && (
                                     <p className="text-red-600 text-left pt-1">Keyword is required</p>
                                 )}
-                                <select {...register("category")} className="select select-bordered w-full flex-1">
+                                <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Select Category</label>
+                                <select id='category' {...register("category")} className="select select-bordered w-full flex-1">
                                     <option value="Digital Marketing">Digital Marketing</option>
                                     <option value="E-Commerce">E-Commerce</option>
                                     <option value="Digital Transformation">Digital Transformation</option>
@@ -138,7 +139,7 @@ const AllWork = () => {
                                 {errors.photo?.type === "required" && (
                                     <p className="text-red-600 text-left pt-1">Photo is required.</p>
                                 )}
-                                <input type='submit' className='block w-full font-bold bg-gradient-to-r from-[#1089D3] to-[#12B1D1] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#85BDD7E0]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#85BDD7E0]/80 active:scale-95 active:shadow-md active:shadow-[#85BDD7E0]/80' />
+                                <input type='submit' className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
                             </form>
                         </div>
                     </div>

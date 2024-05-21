@@ -36,6 +36,8 @@ const UpdateJobPage = ({ params }) => {
     const onSubmit = async (data) => {
         const title = data.title;
         const locationType = data.locationType;
+        const keyword = data.keyword;
+        const category = data.category;
         const overview = data.overview;
         const aboutTheRole = data.aboutTheRole;
         const skillsRequired = data.skillsRequired;
@@ -54,7 +56,7 @@ const UpdateJobPage = ({ params }) => {
             });
             imageURL = uploadImage?.data?.data?.display_url;
         }
-        const jobInfo = { title, locationType, overview, aboutTheRole, skillsRequired, recruiter, recruiterRole, recruiterEmail, imageURL };
+        const jobInfo = { title, locationType, keyword, category, overview, aboutTheRole, skillsRequired, recruiter, recruiterRole, recruiterEmail, imageURL };
         const res = await axiosPublic.put(`/allJobCircular/${details?._id}`, jobInfo);
         if (res?.data?.modifiedCount) {
             toast.success("Updated Successfully");
@@ -83,6 +85,25 @@ const UpdateJobPage = ({ params }) => {
                     {errors.locationType?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Location & Job Type is required</p>
                     )}
+                    <input defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Keywords..." />
+                    {errors.keyword?.type === "required" && (
+                        <p className="text-red-600 text-left pt-1">Keyword is required</p>
+                    )}
+                    <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Category</label>
+                    <select defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1">
+                        <option value="Digital Marketing">Digital Marketing</option>
+                        <option value="E-Commerce">E-Commerce</option>
+                        <option value="Digital Transformation">Digital Transformation</option>
+                        <option value="Content Management">Content Management</option>
+                        <option value="Experience Design">Experience Design</option>
+                        <option value="Data Strategy">Data Strategy</option>
+                        <option value="Product Information Management">Product Information Management</option>
+                        <option value="Strategy and Organization">Strategy and Organization</option>
+                        <option value="Experience Design">Experience Design</option>
+                    </select>
+                    {errors.category?.type === "required" && (
+                        <p className="text-red-600 text-left pt-1">Category is required</p>
+                    )}
                     <input defaultValue={details?.recruiter} {...register("recruiter", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Recruiter Name" />
                     {errors.recruiter?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Recruiter Name is required</p>
@@ -101,7 +122,7 @@ const UpdateJobPage = ({ params }) => {
                             <Image height={300} width={300} src={details?.imageURL} alt="Current" className="w-full max-w-xs mx-auto" />
                         </div>
                     )}
-                    <label htmlFor='photo'>Change Recruiter Photo *</label>
+                    <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Recruiter Photo</label>
                     {/* File input for new photo */}
                     <input {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
                     {errors.photo?.type === "required" && (
