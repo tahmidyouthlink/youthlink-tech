@@ -69,18 +69,20 @@ const UpdateBlogPage = ({ params }) => {
     return (
         <PrivateRoute>
             <div>
-                <form className='flex flex-col gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
+                <form className='flex flex-col px-6 lg:px-0 gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
                     <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Enter work details</h1>
-                    <input defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Job Title..." />
+                    <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C]'>Change Title</label>
+                    <input id='title' defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.title?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Title is required</p>
                     )}
-                    <input defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Keywords..." />
+                    <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Keywords</label>
+                    <input id='keyword' defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.keyword?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Keyword is required</p>
                     )}
                     <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Category</label>
-                    <select defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1">
+                    <select id='category' defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1">
                         <option value="Digital Marketing">Digital Marketing</option>
                         <option value="E-Commerce">E-Commerce</option>
                         <option value="Digital Transformation">Digital Transformation</option>
@@ -94,9 +96,10 @@ const UpdateBlogPage = ({ params }) => {
                     {errors.category?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Category is required</p>
                     )}
-                    <textarea defaultValue={details?.description} {...register("description", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={12} placeholder='Enter job details...' />
+                    <label htmlFor='description' className='flex justify-start font-medium text-[#EA580C]'>Change Blog Details</label>
+                    <textarea id='description' defaultValue={details?.description} {...register("description", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={12} />
                     {errors.description?.type === "required" && (
-                        <p className="text-red-600 text-left pt-1">Description is required</p>
+                        <p className="text-red-600 text-left pt-1">Details is required</p>
                     )}
 
                     {/* Display the current image */}
@@ -107,11 +110,12 @@ const UpdateBlogPage = ({ params }) => {
                     )}
 
                     {/* File input for new photo */}
-                    <input {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
+                    <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Blog Photo</label>
+                    <input id='photo' {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
                     {errors.photo?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Photo is required.</p>
                     )}
-                    <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-r from-[#1089D3] to-[#12B1D1] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#85BDD7E0]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#85BDD7E0]/80 active:scale-95 active:shadow-md active:shadow-[#85BDD7E0]/80' />
+                    <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80 mb-4' />
                 </form>
             </div>
         </PrivateRoute>

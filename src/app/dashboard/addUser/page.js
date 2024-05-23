@@ -1,17 +1,17 @@
 "use client";
-import useAuth from '@/hooks/useAuth';
 import toast from "react-hot-toast";
 import { useState } from 'react';
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
-import { useRouter } from 'next/navigation';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
+import useAuth from "@/hooks/useAuth";
 
 const AuthorizedRegister = () => {
 
     const [showPassword, setShowPassword] = useState(false);
-    const { createUser, user, logOut } = useAuth();
-    const router = useRouter();
+    const { createUser, logOut } = useAuth();
+    const axiosPublic = useAxiosPublic();
 
     const handleRegister = (e) => {
         e.preventDefault();
@@ -19,17 +19,16 @@ const AuthorizedRegister = () => {
         const email = form.email.value;
         const password = form.password.value;
         createUser(email, password)
-            .then(() => {
-                toast.success('Your SignUp Successful')
-                router.push("/dashboard");
+            .then(async () => {
+                toast.success('New User Added Successful');
+                const role = "user";
+                const registerInfo = { email, role };
+                await axiosPublic.post("/user", registerInfo);
+                logOut().then()
             })
             .catch(error => {
                 toast.error(error?.message)
             })
-    }
-
-    const handleLogOut = () => {
-        logOut().then().catch();
     }
 
     return (
@@ -49,40 +48,12 @@ const AuthorizedRegister = () => {
                                 <input id="password" type={showPassword ? "text" : "password"} placeholder=".............." className="p-3 block w-full pl-10 drop-shadow-lg outline-none" />
                                 <span className="absolute top-1/4 left-2"><svg viewBox="0 0 24 24" fill="none" className="inline-block w-6" xmlns="http://www.w3.org/2000/svg"><g strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M20.9098 11.1203V6.73031C20.9098 5.91031 20.2898 4.98031 19.5198 4.67031L13.9498 2.39031C12.6998 1.88031 11.2898 1.88031 10.0398 2.39031L4.46984 4.67031C3.70984 4.98031 3.08984 5.91031 3.08984 6.73031V11.1203C3.08984 16.0103 6.63984 20.5903 11.4898 21.9303C11.8198 22.0203 12.1798 22.0203 12.5098 21.9303C17.3598 20.5903 20.9098 16.0103 20.9098 11.1203ZM12.7498 12.8703V15.5003C12.7498 15.9103 12.4098 16.2503 11.9998 16.2503C11.5898 16.2503 11.2498 15.9103 11.2498 15.5003V12.8703C10.2398 12.5503 9.49984 11.6103 9.49984 10.5003C9.49984 9.12031 10.6198 8.00031 11.9998 8.00031C13.3798 8.00031 14.4998 9.12031 14.4998 10.5003C14.4998 11.6203 13.7598 12.5503 12.7498 12.8703Z" fill="#000000"></path></g></svg></span>
                                 <span className='absolute top-1/3 right-2' onClick={() => setShowPassword(!showPassword)}
-                                >{showPassword ? <FaEye /> : <FaEyeSlash />}</span>
+                                >{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
                             </div>
                         </div>
                         {/* button type will be submit for handling form submission*/}
                         <button type="submit" className="py-2 px-5 mb-4 mt-6 shadow-lg before:block before:-left-1 before:-top-1 before:bg-black before:absolute before:h-0 before:w-0 before:hover:w-[100%] before:hover:h-[100%]  before:duration-500 before:-z-40 after:block after:-right-1 after:-bottom-1 after:bg-black after:absolute after:h-0 after:w-0 after:hover:w-[100%] after:hover:h-[100%] after:duration-500 after:-z-40 bg-white relative inline-block">Submit</button>
                     </form>
-                    <div className="">
-                        {user ? (
-                            <div
-                                className={`flex items-center`}
-                            >
-                                <div className="dropdown dropdown-end">
-                                    <label
-                                        tabIndex={0}
-                                        className="btn btn-ghost btn-circle avatar"
-                                    >
-                                    </label>
-                                    <ul
-                                        tabIndex={0}
-                                        className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-                                    >
-                                        <button onClick={handleLogOut} className="Btnuu">
-                                            <div className="text">LOGOUT</div>
-                                        </button>
-                                    </ul>
-                                </div>
-                            </div>
-                        ) : (
-
-                            <button className="Btnu">
-                                <div className="text">Login</div>
-                            </button>
-                        )}
-                    </div>
                 </div>
             </div>
         </PrivateRoute>

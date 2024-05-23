@@ -11,20 +11,27 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import toast from "react-hot-toast";
+import Loading from "../shared/Loading/Loading";
+import useAdmin from "@/hooks/useAdmin";
+import { MdOutlinePendingActions } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 
 const SideNavbar = () => {
     const pathname = usePathname();
     const { user, logOut } = useAuth(); //current or logged in user
     const router = useRouter();
+    const [isAdmin, pending] = useAdmin();
+
+    // console.log(isAdmin);
     // console.log(user);
-    const menuList = [
+    const userList = [
         {
             name: "Dashboard",
             icon: <LuLayoutDashboard />,
             path: "/dashboard",
         },
         {
-            name: "Our Work",
+            name: "Our Works",
             icon: <SiPolywork />,
             path: "/dashboard/allWork",
         },
@@ -34,17 +41,49 @@ const SideNavbar = () => {
             path: "/dashboard/allBlog"
         },
         {
-            name: "Carriers",
+            name: "Careers",
             icon: <MdViewKanban />,
             path: "/dashboard/allJob"
         }
     ];
+
+    const adminList = [
+        {
+            name: "Dashboard",
+            icon: <LuLayoutDashboard />,
+            path: "/dashboard",
+        },
+        {
+            name: "Our Works",
+            icon: <SiPolywork />,
+            path: "/dashboard/allWork",
+        },
+        {
+            name: "Blogs Overview",
+            icon: <FaBlog />,
+            path: "/dashboard/allBlog"
+        },
+        {
+            name: "Careers",
+            icon: <MdViewKanban />,
+            path: "/dashboard/allJob"
+        },
+        {
+            name: "Create User",
+            icon: <FaUser />,
+            path: "/dashboard/addUser"
+        },
+    ]
 
     const handleLogout = () => {
         logOut().then(() => {
             toast.success("Logout successful");
             router.push("/")
         })
+    }
+
+    if (pending) {
+        return <Loading />
     }
 
     return (
@@ -59,7 +98,20 @@ const SideNavbar = () => {
             </div>
             <div className="flex flex-col mt-5 gap-2">
                 <>
-                    {menuList.map((item, index) => (
+                    {isAdmin ? <>{adminList?.map((item, index) => (
+                        <Link
+                            href={item?.path}
+                            key={index}
+                            className={`${pathname === item.path ? "text-white bg-gradient-to-t from-[#EA580C] to-[#EAB308]" : "text-neutral-600"} mx-4 rounded-lg`}>
+                            <button
+                                className={`flex items-center gap-2 w-full hover:bg-gradient-to-t hover:from-[#ea5a0cd1] hover:to-[#eab208c3] hover:text-white px-4 py-2 rounded-md font-medium`}>
+                                <h2 className="p-2 text-2xl rounded-xl">
+                                    {item?.icon}
+                                </h2>
+                                <h2 className="font-medium">{item?.name}</h2>
+                            </button>
+                        </Link>
+                    ))}</> : <>{userList?.map((item, index) => (
                         <Link
                             href={item?.path}
                             key={index}
@@ -72,7 +124,7 @@ const SideNavbar = () => {
                                 <h2 className="font-medium">{item?.name}</h2>
                             </button>
                         </Link>
-                    ))}
+                    ))}</>}
                 </>
             </div>
             <hr className="my-5" />

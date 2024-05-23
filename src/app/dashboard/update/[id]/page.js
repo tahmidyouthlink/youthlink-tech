@@ -72,17 +72,20 @@ const UpdatePage = ({ params }) => {
     return (
         <PrivateRoute>
             <div>
-                <form className='flex flex-col gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
+                <form className='flex flex-col px-6 lg:px-0 gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
                     <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Edit work details</h1>
-                    <input defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Work Title..." />
+                    <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C]'>Change Title</label>
+                    <input id='title' defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.title?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Title is required</p>
                     )}
-                    <input defaultValue={details?.heading} {...register("heading", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Work Title..." />
+                    <label htmlFor='heading' className='flex justify-start font-medium text-[#EA580C]'>Change Heading</label>
+                    <input id='heading' defaultValue={details?.heading} {...register("heading", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.heading?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Heading is required</p>
                     )}
-                    <input defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Work Title..." />
+                    <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Keywords</label>
+                    <input id='keyword' defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.keyword?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Keyword is required</p>
                     )}
@@ -98,15 +101,18 @@ const UpdatePage = ({ params }) => {
                         <option value="Strategy and Organization">Strategy and Organization</option>
                         <option value="Experience Design">Experience Design</option>
                     </select>
-                    <textarea defaultValue={details?.aboutTheProject} {...register("aboutTheProject", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={8} placeholder='Enter work details...' />
+                    <label htmlFor='aboutTheProject' className='flex justify-start font-medium text-[#EA580C]'>Change Details</label>
+                    <textarea id='aboutTheProject' defaultValue={details?.aboutTheProject} {...register("aboutTheProject", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={8} />
                     {errors.aboutTheProject?.type === "required" && (
-                        <p className="text-red-600 text-left pt-1">About The Project is required</p>
+                        <p className="text-red-600 text-left pt-1">About This Work is required</p>
                     )}
-                    <textarea defaultValue={details?.ourSolution} {...register("ourSolution", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={8} placeholder='Enter work details...' />
+                    <label htmlFor='ourSolution' className='flex justify-start font-medium text-[#EA580C]'>Change Solution</label>
+                    <textarea id='ourSolution' defaultValue={details?.ourSolution} {...register("ourSolution", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={8} />
                     {errors.ourSolution?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Our Solution is required</p>
                     )}
-                    <textarea defaultValue={details?.theResults} {...register("theResults", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={8} placeholder='Enter work details...' />
+                    <label htmlFor='theResults' className='flex justify-start font-medium text-[#EA580C]'>Change Results</label>
+                    <textarea id='theResults' defaultValue={details?.theResults} {...register("theResults", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={8} />
                     {errors.theResults?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">The Results is required</p>
                     )}
@@ -119,11 +125,12 @@ const UpdatePage = ({ params }) => {
                     )}
 
                     {/* File input for new photo */}
-                    <input {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
+                    <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Work Photo</label>
+                    <input id='photo' {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
                     {errors.photo?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Photo is required.</p>
                     )}
-                    <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-r from-[#1089D3] to-[#12B1D1] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#85BDD7E0]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#85BDD7E0]/80 active:scale-95 active:shadow-md active:shadow-[#85BDD7E0]/80' />
+                    <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80 mb-4' />
                 </form>
             </div>
         </PrivateRoute>

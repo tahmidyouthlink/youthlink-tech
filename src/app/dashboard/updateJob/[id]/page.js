@@ -75,22 +75,25 @@ const UpdateJobPage = ({ params }) => {
     return (
         <PrivateRoute>
             <div>
-                <form className='flex flex-col gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
-                    <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Edit job details</h1>
-                    <input defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Job Title" />
+                <form className='flex flex-col px-6 lg:px-0 gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
+                    <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Edit Job Details</h1>
+                    <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C] mt-2'>Change Title</label>
+                    <input id='title' defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.title?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Title is required</p>
                     )}
-                    <input defaultValue={details?.locationType} {...register("locationType", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Location & Job Type" />
+                    <label htmlFor='locationType' className='flex justify-start font-medium text-[#EA580C]'>Change Location & Job Type</label>
+                    <input id='locationType' defaultValue={details?.locationType} {...register("locationType", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.locationType?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Location & Job Type is required</p>
                     )}
-                    <input defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Enter Keywords..." />
+                    <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Keywords</label>
+                    <input id='keyword' defaultValue={details?.keyword} {...register("keyword", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.keyword?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Keyword is required</p>
                     )}
                     <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Category</label>
-                    <select defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1">
+                    <select id='category' defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1 mb-3">
                         <option value="Digital Marketing">Digital Marketing</option>
                         <option value="E-Commerce">E-Commerce</option>
                         <option value="Digital Transformation">Digital Transformation</option>
@@ -104,15 +107,18 @@ const UpdateJobPage = ({ params }) => {
                     {errors.category?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Category is required</p>
                     )}
-                    <input defaultValue={details?.recruiter} {...register("recruiter", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Recruiter Name" />
+                    <label htmlFor='recruiter' className='flex justify-start font-medium text-[#EA580C]'>Change Recruiter Name</label>
+                    <input id='recruiter' defaultValue={details?.recruiter} {...register("recruiter", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.recruiter?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Recruiter Name is required</p>
                     )}
-                    <input defaultValue={details?.recruiterRole} {...register("recruiterRole", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" placeholder="Recruiter Role" />
+                    <label htmlFor='recruiterRole' className='flex justify-start font-medium text-[#EA580C]'>Change Recruiter Role</label>
+                    <input id='recruiterRole' defaultValue={details?.recruiterRole} {...register("recruiterRole", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                     {errors.recruiterRole?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Recruiter Role is required</p>
                     )}
-                    <input defaultValue={details?.recruiterEmail} {...register("recruiterEmail", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="email" placeholder="Recruiter Email" />
+                    <label htmlFor='recruiterEmail' className='flex justify-start font-medium text-[#EA580C]'>Change Recruiter Email</label>
+                    <input id='recruiterEmail' defaultValue={details?.recruiterEmail} {...register("recruiterEmail", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="email" />
                     {errors.recruiterEmail?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Recruiter Email is required</p>
                     )}
@@ -124,23 +130,26 @@ const UpdateJobPage = ({ params }) => {
                     )}
                     <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Recruiter Photo</label>
                     {/* File input for new photo */}
-                    <input {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
+                    <input id='photo' {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
                     {errors.photo?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Photo is required.</p>
                     )}
-                    <textarea defaultValue={details?.overview} {...register("overview", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} placeholder='Opportunity Overview' />
+                    <label htmlFor='overview' className='flex justify-start font-medium text-[#EA580C]'>Change Opportunity Overview</label>
+                    <textarea id='overview' defaultValue={details?.overview} {...register("overview", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} />
                     {errors.overview?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Overview is required</ p>
                     )}
-                    <textarea defaultValue={details?.aboutTheRole} {...register("aboutTheRole", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} placeholder='About The Role' />
+                    <label htmlFor='aboutTheRole' className='flex justify-start font-medium text-[#EA580C]'>Change Job Role</label>
+                    <textarea defaultValue={details?.aboutTheRole} {...register("aboutTheRole", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} />
                     {errors.aboutTheRole?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">About The Role is required</ p>
                     )}
-                    <textarea defaultValue={details?.skillsRequired} {...register("skillsRequired", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} placeholder='Skills Required' />
+                    <label htmlFor='skillsRequired' className='flex justify-start font-medium text-[#EA580C]'>Change Required Skills</label>
+                    <textarea id='skillsRequired' defaultValue={details?.skillsRequired} {...register("skillsRequired", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} />
                     {errors.skillsRequired?.type === "required" && (
                         <p className="text-red-600 text-left pt-1">Skills is required</ p>
                     )}
-                    <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-r from-[#1089D3] to-[#12B1D1] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#85BDD7E0]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#85BDD7E0]/80 active:scale-95 active:shadow-md active:shadow-[#85BDD7E0]/80' />
+                    <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80 mb-4' />
                 </form>
             </div>
         </PrivateRoute>
