@@ -110,7 +110,7 @@ const AllBlog = () => {
         }
     }
 
-    if (isBlog | pending) {
+    if (isBlog || pending) {
         return <Loading />
     }
 

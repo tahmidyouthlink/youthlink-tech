@@ -77,7 +77,7 @@ const SideNavbar = () => {
 
     const handleLogout = () => {
         logOut().then(() => {
-            toast.success("Logout successful");
+            toast.success("You're all set! See you next time.");
             router.push("/")
         })
     }

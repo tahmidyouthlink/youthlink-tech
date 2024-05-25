@@ -117,7 +117,7 @@ const AllJob = () => {
         }
     }
 
-    if (isJob | pending) {
+    if (isJob || pending) {
         return <Loading />
     }
 

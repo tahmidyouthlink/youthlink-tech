@@ -113,7 +113,7 @@ const AllWork = () => {
         }
     }
 
-    if (isWork | pending) {
+    if (isWork || pending) {
         return <Loading />
     }
 

@@ -25,7 +25,7 @@ const AuthorizedLogin = () => {
         const password = data?.password;
         signIn(email, password)
             .then(() => {
-                toast.success("Log in SuccessFul")
+                toast.success("Welcome back! Let's dive back into your world.")
                 router.push("/dashboard");
             })
             .catch(error => {

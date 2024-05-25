@@ -22,7 +22,7 @@ const Dashboard = () => {
         }
     };
 
-    if (isCheckedBlog | isCheckedWork | isCheckedJobCircular) {
+    if (isCheckedBlog || isCheckedWork || isCheckedJobCircular) {
         return <Loading />
     }
 
@@ -65,7 +65,7 @@ const Dashboard = () => {
                         ))}
                     </div>
                 }
-                {checkedWork.length > 6 && (
+                {checkedWork?.length > 6 && (
                     <div onClick={toggleShowMore} className="my-6 md:my-8 px-6 flex justify-center">
                         <button className="font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-0.5 px-4 rounded-lg mx-auto">{showMoreData > 6 ? 'Show less' : 'Show More'}</button>
                     </div>
@@ -108,7 +108,7 @@ const Dashboard = () => {
                         ))}
                     </div>
                 }
-                {checkedBlog.length > 6 && (
+                {checkedBlog?.length > 6 && (
                     <div onClick={toggleShowMore} className="my-6 md:my-8 px-6 flex justify-center">
                         <button className="font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-0.5 px-4 rounded-lg mx-auto">{showMoreData > 6 ? 'Show less' : 'Show More'}</button>
                     </div>
@@ -120,15 +120,23 @@ const Dashboard = () => {
                     checkedJobCircular?.length > 6 ? <div className="grid grid-cols-2 lg:grid-cols-3  2xl:grid-cols-6 gap-4 max-w-screen-xl mx-auto px-6">
                         {checkedJobCircular?.slice(0, showMoreData).map((job, index) => (
                             <div key={index}>
-                                <div className="group relative block bg-black">
-                                    <Image
-                                        alt="WORK IMAGE"
-                                        src={job?.imageURL} height={100} width={600}
-                                        className="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
-                                    />
+                                <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100">
+                                    <div className="mt-2 p-4">
+                                        <dl>
+                                            <div>
+                                                <dt className="sr-only">Title</dt>
 
-                                    <div className="relative p-4 sm:p-6 lg:p-8">
-                                        <p className="text-sm font-bold uppercase tracking-widest text-white">{job?.title}</p>
+                                                <dd className="text-sm font-bold text-neutral-800">{job?.title}</dd>
+                                            </div>
+
+                                            <div>
+                                                <dt className="sr-only">Location & Type</dt>
+                                                <dd className="">{job?.locationType}</dd>
+                                            </div>
+                                        </dl>
+                                        <div className='flex items-left pt-4'>
+                                            <p className="text-xs px-2 py-1 rounded-lg bg-gray-800 font-medium text-white md:text-sm">{job?.category}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -136,22 +144,30 @@ const Dashboard = () => {
                     </div> : <div className="grid grid-cols-2 lg:grid-cols-3  2xl:grid-cols-6 gap-4 max-w-screen-xl mx-auto px-6" >
                         {checkedJobCircular?.map((job, index) => (
                             <div key={index}>
-                                <div className="group relative block bg-black">
-                                    <Image
-                                        alt="WORK IMAGE"
-                                        src={job?.imageURL} height={100} width={600}
-                                        className="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
-                                    />
+                                <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100">
+                                    <div className="mt-2 p-4">
+                                        <dl>
+                                            <div>
+                                                <dt className="sr-only">Title</dt>
 
-                                    <div className="relative p-4 sm:p-6 lg:p-8">
-                                        <p className="text-sm font-bold uppercase tracking-widest text-white">{job?.title}</p>
+                                                <dd className="text-sm font-bold text-neutral-800">{job?.title}</dd>
+                                            </div>
+
+                                            <div>
+                                                <dt className="sr-only">Location & Type</dt>
+                                                <dd className="">{job?.locationType}</dd>
+                                            </div>
+                                        </dl>
+                                        <div className='flex items-left pt-4'>
+                                            <p className="text-xs px-2 py-1 rounded-lg bg-gray-800 font-medium text-white md:text-sm">{job?.category}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 }
-                {checkedJobCircular.length > 6 && (
+                {checkedJobCircular?.length > 6 && (
                     <div onClick={toggleShowMore} className="my-6 md:my-8 px-6 flex justify-center">
                         <button className="font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-0.5 px-4 rounded-lg mx-auto">{showMoreData > 6 ? 'Show less' : 'Show More'}</button>
                     </div>

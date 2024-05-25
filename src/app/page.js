@@ -4,7 +4,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1>Welcome to Youthlink page</h1>
+      <h1>Welcome to YouthLink page</h1>
     </div>
   );
 };

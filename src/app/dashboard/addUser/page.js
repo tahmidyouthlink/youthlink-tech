@@ -35,8 +35,8 @@ const AuthorizedRegister = () => {
         <PrivateRoute>
             <div className='flex min-h-screen justify-center items-center'>
                 <div className="w-full mx-auto lg:w-[500px] lg:drop-shadow-lg bg-white">
-                    <form onSubmit={handleRegister} className="p-12">
-                        <h1 className="backdrop-blur-sm text-4xl pb-8 font-bold">Signup</h1>
+                    <form onSubmit={handleRegister} className="p-12 mx-6">
+                        <h1 className="backdrop-blur-sm text-4xl pb-8 font-bold">Add a new user</h1>
                         <div className="space-y-5">
                             <label htmlFor="email" className="block">Email</label>
                             <div className="relative">
