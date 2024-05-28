@@ -117,7 +117,7 @@ const SideNavbar = () => {
                             key={index}
                             className={`${pathname === item.path ? "text-white bg-gradient-to-t from-[#EA580C] to-[#EAB308]" : "text-neutral-600"} mx-4 rounded-lg`}>
                             <button
-                                className={`flex items-center gap-2 w-full hover:text-[#EA580C] px-4 py-2 rounded-md font-medium`}>
+                                className={`flex items-center gap-2 w-full hover:bg-gradient-to-t hover:from-[#ea5a0cd1] hover:to-[#eab208c3] hover:text-white px-4 py-2 rounded-md font-medium`}>
                                 <h2 className="p-2 text-2xl rounded-xl">
                                     {item?.icon}
                                 </h2>

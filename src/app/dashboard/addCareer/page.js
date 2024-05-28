@@ -1,52 +1,51 @@
 "use client";
 import Loading from '@/components/shared/Loading/Loading';
+import useAdmin from '@/hooks/useAdmin';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { ImCross } from 'react-icons/im';
+import { ImCross } from "react-icons/im";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import useJobs from '@/hooks/useJobs';
-
+import CreatableSelect from "react-select/creatable";
 const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
-
 const apiKey = "bcc91618311b97a1be1dd7020d5af85f";
 const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
-const UpdateCareer = ({ params }) => {
-    const { register, handleSubmit, formState: { errors }, reset, control, setValue } = useForm();
+const AddCareer = () => {
+    const { register, handleSubmit, formState: { errors }, reset, control } = useForm();
     const [, , refetch] = useJobs();
     const axiosPublic = useAxiosPublic();
+    const [isAdmin, pending] = useAdmin();
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
-    const [details, setDetails] = useState({});
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [names, setNames] = useState([]);
 
-    useEffect(() => {
-        const fetchJob = async () => {
-            const res = await axiosPublic.get(`/allJobCircular/${params?.id}`);
-            const job = res.data;
-            setDetails(job);
-            setValue('title', job.title);
-            setValue('locationType', job.locationType);
-            setValue('category', job.category);
-            setValue('type', job.type);
-            setValue('jobDescription', job.jobDescription);
-            setValue('keyResponsibilities', job.keyResponsibilities);
-            setValue('requirements', job.requirements);
-            setValue('preferredQualifications', job.preferredQualifications);
-            setValue('skillsRequired', job.skillsRequired);
-            setValue('recruiter', job.recruiter);
-            setValue('recruiterEmail', job.recruiterEmail);
-            setValue('photo', job.photo);
-            setLoading(false);
-        };
-        fetchJob();
-    }, [params, axiosPublic, setValue]);
+    let temp = [];
+    const handleNameChange = (inputValue) => {
+        if (inputValue) {
+            try {
+                (async () => {
+                    const res = await axiosPublic.get(`/allSkills/${inputValue.toLowerCase()}`)
+                    const name = res?.data?.map(data => {
+                        const option = {
+                            label: data?.allSkills,
+                            value: data?.allSkills,
+                        }
+                        temp.push(option)
+                    })
+                    setNames(temp);
+                })()
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
 
     const onSubmit = async (data) => {
         const title = data.title;
@@ -57,35 +56,36 @@ const UpdateCareer = ({ params }) => {
         const keyResponsibilities = data.keyResponsibilities;
         const requirements = data.requirements;
         const preferredQualifications = data.preferredQualifications;
-        const skillsRequired = data.skillsRequired;
+        const skillsRequired = selectedOption;
         const recruiter = data.recruiter;
         const recruiterEmail = data.recruiterEmail;
-        let imageURL = details.imageURL; // Default to current imageURL
-        if (data.photo && data.photo[0]) {
-            const photo = data.photo[0];
-            const formData = new FormData();
-            formData.append('image', photo);
-            const uploadImage = await axiosPublic.post(apiURL, formData, {
-                headers: {
-                    "content-type": "multipart/form-data",
-                }
-            });
-            imageURL = uploadImage?.data?.data?.display_url;
+        const photo = data.photo[0];
+        let status;
+        if (isAdmin) {
+            status = "checked";
         }
-        const updatedBlogInfo = { title, locationType, type, category, jobDescription, keyResponsibilities, requirements, preferredQualifications, skillsRequired, recruiter, recruiterEmail, imageURL };
-        const res = await axiosPublic.put(`/allJobCircular/${params?.id}`, updatedBlogInfo);
-        if (res.data.modifiedCount > 0) {
+        else {
+            status = "pending";
+        }
+        const photoObj = { image: photo }
+        const uploadImage = await axiosPublic.post(apiURL, photoObj, {
+            headers: {
+                "content-type": "multipart/form-data",
+            }
+        })
+        const imageURL = uploadImage?.data?.data?.display_url;
+        const jobInfo = { title, locationType, type, category, jobDescription, keyResponsibilities, requirements, preferredQualifications, skillsRequired, recruiter, recruiterEmail, imageURL, status };
+        const res = await axiosPublic.post("/addJobCircular", jobInfo);
+        if (res?.data?.insertedId) {
             reset();
             refetch();
-            toast.success("Job details updated successfully");
-            router.push("/dashboard/allJob");
-        } else {
-            toast.error("Change something first!");
+            toast.success("Your job successfully published");
+            router.push("/dashboard/allJob")
         }
-    };
+    }
 
-    if (loading) {
-        return <Loading />;
+    if (pending) {
+        return <Loading />
     }
 
     return (
@@ -98,14 +98,16 @@ const UpdateCareer = ({ params }) => {
                 </div>
                 <div className="flex flex-col items-center justify-center space-y-4 w-full">
                     <div className='w-full'>
-                        <form className='flex flex-col px-6 lg:px-0 gap-4 max-w-screen-md mx-auto' onSubmit={handleSubmit(onSubmit)}>
-                            <h1 className='font-semibold text-2xl mt-4 md:mt-8'>Edit Job Details</h1>
-                            <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C] mt-2'>Change Job Title</label>
-                            <input id='title' defaultValue={details?.title} {...register("title", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
+                        <form className='flex flex-col gap-4 mx-auto mt-6 px-6 max-w-screen-md' onSubmit={handleSubmit(onSubmit)}>
+                            <h1 className='font-semibold text-2xl mb-2 mt-4 md:mt-8'>Enter Job details</h1>
+
+                            <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C]'>Job Title *</label>
+                            <input id='title' {...register("title", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                             {errors.title?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Title is required</p>
                             )}
-                            <label defaultValue={details?.locationType} htmlFor='locationType' className='flex justify-start font-medium text-[#EA580C]'>Location *</label>
+
+                            <label htmlFor='locationType' className='flex justify-start font-medium text-[#EA580C]'>Location *</label>
                             <select id='locationType' {...register("locationType", { required: true })} className="select select-bordered w-full flex-1 mb-3">
                                 <option value="Onsite">Onsite</option>
                                 <option value="Remote">Remote</option>
@@ -114,8 +116,9 @@ const UpdateCareer = ({ params }) => {
                             {errors.locationType?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Location is required</p>
                             )}
-                            <label defaultValue={details?.type} htmlFor='type' className='flex justify-start font-medium text-[#EA580C]'>Job Type *</label>
-                            <select id='type' {...register("type")} className="select select-bordered w-full flex-1 mb-3">
+
+                            <label htmlFor='type' className='flex justify-start font-medium text-[#EA580C]'>Job Type *</label>
+                            <select id='type' {...register("type", { required: true })} className="select select-bordered w-full flex-1 mb-3">
                                 <option value="Full Time">Full Time</option>
                                 <option value="Part Time">Part Time</option>
                                 <option value="Contract/Freelance">Contract/Freelance</option>
@@ -124,8 +127,9 @@ const UpdateCareer = ({ params }) => {
                             {errors.type?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Job Type is required</p>
                             )}
-                            <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Category</label>
-                            <select id='category' defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1 mb-3">
+
+                            <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Select Category *</label>
+                            <select id='category' {...register("category", { required: true })} className="select select-bordered w-full flex-1 mb-3">
                                 <option value="Digital Marketing">Digital Marketing</option>
                                 <option value="Software Development">Software Development</option>
                                 <option value="Digital Transformation">Digital Transformation</option>
@@ -155,35 +159,35 @@ const UpdateCareer = ({ params }) => {
                             {errors.category?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Category is required</p>
                             )}
-                            <label htmlFor='skillsRequired' className='flex justify-start font-medium text-[#EA580C]'>Change Required Skills</label>
-                            <input id='skillsRequired' defaultValue={details?.skillsRequired} {...register("skillsRequired", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
+                            <label htmlFor='skillsRequired' className='flex justify-start font-medium text-[#EA580C]'>Skills Required *</label>
+                            <CreatableSelect
+                                defaultValue={selectedOption}
+                                onChange={setSelectedOption}
+                                options={names}
+                                onInputChange={handleNameChange}
+                                isMulti
+                            />
                             {errors.skillsRequired?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">Skills is required</ p>
+                                <p className="text-red-600 text-left pt-1">Skills are required</p>
                             )}
-                            <label htmlFor='recruiter' className='flex justify-start font-medium text-[#EA580C]'>Change Hiring Manager Name</label>
-                            <input id='recruiter' defaultValue={details?.recruiter} {...register("recruiter", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
+                            <label htmlFor='recruiter' className='flex justify-start font-medium text-[#EA580C]'>Hiring Manager Name *</label>
+                            <input id='recruiter' {...register("recruiter", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                             {errors.recruiter?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Hiring Manager Name is required</p>
                             )}
 
-                            <label htmlFor='recruiterEmail' className='flex justify-start font-medium text-[#EA580C]'>Change Hiring Manager Email</label>
-                            <input id='recruiterEmail' defaultValue={details?.recruiterEmail} {...register("recruiterEmail", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="email" />
+                            <label htmlFor='recruiterEmail' className='flex justify-start font-medium text-[#EA580C]'>Hiring Manager Email *</label>
+                            <input id='recruiterEmail' {...register("recruiterEmail", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="email" />
                             {errors.recruiterEmail?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Hiring Manager Email is required</p>
                             )}
-                            {/* Display the current image */}
-                            {details?.imageURL && (
-                                <div className="mb-4">
-                                    <Image height={300} width={300} src={details?.imageURL} alt="Current" className="w-full max-w-xs mx-auto" />
-                                </div>
-                            )}
-                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Hiring Manager Photo</label>
-                            {/* File input for new photo */}
-                            <input id='photo' {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
+
+                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Hiring Manager Photo *</label>
+                            <input id='photo' {...register("photo", { required: true })} className="file-input file-input-bordered w-full mt-1 mb-3" type="file" />
                             {errors.photo?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">Photo is required.</p>
+                                <p className="text-red-600 text-left pt-1">Photo is required</p>
                             )}
-                            <label htmlFor='jobDescription' className='flex justify-start font-medium text-[#EA580C]'>Change Job Description</label>
+                            <label htmlFor='jobDescription' className='flex justify-start font-medium text-[#EA580C]'>Job Description *</label>
                             <Controller
                                 name="jobDescription"
                                 control={control}
@@ -192,9 +196,10 @@ const UpdateCareer = ({ params }) => {
                                 render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
                             />
                             {errors.jobDescription?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">Job Description is required</ p>
+                                <p className="text-red-600 text-left pt-1">Job Description is required</p>
                             )}
-                            <label htmlFor='keyResponsibilities' className='flex justify-start font-medium text-[#EA580C]'>Change Key Responsibilities</label>
+
+                            <label htmlFor='keyResponsibilities' className='flex justify-start font-medium text-[#EA580C]'>Key Responsibilities *</label>
                             <Controller
                                 name="keyResponsibilities"
                                 control={control}
@@ -203,9 +208,10 @@ const UpdateCareer = ({ params }) => {
                                 render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
                             />
                             {errors.keyResponsibilities?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">About The Role is required</ p>
+                                <p className="text-red-600 text-left pt-1">Key Responsibilities are required</p>
                             )}
-                            <label htmlFor='requirements' className='flex justify-start font-medium text-[#EA580C]'>Change Requirements</label>
+
+                            <label htmlFor='requirements' className='flex justify-start font-medium text-[#EA580C]'>Requirements *</label>
                             <Controller
                                 name="requirements"
                                 control={control}
@@ -214,9 +220,10 @@ const UpdateCareer = ({ params }) => {
                                 render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
                             />
                             {errors.requirements?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">About The Role is required</ p>
+                                <p className="text-red-600 text-left pt-1">Requirements are required</p>
                             )}
-                            <label htmlFor='preferredQualifications' className='flex justify-start font-medium text-[#EA580C]'>Change Preferred Qualifications</label>
+
+                            <label htmlFor='preferredQualifications' className='flex justify-start font-medium text-[#EA580C]'>Preferred Qualifications *</label>
                             <Controller
                                 name="preferredQualifications"
                                 control={control}
@@ -224,10 +231,7 @@ const UpdateCareer = ({ params }) => {
                                 rules={{ required: true }}
                                 render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
                             />
-                            {errors.preferredQualifications?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">About The Role is required</ p>
-                            )}
-                            <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80 mb-4' />
+                            <input type='submit' className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
                         </form>
                     </div>
                 </div>
@@ -236,4 +240,4 @@ const UpdateCareer = ({ params }) => {
     );
 };
 
-export default UpdateCareer;
+export default AddCareer;

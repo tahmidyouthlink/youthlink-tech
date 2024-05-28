@@ -8,22 +8,20 @@ import { FaRegEdit } from "react-icons/fa";
 import Image from 'next/image';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
-import Link from 'next/link';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import { FiPlus } from 'react-icons/fi';
-import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 import useAdmin from '@/hooks/useAdmin';
-const apiKey = "bcc91618311b97a1be1dd7020d5af85f";
-const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+import dynamic from 'next/dynamic';
+
+const MarkdownPreview = dynamic(() => import('@/utils/Markdown/MarkdownPreview/MarkdownPreview'), { ssr: false });
 
 const AllWork = () => {
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [allWork, isWork, refetch] = useWorks();
     const [details, setDetails] = useState({});
     const [openModal, setOpenModal] = useState(false);
-    const [openModal2, setOpenModal2] = useState(false);
     const axiosPublic = useAxiosPublic();
     const [isAdmin, pending] = useAdmin();
 
@@ -31,39 +29,6 @@ const AllWork = () => {
         setOpenModal(true);
         const singleData = allWork?.find(work => work?._id === id);
         setDetails(singleData);
-    }
-
-    const onSubmit = async (data) => {
-        const title = data.title;
-        const heading = data.heading;
-        const aboutTheProject = data.aboutTheProject;
-        const ourSolution = data.ourSolution;
-        const theResults = data.theResults;
-        const keyword = data.keyword;
-        const category = data.category;
-        let status;
-        if (isAdmin) {
-            status = "checked";
-        }
-        else {
-            status = "pending";
-        }
-        const photo = data.photo[0];
-        const photoObj = { image: photo }
-        const uploadImage = await axiosPublic.post(apiURL, photoObj, {
-            headers: {
-                "content-type": "multipart/form-data",
-            }
-        })
-        const imageURL = uploadImage?.data?.data?.display_url;
-        const workInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL, status };
-        const res = await axiosPublic.post("/addWork", workInfo);
-        if (res?.data?.insertedId) {
-            reset();
-            setOpenModal2(false);
-            refetch();
-            toast.success("Your work successfully published");
-        }
     }
 
     const handleDelete = (id) => {
@@ -98,15 +63,10 @@ const AllWork = () => {
                 confirmButtonText: "Yes, checked!"
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    if (isAdmin) {
-                        const res = await axiosPublic.patch(`/checkedWork/${id}`);
-                        if (res?.data?.modifiedCount) {
-                            refetch();
-                            toast.success("Checked!");
-                        }
-                    }
-                    else {
-                        toast.error("You cannot checked this work!")
+                    const res = await axiosPublic.patch(`/checkedWork/${id}`);
+                    if (res?.data?.modifiedCount) {
+                        refetch();
+                        toast.success("Approved!");
                     }
                 }
             });
@@ -119,77 +79,16 @@ const AllWork = () => {
 
     return (
         <PrivateRoute>
-            <div>
-                <div onClick={() => setOpenModal2(true)} className='flex justify-center mt-8'><button className='flex items-center font-medium bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white px-3 hover:scale-105 transition duration-300 py-1 rounded-md'>
-                    <FiPlus />
-                    <h1>Add Work</h1>
-                </button></div>
-                <div onClick={() => setOpenModal2(false)} className={`fixed z-[100] flex items-center justify-center ${openModal2 ? 'opacity-1 visible' : 'invisible opacity-0'} inset-0 bg-black/20 backdrop-blur-sm duration-100`}>
-                    <div onClick={(e_) => e_.stopPropagation()} className={`absolute max-h-[95vh] overflow-y-auto md:w-[600px] lg:w-[800px] rounded-lg bg-white mx-4 p-6 text-center drop-shadow-2xl dark:bg-gray-800 dark:text-white ${openModal2 ? 'opacity-1 translate-y-0 duration-300' : 'translate-y-20 opacity-0 duration-150'}`}>
-                        <div className='flex gap-2'>
-                            <svg onClick={() => setOpenModal2(false)} className="mx-auto mr-0 w-8 cursor-pointer absolute right-2 top-2 fill-black dark:fill-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g strokeWidth="0"></g><g strokeLinecap="round" strokeLinejoin="round"></g><g><path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"></path></g></svg>
-                        </div>
-                        <div className="flex flex-col items-center justify-center space-y-4">
-                            <div className='w-full'>
-                                <form className='flex flex-col gap-4 mx-auto mt-6 px-6' onSubmit={handleSubmit(onSubmit)}>
-                                    <h1 className='font-semibold text-2xl my-2 mt-4 md:mt-8'>Work details</h1>
-                                    <label htmlFor='title ' className='flex justify-start font-medium text-[#EA580C]'>Title *</label>
-                                    <input id='title' {...register("title", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
-                                    {errors.title?.type === "required" && (
-                                        <p className="text-red-600 text-left pt-1">Title is required</p>
-                                    )}
-                                    <label htmlFor='heading' className='flex justify-start font-medium text-[#EA580C]'>Heading *</label>
-                                    <input id='heading' {...register("heading", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
-                                    {errors.heading?.type === "required" && (
-                                        <p className="text-red-600 text-left pt-1">Heading is required</p>
-                                    )}
-                                    <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Keywords *</label>
-                                    <input {...register("keyword", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
-                                    {errors.keyword?.type === "required" && (
-                                        <p className="text-red-600 text-left pt-1">Keyword is required</p>
-                                    )}
-                                    <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Select Category *</label>
-                                    <select id='category' {...register("category")} className="select select-bordered w-full flex-1 mb-3">
-                                        <option value="Digital Marketing">Digital Marketing</option>
-                                        <option value="E-Commerce">E-Commerce</option>
-                                        <option value="Digital Transformation">Digital Transformation</option>
-                                        <option value="Content Management">Content Management</option>
-                                        <option value="Experience Design">Experience Design</option>
-                                        <option value="Data Strategy">Data Strategy</option>
-                                        <option value="Product Information Management">Product Information Management</option>
-                                        <option value="Strategy and Organization">Strategy and Organization</option>
-                                        <option value="Experience Design">Experience Design</option>
-                                    </select>
-                                    {errors.category?.type === "required" && (
-                                        <p className="text-red-600 text-left pt-1">Category is required</p>
-                                    )}
-                                    <label htmlFor='aboutWork' className='flex justify-start font-medium text-[#EA580C]'>Details About This Work *</label>
-                                    <textarea id='aboutWork' {...register("aboutTheProject", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} />
-                                    {errors.description?.type === "required" && (
-                                        <p className="text-red-600 text-left pt-1">This field is required</ p>
-                                    )}
-                                    <label htmlFor='ourSolution' className='flex justify-start font-medium text-[#EA580C]'>Our Solution *</label>
-                                    <textarea id='ourSolution' {...register("ourSolution", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} />
-                                    {errors.ourSolution?.type === "required" && (
-                                        <p className="text-red-600 text-left pt-1">This field is required</ p>
-                                    )}
-                                    <label htmlFor='theResults' className='flex justify-start font-medium text-[#EA580C]'>The Results *</label>
-                                    <textarea id='theResults' {...register("theResults", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" rows={4} />
-                                    {errors.theResults?.type === "required" && (
-                                        <p className="text-red-600 text-left pt-1">This field is required</ p>
-                                    )}
-                                    <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Upload Work Photo *</label>
-                                    <input {...register("photo", { required: true })} className="file-input file-input-bordered w-full" id='photo' type="file" />
-                                    {errors.photo?.type === "required" && (
-                                        <p className="text-red-600 text-left pt-1">Photo is required.</p>
-                                    )}
-                                    <input type='submit' className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+            <div className='relative'>
+                <div className='fixed bottom-4 right-12 z-50'>
+                    <Link href={`/dashboard/addWork`}>
+                        <button className='flex items-center font-medium bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white px-4 hover:scale-105 transition duration-300 py-2 rounded-md'>
+                            <FiPlus size={20} />
+                            <h1>Add Work</h1>
+                        </button>
+                    </Link>
                 </div>
-                <h1 className='text-center text-2xl font-bold mt-6 md:mt-12'>All Works</h1>
+                <h1 className=' px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6 md:mt-12 lg:mb-8 mb-4'>All Works</h1>
                 <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
                     {allWork?.map((work, index) => <div key={index}>
                         <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100">
@@ -221,7 +120,7 @@ const AllWork = () => {
                                     <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-base mt-1.5 sm:mt-0">
                                         <button onClick={() => open(work?._id)} className="hover:text-[#EAB308]"><FaEye /></button>
                                         <div className={`fixed z-[100] flex items-center justify-center ${openModal ? 'opacity-1 visible' : 'invisible opacity-0'} inset-0 bg-black/20 backdrop-blur-sm duration-100`}>
-                                            <div className={`absolute max-w-screen-md max-h-[95vh] overflow-y-auto rounded-lg bg-white mx-4 md:mx-0 p-3 pb-5 text-center drop-shadow-2xl dark:bg-gray-800 dark:text-white ${openModal ? 'scale-1 opacity-1 duration-300' : 'scale-0 opacity-0 duration-150'} `}>
+                                            <div className={`absolute max-w-screen-md max-h-[95vh] overflow-y-auto rounded-lg bg-white mx-4 md:mx-0 px-10 pt-3 pb-5 text-center drop-shadow-2xl dark:bg-gray-800 dark:text-white ${openModal ? 'scale-1 opacity-1 duration-300' : 'scale-0 opacity-0 duration-150'} `}>
                                                 <svg onClick={() => setOpenModal(false)} className="mx-auto mr-0 w-8 cursor-pointer fill-black dark:fill-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g strokeWidth="0"></g><g strokeLinecap="round" strokeLinejoin="round"></g><g><path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"></path></g></svg>
                                                 <div className='flex justify-center items-center mt-6'>
                                                     <Image src={details?.imageURL} alt='image' width={300} height={300} />
@@ -238,15 +137,15 @@ const AllWork = () => {
                                                 <div className='flex justify-center py-3'><p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{details?.category}</p></div>
                                                 <p className="mt-4 text-sm text-center">
                                                     <h1 className='gradient-text font-bold py-1'>About The Project</h1>
-                                                    <p className='text-neutral-400 px-8'>{details?.aboutTheProject}</p>
+                                                    <MarkdownPreview content={details?.aboutTheProject} />
                                                 </p>
                                                 <p className="mt-4 text-sm text-center">
                                                     <h1 className='gradient-text font-bold py-1'>Our Solution</h1>
-                                                    <p className='text-neutral-400 px-8'>{details?.ourSolution}</p>
+                                                    <MarkdownPreview content={details?.ourSolution} />
                                                 </p>
                                                 <p className="mt-4 text-sm text-center">
                                                     <h1 className='gradient-text font-bold py-1'>The Results</h1>
-                                                    <p className='text-neutral-400 px-8'>{details?.theResults}</p>
+                                                    <MarkdownPreview content={details?.theResults} />
                                                 </p>
                                             </div>
                                         </div>
@@ -264,7 +163,7 @@ const AllWork = () => {
                                     </div>
                                     <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-base">
                                         <div className="mt-1.5 sm:mt-0">
-                                            {work?.status === "checked" ? <p className='text-blue-700 font-bold'>Checked</p> : <button onClick={() => handleChecked(work?._id)} className={`${isAdmin ? "block text-red-700 border border-red-700 px-3 text-sm hover:text-white hover:bg-red-700 py-0.5 rounded" : "text-red-700"}`}>Pending</button>}
+                                            {work?.status === "checked" ? <p className='text-blue-700 font-bold'>Approved</p> : <button onClick={() => handleChecked(work?._id)} className={`${isAdmin ? "block text-red-700 border border-red-700 px-3 text-sm hover:text-white hover:bg-red-700 py-0.5 rounded" : "text-red-700"}`}>Under Review</button>}
                                         </div>
                                     </div>
                                 </div>
