@@ -13,17 +13,17 @@ import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import useJobs from '@/hooks/useJobs';
 import CreatableSelect from "react-select/creatable";
+
 const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
 const apiKey = "bcc91618311b97a1be1dd7020d5af85f";
 const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
 const AddCareer = () => {
-    const { register, handleSubmit, formState: { errors }, reset, control } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset, control, setValue, trigger } = useForm();
     const [, , refetch] = useJobs();
     const axiosPublic = useAxiosPublic();
     const [isAdmin, pending] = useAdmin();
     const router = useRouter();
-    const [selectedOption, setSelectedOption] = useState(null);
     const [names, setNames] = useState([]);
 
     let temp = [];
@@ -31,16 +31,16 @@ const AddCareer = () => {
         if (inputValue) {
             try {
                 (async () => {
-                    const res = await axiosPublic.get(`/allSkills/${inputValue.toLowerCase()}`)
+                    const res = await axiosPublic.get(`/allSkills/${inputValue.toLowerCase()}`);
                     const name = res?.data?.map(data => {
                         const option = {
                             label: data?.allSkills,
                             value: data?.allSkills,
                         }
-                        temp.push(option)
-                    })
+                        temp.push(option);
+                    });
                     setNames(temp);
-                })()
+                })();
             } catch (err) {
                 console.log(err);
             }
@@ -56,7 +56,7 @@ const AddCareer = () => {
         const keyResponsibilities = data.keyResponsibilities;
         const requirements = data.requirements;
         const preferredQualifications = data.preferredQualifications;
-        const skillsRequired = selectedOption;
+        const skillsRequired = data.skillsRequired; // Get value from form data
         const recruiter = data.recruiter;
         const recruiterEmail = data.recruiterEmail;
         const photo = data.photo[0];
@@ -67,12 +67,12 @@ const AddCareer = () => {
         else {
             status = "pending";
         }
-        const photoObj = { image: photo }
+        const photoObj = { image: photo };
         const uploadImage = await axiosPublic.post(apiURL, photoObj, {
             headers: {
                 "content-type": "multipart/form-data",
             }
-        })
+        });
         const imageURL = uploadImage?.data?.data?.display_url;
         const jobInfo = { title, locationType, type, category, jobDescription, keyResponsibilities, requirements, preferredQualifications, skillsRequired, recruiter, recruiterEmail, imageURL, status };
         const res = await axiosPublic.post("/addJobCircular", jobInfo);
@@ -80,12 +80,12 @@ const AddCareer = () => {
             reset();
             refetch();
             toast.success("Your job successfully published");
-            router.push("/dashboard/allJob")
+            router.push("/dashboard/allJob");
         }
     }
 
     if (pending) {
-        return <Loading />
+        return <Loading />;
     }
 
     return (
@@ -159,17 +159,31 @@ const AddCareer = () => {
                             {errors.category?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Category is required</p>
                             )}
+
                             <label htmlFor='skillsRequired' className='flex justify-start font-medium text-[#EA580C]'>Skills Required *</label>
-                            <CreatableSelect
-                                defaultValue={selectedOption}
-                                onChange={setSelectedOption}
-                                options={names}
-                                onInputChange={handleNameChange}
-                                isMulti
+                            <Controller
+                                name="skillsRequired"
+                                control={control}
+                                defaultValue={[]}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <CreatableSelect
+                                        {...field}
+                                        isMulti
+                                        onChange={(selected) => {
+                                            field.onChange(selected);
+                                            setValue("skillsRequired", selected); // Update form value
+                                            trigger("skillsRequired"); // Trigger validation
+                                        }}
+                                        options={names}
+                                        onInputChange={handleNameChange}
+                                    />
+                                )}
                             />
-                            {errors.skillsRequired?.type === "required" && (
+                            {errors.skillsRequired && (
                                 <p className="text-red-600 text-left pt-1">Skills are required</p>
                             )}
+
                             <label htmlFor='recruiter' className='flex justify-start font-medium text-[#EA580C]'>Hiring Manager Name *</label>
                             <input id='recruiter' {...register("recruiter", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                             {errors.recruiter?.type === "required" && (
@@ -187,6 +201,7 @@ const AddCareer = () => {
                             {errors.photo?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Photo is required</p>
                             )}
+
                             <label htmlFor='jobDescription' className='flex justify-start font-medium text-[#EA580C]'>Job Description *</label>
                             <Controller
                                 name="jobDescription"
@@ -231,6 +246,7 @@ const AddCareer = () => {
                                 rules={{ required: true }}
                                 render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
                             />
+
                             <input type='submit' className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
                         </form>
                     </div>

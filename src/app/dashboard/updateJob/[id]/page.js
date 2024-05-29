@@ -10,6 +10,7 @@ import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { ImCross } from 'react-icons/im';
 import dynamic from 'next/dynamic';
+import CreatableSelect from 'react-select/creatable';
 import 'react-quill/dist/quill.snow.css';
 import useJobs from '@/hooks/useJobs';
 
@@ -25,6 +26,8 @@ const UpdateCareer = ({ params }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [details, setDetails] = useState({});
+    const [selectedSkills, setSelectedSkills] = useState([]);
+    const [options, setOptions] = useState([]);
 
     useEffect(() => {
         const fetchJob = async () => {
@@ -39,14 +42,35 @@ const UpdateCareer = ({ params }) => {
             setValue('keyResponsibilities', job.keyResponsibilities);
             setValue('requirements', job.requirements);
             setValue('preferredQualifications', job.preferredQualifications);
-            setValue('skillsRequired', job.skillsRequired);
             setValue('recruiter', job.recruiter);
             setValue('recruiterEmail', job.recruiterEmail);
             setValue('photo', job.photo);
+            setSelectedSkills(job.skillsRequired.map(skill => skill));
             setLoading(false);
         };
         fetchJob();
     }, [params, axiosPublic, setValue]);
+
+    let temp = [];
+    const handleNameChange = (inputValue) => {
+        if (inputValue) {
+            try {
+                (async () => {
+                    const res = await axiosPublic.get(`/allSkills/${inputValue.toLowerCase()}`);
+                    const name = res?.data?.map(data => {
+                        const option = {
+                            label: data?.allSkills,
+                            value: data?.allSkills,
+                        }
+                        temp.push(option);
+                    });
+                    setOptions(temp);
+                })();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
 
     const onSubmit = async (data) => {
         const title = data.title;
@@ -57,10 +81,11 @@ const UpdateCareer = ({ params }) => {
         const keyResponsibilities = data.keyResponsibilities;
         const requirements = data.requirements;
         const preferredQualifications = data.preferredQualifications;
-        const skillsRequired = data.skillsRequired;
+        const skillsRequired = selectedSkills?.map(skill => skill);
         const recruiter = data.recruiter;
         const recruiterEmail = data.recruiterEmail;
         let imageURL = details.imageURL; // Default to current imageURL
+
         if (data.photo && data.photo[0]) {
             const photo = data.photo[0];
             const formData = new FormData();
@@ -72,8 +97,12 @@ const UpdateCareer = ({ params }) => {
             });
             imageURL = uploadImage?.data?.data?.display_url;
         }
-        const updatedBlogInfo = { title, locationType, type, category, jobDescription, keyResponsibilities, requirements, preferredQualifications, skillsRequired, recruiter, recruiterEmail, imageURL };
-        const res = await axiosPublic.put(`/allJobCircular/${params?.id}`, updatedBlogInfo);
+        const updatedJobInfo = {
+            title, locationType, type, category, jobDescription, keyResponsibilities,
+            requirements, preferredQualifications, skillsRequired, recruiter, recruiterEmail, imageURL
+        };
+
+        const res = await axiosPublic.put(`/allJobCircular/${params?.id}`, updatedJobInfo);
         if (res.data.modifiedCount > 0) {
             reset();
             refetch();
@@ -156,9 +185,25 @@ const UpdateCareer = ({ params }) => {
                                 <p className="text-red-600 text-left pt-1">Category is required</p>
                             )}
                             <label htmlFor='skillsRequired' className='flex justify-start font-medium text-[#EA580C]'>Change Required Skills</label>
-                            <input id='skillsRequired' defaultValue={details?.skillsRequired} {...register("skillsRequired", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
+                            <Controller
+                                name="skillsRequired"
+                                defaultValue={selectedSkills}
+                                control={control}
+                                render={({ field }) => (
+                                    <CreatableSelect
+                                        isMulti
+                                        {...field}
+                                        options={options}
+                                        onChange={(selected) => {
+                                            field.onChange(selected);
+                                            setSelectedSkills(selected);
+                                        }}
+                                        onInputChange={handleNameChange}
+                                    />
+                                )}
+                            />
                             {errors.skillsRequired?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">Skills is required</ p>
+                                <p className="text-red-600 text-left pt-1">Skills is required</p>
                             )}
                             <label htmlFor='recruiter' className='flex justify-start font-medium text-[#EA580C]'>Change Hiring Manager Name</label>
                             <input id='recruiter' defaultValue={details?.recruiter} {...register("recruiter", { required: true })} className="w-full p-4 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
@@ -203,7 +248,7 @@ const UpdateCareer = ({ params }) => {
                                 render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
                             />
                             {errors.keyResponsibilities?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">About The Role is required</ p>
+                                <p className="text-red-600 text-left pt-1">Key Responsibilities are required</ p>
                             )}
                             <label htmlFor='requirements' className='flex justify-start font-medium text-[#EA580C]'>Change Requirements</label>
                             <Controller
@@ -214,7 +259,7 @@ const UpdateCareer = ({ params }) => {
                                 render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
                             />
                             {errors.requirements?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">About The Role is required</ p>
+                                <p className="text-red-600 text-left pt-1">Requirements are required</ p>
                             )}
                             <label htmlFor='preferredQualifications' className='flex justify-start font-medium text-[#EA580C]'>Change Preferred Qualifications</label>
                             <Controller
@@ -225,7 +270,7 @@ const UpdateCareer = ({ params }) => {
                                 render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
                             />
                             {errors.preferredQualifications?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">About The Role is required</ p>
+                                <p className="text-red-600 text-left pt-1">Preferred Qualifications are required</ p>
                             )}
                             <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80 mb-4' />
                         </form>
