@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
 import useAxiosPublic from '@/hooks/useAxiosPublic';
-import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import useAuth from "@/hooks/useAuth";
+import AdminRoute from "@/utils/Provider/AdminRoute";
 
 const AuthorizedRegister = () => {
 
@@ -32,7 +32,7 @@ const AuthorizedRegister = () => {
     }
 
     return (
-        <PrivateRoute>
+        <AdminRoute>
             <div className='flex min-h-screen justify-center items-center'>
                 <div className="w-full mx-auto lg:w-[500px] lg:drop-shadow-lg bg-white">
                     <form onSubmit={handleRegister} className="p-12 mx-6">
@@ -56,7 +56,7 @@ const AuthorizedRegister = () => {
                     </form>
                 </div>
             </div>
-        </PrivateRoute>
+        </AdminRoute>
     );
 };
 

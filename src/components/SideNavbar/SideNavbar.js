@@ -13,7 +13,6 @@ import useAuth from "@/hooks/useAuth";
 import toast from "react-hot-toast";
 import Loading from "../shared/Loading/Loading";
 import useAdmin from "@/hooks/useAdmin";
-import { MdOutlinePendingActions } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 
 const SideNavbar = () => {
