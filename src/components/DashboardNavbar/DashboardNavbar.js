@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import SideNavbar from "../SideNavbar/SideNavbar";
-import { Menu, X } from "lucide-react";
+import { HiMenuAlt1 } from "react-icons/hi";
+import { ImCross } from "react-icons/im";
 
 const DashboardNavbar = () => {
     const [isToggle, setIsToggle] = useState(false);
@@ -10,7 +11,7 @@ const DashboardNavbar = () => {
         <div>
             {/* Sidebar */}
             <button className="md:hidden duration-300" onClick={() => setIsToggle(!isToggle)}>
-                {isToggle ? <X /> : <Menu />}
+                {isToggle ? <ImCross /> : <HiMenuAlt1 />}
             </button>
             <div
                 className={`absolute transition-all duration-500 ${isToggle ? "block" : "hidden"} flex-col w-[60%] min-w-[280px] h-full md:hidden`}>

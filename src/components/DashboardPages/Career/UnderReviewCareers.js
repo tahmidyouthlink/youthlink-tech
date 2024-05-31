@@ -1,10 +1,9 @@
-"use client";
 import React, { useState } from 'react';
 import useReviewCareer from '@/hooks/useReviewCareer';
 import Loading from '@/components/shared/Loading/Loading';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 
-const ReviewCareer = () => {
+const UnderReviewCareers = () => {
     const [reviewJobCircular, isReviewJobCircular] = useReviewCareer();
     const [showMoreData, setShowMoreData] = useState(6);
 
@@ -53,4 +52,4 @@ const ReviewCareer = () => {
     );
 };
 
-export default ReviewCareer;
+export default UnderReviewCareers;

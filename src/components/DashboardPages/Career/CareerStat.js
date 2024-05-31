@@ -1,6 +1,4 @@
 "use client";
-import ApexCharts from 'apexcharts'
-import { useEffect, useState } from 'react';
 import { SiPoly } from 'react-icons/si';
 import { RiLoaderFill, RiVerifiedBadgeFill } from 'react-icons/ri';
 import Loading from '@/components/shared/Loading/Loading';
@@ -19,62 +17,7 @@ const CareerStat = () => {
     const underReviewLength = reviewJobCircular?.length;
     const taskCompletedPercentage = (approvedLength / allJobLength * 100).toFixed(2);
 
-    useEffect(() => {
-        if (allJob && checkedJobCircular && reviewJobCircular) {
-            const options = {
-                series: [taskCompletedPercentage],
-                chart: {
-                    height: 350,
-                    type: 'radialBar',
-                    offsetY: -10
-                },
-                plotOptions: {
-                    radialBar: {
-                        startAngle: -135,
-                        endAngle: 135,
-                        dataLabels: {
-                            name: {
-                                fontSize: '16px',
-                                color: undefined,
-                                offsetY: 120
-                            },
-                            value: {
-                                offsetY: 76,
-                                fontSize: '22px',
-                                color: "#000",
-                                formatter: function (val) {
-                                    return val + "%";
-                                }
-                            }
-                        }
-                    }
-                },
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shade: 'dark',
-                        shadeIntensity: 0.15,
-                        inverseColors: false,
-                        opacityFrom: 1,
-                        opacityTo: 1,
-                        stops: [0, 50, 65, 91]
-                    },
-                },
-                stroke: {
-                    dashArray: 4
-                },
-                labels: ['Approved Circular'],
-            };
 
-            const chart = new ApexCharts(document.querySelector("#chart"), options);
-            chart.render();
-
-            // Cleanup function
-            return () => {
-                chart.destroy();
-            };
-        }
-    }, [allJob, checkedJobCircular, reviewJobCircular, taskCompletedPercentage]);
 
     if (isJob || isCheckedJobCircular || isReviewJobCircular) {
         return <Loading />
@@ -107,7 +50,6 @@ const CareerStat = () => {
                         </div>
                     </div>
                 </div>
-                <div id="chart"></div>
             </div>
         </div>
     );

@@ -88,7 +88,7 @@ const AllWork = () => {
                         </button>
                     </Link>
                 </div>
-                <h1 className=' px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6 md:mt-12 lg:mb-8 mb-4'>All Works</h1>
+                <h1 className='px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6 md:mt-12 lg:mb-8 mb-4'>All Works</h1>
                 <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
                     {allWork?.map((work, index) => <div key={index}>
                         <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100">

@@ -4,15 +4,15 @@ import { useState } from "react";
 import { MdViewKanban } from "react-icons/md";
 import { SiPolywork } from "react-icons/si";
 import { FaBlog } from "react-icons/fa";
-import WorkOverview from "@/pages/WorkOverview/WorkOverview";
-import ReviewWork from "@/pages/ReviewWork/ReviewWork";
-import BlogsOverview from "@/pages/BlogsOverview/BlogsOverview";
-import ReviewBlog from "@/pages/ReviewBlog/ReviewBlog";
-import CareersOverview from "@/pages/CareersOverview/CareersOverview";
-import ReviewCareer from "@/pages/ReviewCareer/ReviewCareer";
-import WorkStat from "@/pages/WorkStat/WorkStat";
-import BlogStat from "@/pages/BlogStat/BlogStat";
-import CareerStat from "@/pages/CareerStat/CareerStat";
+import ApprovedCareers from "@/components/DashboardPages/Career/ApprovedCareers";
+import UnderReviewCareers from "@/components/DashboardPages/Career/UnderReviewCareers";
+import ApprovedWorks from "@/components/DashboardPages/Work/ApprovedWorks";
+import UnderReviewWorks from "@/components/DashboardPages/Work/UnderReviewWorks";
+import ApprovedBlogs from "@/components/DashboardPages/Blog/ApprovedBlogs";
+import UnderReviewBlogs from "@/components/DashboardPages/Blog/UnderReviewBlogs";
+import WorkStat from "@/components/DashboardPages/Work/WorkStat";
+import BlogStat from "@/components/DashboardPages/Blog/BlogStat";
+import CareerStat from "@/components/DashboardPages/Career/CareerStat";
 
 const Dashboard = () => {
     const [activeMainTab, setActiveMainTab] = useState(0);
@@ -106,11 +106,11 @@ const Dashboard = () => {
                                 </TabList>
                                 <TabPanel>
                                     {/* Approved content */}
-                                    <WorkOverview />
+                                    <ApprovedWorks />
                                 </TabPanel>
                                 <TabPanel>
                                     {/* Under Review content */}
-                                    <ReviewWork />
+                                    <UnderReviewWorks />
                                 </TabPanel>
                                 <TabPanel>
                                     {/* Statistics content */}
@@ -156,11 +156,11 @@ const Dashboard = () => {
                                 </TabList>
                                 <TabPanel>
                                     {/* Approved content */}
-                                    <BlogsOverview />
+                                    <ApprovedBlogs />
                                 </TabPanel>
                                 <TabPanel>
                                     {/* REVIEW content */}
-                                    <ReviewBlog />
+                                    <UnderReviewBlogs />
                                 </TabPanel>
                                 <TabPanel>
                                     {/* STATISTICS */}
@@ -205,11 +205,11 @@ const Dashboard = () => {
                                 </TabList>
                                 <TabPanel>
                                     {/* Approved content */}
-                                    <CareersOverview />
+                                    <ApprovedCareers />
                                 </TabPanel>
                                 <TabPanel>
                                     {/* REVIEW content */}
-                                    <ReviewCareer />
+                                    <UnderReviewCareers />
                                 </TabPanel>
                                 <TabPanel>
                                     {/* STATISTICS */}

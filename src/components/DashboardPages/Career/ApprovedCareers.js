@@ -1,10 +1,9 @@
-"use client";
 import React, { useState } from 'react';
 import useCheckedJobCircular from '@/hooks/useCheckedJobCircular';
 import Loading from '@/components/shared/Loading/Loading';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 
-const CareersOverview = () => {
+const ApprovedCareers = () => {
     const [checkedJobCircular, isCheckedJobCircular] = useCheckedJobCircular();
     const [showMoreData, setShowMoreData] = useState(6);
 
@@ -53,4 +52,4 @@ const CareersOverview = () => {
     );
 };
 
-export default CareersOverview;
+export default ApprovedCareers;

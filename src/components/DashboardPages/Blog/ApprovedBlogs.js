@@ -1,23 +1,22 @@
-"use client";
 import React, { useState } from 'react';
-import useCheckedWork from '@/hooks/useCheckedWork';
+import useCheckedBlog from '@/hooks/useCheckedBlog';
 import Loading from '@/components/shared/Loading/Loading';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import Image from 'next/image';
 
-const WorkOverview = () => {
-    const [checkedWork, isCheckedWork] = useCheckedWork();
+const ApprovedBlogs = () => {
+    const [checkedBlog, isCheckedBlog] = useCheckedBlog();
     const [showMoreData, setShowMoreData] = useState(6);
 
     const toggleShowMore = () => {
         if (showMoreData === 6) {
-            setShowMoreData(checkedWork.length);
+            setShowMoreData(checkedBlog.length);
         } else if (showMoreData > 6) {
             setShowMoreData(6);
         }
     };
 
-    if (isCheckedWork) {
+    if (isCheckedBlog) {
         return <Loading />;
     }
 
@@ -25,7 +24,7 @@ const WorkOverview = () => {
         <PrivateRoute>
             <div>
                 <div className="grid grid-cols-2 md:grid-cols-3  xl:grid-cols-6 gap-6 max-w-screen-xl mx-auto px-6 mt-8 md:mt-12 xl:mt-16">
-                    {checkedWork?.slice(0, showMoreData).map((work, index) => (
+                    {checkedBlog?.slice(0, showMoreData).map((work, index) => (
                         <div key={index}>
                             <div className="group relative block bg-black rounded-xl h-[300px] 2xl:h-[400px]">
                                 <Image
@@ -40,7 +39,7 @@ const WorkOverview = () => {
                         </div>
                     ))}
                 </div>
-                {checkedWork?.length > 6 && (
+                {checkedBlog?.length > 6 && (
                     <div onClick={toggleShowMore} className="my-6 md:my-8 px-6 flex justify-center">
                         <button className="font-medium bg-gradient-to-r from-[#EA580C] to-[#EAB308] text-white py-2 px-4 rounded-lg mx-auto hover:bg-gradient-to-t hover:from-[#EAB308] hover:to-[#EA580C]">{showMoreData > 6 ? 'Show less' : 'Show More'}</button>
                     </div>
@@ -50,4 +49,4 @@ const WorkOverview = () => {
     );
 };
 
-export default WorkOverview;
+export default ApprovedBlogs;

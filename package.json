@@ -9,20 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^2.0.3",
     "@next/env": "^14.2.3",
     "@tailwindcss/typography": "^0.5.13",
     "@tanstack/react-query": "^5.36.2",
     "@tanstack/react-query-devtools": "^5.36.2",
-    "apexcharts": "^3.49.1",
     "axios": "^1.6.8",
     "firebase": "^10.11.1",
     "lottie-react": "^2.4.0",
-    "lucide-react": "^0.378.0",
     "marked": "^12.0.2",
     "next": "14.2.3",
     "react": "^18",
-    "react-apexcharts": "^1.4.1",
     "react-dom": "^18",
     "react-hook-form": "^7.51.4",
     "react-hot-toast": "^2.4.1",
@@ -31,10 +27,11 @@
     "react-quill": "^2.0.0",
     "react-select": "^5.8.0",
     "react-tabs": "^6.0.2",
+    "recharts": "^2.12.7",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
-    "sweetalert2": "^11.11.0",
-    "turndown": "^7.2.0"
+    "sharp": "^0.33.4",
+    "sweetalert2": "^11.11.0"
   },
   "devDependencies": {
     "daisyui": "^4.11.1",

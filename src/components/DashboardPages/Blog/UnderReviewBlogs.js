@@ -1,23 +1,22 @@
-"use client";
 import React, { useState } from 'react';
 import Loading from '@/components/shared/Loading/Loading';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import Image from 'next/image';
-import useReviewWork from '@/hooks/useReviewWork';
+import useReviewBlog from '@/hooks/useReviewBlog';
 
-const ReviewWork = () => {
-    const [reviewWork, isReviewWork] = useReviewWork();
+const UnderReviewBlogs = () => {
+    const [reviewBlog, isReviewBlog] = useReviewBlog();
     const [showMoreData, setShowMoreData] = useState(6);
 
     const toggleShowMore = () => {
         if (showMoreData === 6) {
-            setShowMoreData(reviewWork.length);
+            setShowMoreData(reviewBlog.length);
         } else if (showMoreData > 6) {
             setShowMoreData(6);
         }
     };
 
-    if (isReviewWork) {
+    if (isReviewBlog) {
         return <Loading />;
     }
 
@@ -25,7 +24,7 @@ const ReviewWork = () => {
         <PrivateRoute>
             <div>
                 <div className="grid grid-cols-2 md:grid-cols-3  xl:grid-cols-6 gap-6 max-w-screen-xl mx-auto px-6 mt-8 md:mt-12 xl:mt-16">
-                    {reviewWork?.slice(0, showMoreData).map((work, index) => (
+                    {reviewBlog?.slice(0, showMoreData).map((work, index) => (
                         <div key={index}>
                             <div className="group relative block bg-black rounded-xl h-[300px] 2xl:h-[400px]">
                                 <Image
@@ -40,7 +39,7 @@ const ReviewWork = () => {
                         </div>
                     ))}
                 </div>
-                {reviewWork?.length > 6 && (
+                {reviewBlog?.length > 6 && (
                     <div onClick={toggleShowMore} className="my-6 md:my-8 px-6 flex justify-center">
                         <button className="font-medium bg-gradient-to-r from-[#EA580C] to-[#EAB308] text-white py-2 px-4 rounded-lg mx-auto hover:bg-gradient-to-t hover:from-[#EAB308] hover:to-[#EA580C]">{showMoreData > 6 ? 'Show less' : 'Show More'}</button>
                     </div>
@@ -50,4 +49,4 @@ const ReviewWork = () => {
     );
 };
 
-export default ReviewWork;
+export default UnderReviewBlogs;
