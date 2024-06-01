@@ -6,9 +6,9 @@ const useBlogs = () => {
 
     const axiosPublic = useAxiosPublic();
 
-    const {data : allBlog, isPending : isBlog, refetch} = useQuery({
-        queryKey : ["allWork"],
-        queryFn : async () => {
+    const { data: allBlog, isPending: isBlog, refetch } = useQuery({
+        queryKey: ["allBlog"],
+        queryFn: async () => {
             const res = await axiosPublic.get("/allBlog");
             return res?.data;
         }

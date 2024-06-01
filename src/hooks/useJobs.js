@@ -6,9 +6,9 @@ const useJobs = () => {
 
     const axiosPublic = useAxiosPublic();
 
-    const {data : allJob, isPending : isJob, refetch} = useQuery({
-        queryKey : ["allWork"],
-        queryFn : async () => {
+    const { data: allJob, isPending: isJob, refetch } = useQuery({
+        queryKey: ["allJob"],
+        queryFn: async () => {
             const res = await axiosPublic.get("/allJobCircular");
             return res?.data;
         }
