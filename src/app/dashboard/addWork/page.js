@@ -31,6 +31,9 @@ const AddWork = () => {
         const theResults = data.theResults;
         const keyword = data.keyword;
         const category = data.category;
+        const currentDate = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = currentDate.toLocaleDateString('en-US', options);
         let status;
         if (isAdmin) {
             status = "checked";
@@ -46,7 +49,7 @@ const AddWork = () => {
             }
         });
         const imageURL = uploadImage?.data?.data?.display_url;
-        const workInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL, status };
+        const workInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL, status, formattedDate };
         const res = await axiosPublic.post("/addWork", workInfo);
         if (res?.data?.insertedId) {
             reset();
@@ -135,7 +138,7 @@ const AddWork = () => {
                             {errors.theResults?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">This field is required</ p>
                             )}
-                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Upload Work Photo *</label>
+                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Upload Work Thumbnail *</label>
                             <input {...register("photo", { required: true })} className="file-input file-input-bordered w-full" id='photo' type="file" />
                             {errors.photo?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Photo is required.</p>

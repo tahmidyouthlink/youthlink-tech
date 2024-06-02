@@ -5,10 +5,9 @@ import { MdViewKanban } from "react-icons/md";
 import { SiPolywork } from "react-icons/si";
 import { FaBlog } from "react-icons/fa";
 import Image from "next/image";
-import { FaHome } from "react-icons/fa";
 import logo from "../../assets/YouthLink-removebg-preview (1).png";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import toast from "react-hot-toast";
 import Loading from "../shared/Loading/Loading";
@@ -17,12 +16,9 @@ import { FaUser } from "react-icons/fa";
 
 const SideNavbar = () => {
     const pathname = usePathname();
-    const { user, logOut } = useAuth(); //current or logged in user
-    const router = useRouter();
+    const { user, logOut } = useAuth();
     const [isAdmin, pending] = useAdmin();
 
-    // console.log(isAdmin);
-    // console.log(user);
     const userList = [
         {
             name: "Dashboard",
@@ -77,8 +73,10 @@ const SideNavbar = () => {
     const handleLogout = () => {
         logOut().then(() => {
             toast.success("You're all set! See you next time.");
-            router.push("/")
-        })
+            window.location.href = "/authorized-login";
+        }).catch(error => {
+            console.error("Logout failed", error);
+        });
     }
 
     if (pending) {
@@ -127,12 +125,9 @@ const SideNavbar = () => {
                 </>
             </div>
             <hr className="my-5" />
-            <div className="flex gap-2 justify-evenly items-center">
-                <Link href={'/'}>
-                    <button className="flex justify-between gap-1 items-center rounded-lg bg-gradient-to-t from-[#EA580C] to-[#EAB308] hover:bg-gradient-to-t hover:from-[#EAB308] hover:to-[#EA580C] text-white px-5 py-2.5"><FaHome /></button>
-                </Link>
+            <div className="flex justify-center items-center">
                 {user &&
-                    <button className="flex justify-between gap-2 items-center p-3 rounded-lg bg-red-700 hover:bg-red-800 text-white" onClick={handleLogout}><MdLogout /></button>
+                    <button className="p-3 rounded-lg bg-red-700 hover:bg-red-800 text-white" onClick={handleLogout}><MdLogout /></button>
                 }
             </div>
         </div>

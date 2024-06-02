@@ -28,6 +28,10 @@ const AddBlog = () => {
         const keyword = data.keyword;
         const category = data.category;
         const description = data.description;
+        const embed = data.embed;
+        const currentDate = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = currentDate.toLocaleDateString('en-US', options);
         let status;
         if (isAdmin) {
             status = "checked";
@@ -43,7 +47,7 @@ const AddBlog = () => {
             }
         });
         const imageURL = uploadImage?.data?.data?.display_url;
-        const blogInfo = { title, keyword, category, description, imageURL, status };
+        const blogInfo = { title, keyword, embed, formattedDate, category, description, imageURL, status };
         const res = await axiosPublic.post("/addBlog", blogInfo);
         if (res?.data?.insertedId) {
             reset();
@@ -109,11 +113,13 @@ const AddBlog = () => {
                             {errors.description?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">This field is required</ p>
                             )}
-                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Upload Blog Photo *</label>
+                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Upload Blog Thumbnail *</label>
                             <input {...register("photo", { required: true })} className="file-input file-input-bordered w-full" id='photo' type="file" />
                             {errors.photo?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Photo is required.</p>
                             )}
+                            <label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3'>Upload Embed video code</label>
+                            <textarea className='w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50' id='embed' {...register("embed")} rows={4} cols={50} />
                             <input type='submit' className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
                         </form>
                     </div>

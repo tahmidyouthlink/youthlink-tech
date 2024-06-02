@@ -5,7 +5,7 @@ import { FaEye } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import { FiPlus } from 'react-icons/fi';
@@ -14,6 +14,7 @@ import Link from 'next/link';
 import useAdmin from '@/hooks/useAdmin';
 import dynamic from 'next/dynamic';
 import useBlogs from '@/hooks/useBlogs';
+import Iframe from '@/components/Iframe/Iframe';
 
 const MarkdownPreview = dynamic(() => import('@/utils/Markdown/MarkdownPreview/MarkdownPreview'), { ssr: false });
 
@@ -24,12 +25,28 @@ const AllBlog = () => {
     const [openModal, setOpenModal] = useState(false);
     const axiosPublic = useAxiosPublic();
     const [isAdmin, pending] = useAdmin();
+    const [blogInfo, setBlogInfo] = useState(allBlog);
+    const [category, setCategory] = useState("All");
 
     function open(id) {
         setOpenModal(true);
         const singleData = allBlog?.find(blog => blog?._id === id);
         setDetails(singleData);
     }
+
+    const handleCategory = (e) => {
+        setCategory(e.target.value);
+    }
+
+    useEffect(() => {
+        if (category === "All") {
+            setBlogInfo(allBlog);
+        }
+        else {
+            const categoryIs = allBlog?.filter(blog => blog?.category === category);
+            setBlogInfo(categoryIs)
+        }
+    }, [allBlog, category])
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -88,9 +105,27 @@ const AllBlog = () => {
                         </button>
                     </Link>
                 </div>
-                <h1 className='px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6 md:mt-12 lg:mb-8 mb-4'>All Blogs</h1>
+                <div className='flex items-center justify-center mt-6 md:mt-12 lg:mb-8 mb-4'>
+                    <h1 className="px-6 lg:px-12 text-2xl md:text-4xl font-semibold">All Blogs</h1>
+                    <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
+                        <option value="All">All</option>
+                        <option value="Industry News and Trends">Industry News and Trends</option>
+                        <option value="How-To Guides and Tutorials">How-To Guides and Tutorials</option>
+                        <option value="Case Studies and Success Stories">Case Studies and Success Stories</option>
+                        <option value="Product and Service Reviews">Product and Service Reviews</option>
+                        <option value="Expert Insights and Opinions">Expert Insights and Opinions</option>
+                        <option value="Company News and Updates">Company News and Updates</option>
+                        <option value="Security Tips and Best Practices">Security Tips and Best Practices</option>
+                        <option value="Career Advice and Job Search Tips">Career Advice and Job Search Tips</option>
+                        <option value="Client Testimonials and Feedback">Client Testimonials and Feedback</option>
+                        <option value="Technology Explainers">Technology Explainers</option>
+                        <option value="Event Coverage">Event Coverage</option>
+                        <option value="Interviews with Experts">Interviews with Experts</option>
+                        <option value="Future of IT">Future of IT</option>
+                    </select>
+                </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
-                    {allBlog?.map((blog, index) => <div key={index}>
+                    {blogInfo?.map((blog, index) => <div key={index}>
                         <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100">
                             <Image
                                 alt="blog images"
@@ -113,9 +148,11 @@ const AllBlog = () => {
                                         </dd>
                                     </div>
                                 </dl>
-                                <div className='flex items-left pt-4'>
+                                <div className='flex justify-between items-center pt-4'>
                                     <p className="text-xs px-2 py-1 rounded-lg bg-gray-800 font-medium text-white md:text-sm">{blog?.category}</p>
+                                    <p className="text-xs font-medium md:text-sm">{blog?.formattedDate}</p>
                                 </div>
+
 
                                 <div className="mt-6 flex items-center gap-8">
                                     <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-base mt-1.5 sm:mt-0">
@@ -132,7 +169,11 @@ const AllBlog = () => {
                                                 <p className="mt-4 px-8 text-sm text-center font-bold">
                                                     Keywords :  {details?.keyword}
                                                 </p>
-                                                <div className='flex justify-center py-3'><p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{details?.category}</p></div>
+                                                <div className='flex justify-evenly items-center py-3'>
+                                                    <p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{details?.category}</p>
+                                                    <p className="text-xs font-medium md:text-sm">{details?.formattedDate}</p>
+                                                </div>
+                                                <Iframe iframeData={details?.embed} />
                                                 <p className="mt-4 text-sm text-center">
                                                     <h1 className='gradient-text font-bold py-1'>About This Blog</h1>
                                                     <MarkdownPreview content={details?.description} />

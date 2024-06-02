@@ -6,7 +6,7 @@ import { FaEye } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import { FiPlus } from 'react-icons/fi';
@@ -24,12 +24,28 @@ const AllWork = () => {
     const [openModal, setOpenModal] = useState(false);
     const axiosPublic = useAxiosPublic();
     const [isAdmin, pending] = useAdmin();
+    const [workInfo, setWorkInfo] = useState(allWork);
+    const [category, setCategory] = useState("All");
 
     function open(id) {
         setOpenModal(true);
         const singleData = allWork?.find(work => work?._id === id);
         setDetails(singleData);
     }
+
+    const handleCategory = (e) => {
+        setCategory(e.target.value);
+    }
+
+    useEffect(() => {
+        if (category === "All") {
+            setWorkInfo(allWork);
+        }
+        else {
+            const categoryIs = allWork?.filter(work => work?.category === category);
+            setWorkInfo(categoryIs)
+        }
+    }, [allWork, category])
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -88,9 +104,23 @@ const AllWork = () => {
                         </button>
                     </Link>
                 </div>
-                <h1 className='px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6 md:mt-12 lg:mb-8 mb-4'>All Works</h1>
+                <div className='flex items-center justify-center mt-6 md:mt-12 lg:mb-8 mb-4'>
+                    <h1 className="px-6 lg:px-12 text-2xl md:text-4xl font-semibold">All Works</h1>
+                    <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
+                        <option value="All">All</option>
+                        <option value="Digital Marketing">Digital Marketing</option>
+                        <option value="E-Commerce">E-Commerce</option>
+                        <option value="Digital Transformation">Digital Transformation</option>
+                        <option value="Content Management">Content Management</option>
+                        <option value="Experience Design">Experience Design</option>
+                        <option value="Data Strategy">Data Strategy</option>
+                        <option value="Product Information Management">Product Information Management</option>
+                        <option value="Strategy and Organization">Strategy and Organization</option>
+                        <option value="Experience Design">Experience Design</option>
+                    </select>
+                </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
-                    {allWork?.map((work, index) => <div key={index}>
+                    {workInfo?.map((work, index) => <div key={index}>
                         <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100">
                             <Image
                                 alt="work images"
@@ -112,8 +142,9 @@ const AllWork = () => {
                                         <dd className="">{work?.heading}</dd>
                                     </div>
                                 </dl>
-                                <div className='flex items-left pt-4'>
+                                <div className='flex justify-between items-center pt-4'>
                                     <p className="text-xs px-2 py-1 rounded-lg bg-gray-800 font-medium text-white md:text-sm">{work?.category}</p>
+                                    <p className="text-xs font-medium md:text-sm">{work?.formattedDate}</p>
                                 </div>
 
                                 <div className="mt-6 flex items-center gap-8">
@@ -134,7 +165,10 @@ const AllWork = () => {
                                                 <p className="mt-4 px-8 text-sm text-center font-bold">
                                                     Keywords :  {details?.keyword}
                                                 </p>
-                                                <div className='flex justify-center py-3'><p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{details?.category}</p></div>
+                                                <div className='flex justify-evenly items-center py-3'>
+                                                    <p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{details?.category}</p>
+                                                    <p className="text-xs font-medium md:text-sm">{details?.formattedDate}</p>
+                                                </div>
                                                 <p className="mt-4 text-sm text-center">
                                                     <h1 className='gradient-text font-bold py-1'>About The Project</h1>
                                                     <MarkdownPreview content={details?.aboutTheProject} />
@@ -172,7 +206,7 @@ const AllWork = () => {
                     </div>)}
                 </div>
             </div>
-        </PrivateRoute>
+        </PrivateRoute >
     );
 };
 
