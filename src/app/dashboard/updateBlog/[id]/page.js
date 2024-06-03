@@ -12,6 +12,7 @@ import { ImCross } from 'react-icons/im';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import useBlogs from '@/hooks/useBlogs';
+import CreatableSelect from 'react-select/creatable';
 
 const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
 
@@ -25,6 +26,8 @@ const UpdateBlog = ({ params }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [details, setDetails] = useState({});
+    const [selectedBlogs, setSelectedBlogs] = useState([]);
+    const [options, setOptions] = useState([]);
 
     useEffect(() => {
         const fetchBlog = async () => {
@@ -36,14 +39,38 @@ const UpdateBlog = ({ params }) => {
             setValue('category', blog.category);
             setValue('description', blog.description);
             setValue('photo', blog.photo);
+            setValue("embed", blog.embed);
+            setSelectedBlogs(blog.keyword.map(skill => skill));
             setLoading(false);
         };
         fetchBlog();
     }, [params, axiosPublic, setValue]);
 
+    let temp = [];
+    const handleNameChange = (inputValue) => {
+        if (inputValue) {
+            try {
+                (async () => {
+                    const res = await axiosPublic.get(`/blogKeywords/${inputValue.toLowerCase()}`);
+                    const name = res?.data?.map(data => {
+                        const option = {
+                            label: data?.blogKeywords,
+                            value: data?.blogKeywords,
+                        }
+                        temp.push(option);
+                    });
+                    setOptions(temp);
+                })();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+
     const onSubmit = async (data) => {
         const title = data.title;
-        const keyword = data.keyword;
+        const keyword = selectedBlogs?.map(skill => skill);
+        const embed = data.embed;
         const category = data.category;
         const description = data.description;
         let imageURL = details.imageURL; // Default to current imageURL
@@ -58,7 +85,7 @@ const UpdateBlog = ({ params }) => {
             });
             imageURL = uploadImage?.data?.data?.display_url;
         }
-        const updatedBlogInfo = { title, keyword, category, description, imageURL };
+        const updatedBlogInfo = { title, keyword, embed, category, description, imageURL };
         const res = await axiosPublic.put(`/allBlog/${params?.id}`, updatedBlogInfo);
         if (res.data.modifiedCount > 0) {
             reset();
@@ -91,8 +118,24 @@ const UpdateBlog = ({ params }) => {
                             {errors.title?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Title is required</p>
                             )}
-                            <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Edit Keywords</label>
-                            <input {...register("keyword", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
+                            <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Keywords</label>
+                            <Controller
+                                name="keyword"
+                                defaultValue={selectedBlogs}
+                                control={control}
+                                render={({ field }) => (
+                                    <CreatableSelect
+                                        isMulti
+                                        {...field}
+                                        options={options}
+                                        onChange={(selected) => {
+                                            field.onChange(selected);
+                                            setSelectedBlogs(selected);
+                                        }}
+                                        onInputChange={handleNameChange}
+                                    />
+                                )}
+                            />
                             {errors.keyword?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Keyword is required</p>
                             )}
@@ -133,11 +176,13 @@ const UpdateBlog = ({ params }) => {
                                 </div>
                             )}
 
-                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Blog Photo</label>
+                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Blog Thumbnail</label>
                             <input id='photo' {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
                             {errors.photo?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Photo is required.</p>
                             )}
+                            <label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3'>Change Embed video code</label>
+                            <textarea className='w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50' id='embed' {...register("embed")} rows={4} cols={50} />
                             <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
                         </form>
                     </div>

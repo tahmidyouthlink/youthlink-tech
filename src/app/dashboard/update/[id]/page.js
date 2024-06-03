@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { ImCross } from 'react-icons/im';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
+import CreatableSelect from 'react-select/creatable';
 
 const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
 
@@ -25,6 +26,8 @@ const UpdateWork = ({ params }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [details, setDetails] = useState({});
+    const [selectedKeywords, setSelectedKeywords] = useState([]);
+    const [options, setOptions] = useState([]);
 
     useEffect(() => {
         const fetchWork = async () => {
@@ -39,15 +42,37 @@ const UpdateWork = ({ params }) => {
             setValue('ourSolution', work.ourSolution);
             setValue('theResults', work.theResults);
             setValue('photo', work.photo);
+            setSelectedKeywords(work.keyword.map(skill => skill));
             setLoading(false);
         };
         fetchWork();
     }, [params, axiosPublic, setValue]);
 
+    let temp = [];
+    const handleNameChange = (inputValue) => {
+        if (inputValue) {
+            try {
+                (async () => {
+                    const res = await axiosPublic.get(`/workKeywords/${inputValue.toLowerCase()}`);
+                    const name = res?.data?.map(data => {
+                        const option = {
+                            label: data?.workKeywords,
+                            value: data?.workKeywords,
+                        }
+                        temp.push(option);
+                    });
+                    setOptions(temp);
+                })();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+
     const onSubmit = async (data) => {
         const title = data.title;
         const heading = data.heading;
-        const keyword = data.keyword;
+        const keyword = selectedKeywords?.map(skill => skill);
         const category = data.category;
         const aboutTheProject = data.aboutTheProject;
         const ourSolution = data.ourSolution;
@@ -102,8 +127,24 @@ const UpdateWork = ({ params }) => {
                             {errors.heading?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Heading is required</p>
                             )}
-                            <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Edit Keywords</label>
-                            <input {...register("keyword", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
+                            <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Keywords</label>
+                            <Controller
+                                name="keyword"
+                                defaultValue={selectedKeywords}
+                                control={control}
+                                render={({ field }) => (
+                                    <CreatableSelect
+                                        isMulti
+                                        {...field}
+                                        options={options}
+                                        onChange={(selected) => {
+                                            field.onChange(selected);
+                                            setSelectedKeywords(selected);
+                                        }}
+                                        onInputChange={handleNameChange}
+                                    />
+                                )}
+                            />
                             {errors.keyword?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Keyword is required</p>
                             )}
@@ -163,7 +204,7 @@ const UpdateWork = ({ params }) => {
                                 </div>
                             )}
 
-                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Work Photo</label>
+                            <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Work Thumbnail</label>
                             <input id='photo' {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
                             {errors.photo?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Photo is required.</p>

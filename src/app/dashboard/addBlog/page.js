@@ -5,24 +5,46 @@ import useAxiosPublic from '@/hooks/useAxiosPublic';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { ImCross } from "react-icons/im";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import useBlogs from '@/hooks/useBlogs';
+import CreatableSelect from "react-select/creatable";
 const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
 const apiKey = "bcc91618311b97a1be1dd7020d5af85f";
 const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
 const AddBlog = () => {
-    const { register, handleSubmit, formState: { errors }, reset, control } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset, control, setValue, trigger } = useForm();
     const [, , refetch] = useBlogs();
     const axiosPublic = useAxiosPublic();
     const [isAdmin, pending] = useAdmin();
     const router = useRouter();
+    const [names, setNames] = useState([]);
 
+    let temp = [];
+    const handleNameChange = (inputValue) => {
+        if (inputValue) {
+            try {
+                (async () => {
+                    const res = await axiosPublic.get(`/blogKeywords/${inputValue.toLowerCase()}`);
+                    const name = res?.data?.map(data => {
+                        const option = {
+                            label: data?.blogKeywords,
+                            value: data?.blogKeywords,
+                        }
+                        temp.push(option);
+                    });
+                    setNames(temp);
+                })();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
     const onSubmit = async (data) => {
         const title = data.title;
         const keyword = data.keyword;
@@ -78,12 +100,30 @@ const AddBlog = () => {
                             {errors.title?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Title is required</p>
                             )}
-                            <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Keywords *</label>
-                            <input {...register("keyword", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
-                            {errors.keyword?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">Keyword is required</p>
+                            <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Keyword *</label>
+                            <Controller
+                                name="keyword"
+                                control={control}
+                                defaultValue={[]}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <CreatableSelect
+                                        {...field}
+                                        isMulti
+                                        onChange={(selected) => {
+                                            field.onChange(selected);
+                                            setValue("keyword", selected); // Update form value
+                                            trigger("keyword"); // Trigger validation
+                                        }}
+                                        options={names}
+                                        onInputChange={handleNameChange}
+                                    />
+                                )}
+                            />
+                            {errors.keyword && (
+                                <p className="text-red-600 text-left pt-1">Skills are required</p>
                             )}
-                            <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Select Category *</label>
+                            <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C] pt-2'>Select Category *</label>
                             <select id='category' {...register("category")} className="select select-bordered w-full flex-1 mb-3">
                                 <option value="Industry News and Trends">Industry News and Trends</option>
                                 <option value="How-To Guides and Tutorials">How-To Guides and Tutorials</option>
