@@ -48,38 +48,42 @@ const AddWork = () => {
     }
 
     const onSubmit = async (data) => {
-        const title = data.title;
-        const heading = data.heading;
-        const aboutTheProject = data.aboutTheProject;
-        const ourSolution = data.ourSolution;
-        const theResults = data.theResults;
-        const keyword = data.keyword;
-        const category = data.category;
-        const currentDate = new Date();
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const formattedDate = currentDate.toLocaleDateString('en-US', options);
-        let status;
-        if (isAdmin) {
-            status = "checked";
-        } else {
-            status = "pending";
-        }
-        const photo = data.photo[0];
-        const formData = new FormData();
-        formData.append('image', photo);
-        const uploadImage = await axiosPublic.post(apiURL, formData, {
-            headers: {
-                "content-type": "multipart/form-data",
+        try {
+            const title = data.title;
+            const heading = data.heading;
+            const aboutTheProject = data.aboutTheProject;
+            const ourSolution = data.ourSolution;
+            const theResults = data.theResults;
+            const keyword = data.keyword;
+            const category = data.category;
+            const currentDate = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = currentDate.toLocaleDateString('en-US', options);
+            let status;
+            if (isAdmin) {
+                status = "checked";
+            } else {
+                status = "pending";
             }
-        });
-        const imageURL = uploadImage?.data?.data?.display_url;
-        const workInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL, status, formattedDate };
-        const res = await axiosPublic.post("/addWork", workInfo);
-        if (res?.data?.insertedId) {
-            reset();
-            refetch();
-            toast.success("Your work successfully published");
-            router.push("/dashboard/allWork");
+            const photo = data.photo[0];
+            const formData = new FormData();
+            formData.append('image', photo);
+            const uploadImage = await axiosPublic.post(apiURL, formData, {
+                headers: {
+                    "content-type": "multipart/form-data",
+                }
+            });
+            const imageURL = uploadImage?.data?.data?.display_url;
+            const workInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL, status, formattedDate };
+            const res = await axiosPublic.post("/addWork", workInfo);
+            if (res?.data?.insertedId) {
+                reset();
+                refetch();
+                toast.success("Your work successfully published");
+                router.push("/dashboard/allWork");
+            }
+        } catch (err) {
+            toast.error("Failed to publish your work")
         }
     }
 
@@ -120,9 +124,13 @@ const AddWork = () => {
                                         {...field}
                                         isMulti
                                         onChange={(selected) => {
-                                            field.onChange(selected);
-                                            setValue("keyword", selected); // Update form value
-                                            trigger("keyword"); // Trigger validation
+                                            if (selected.length > 5) {
+                                                toast.error("You can select up to 5 items only.");
+                                            } else {
+                                                field.onChange(selected);
+                                                setValue("keyword", selected); // Update form value
+                                                trigger("keyword"); // Trigger validation
+                                            }
                                         }}
                                         options={names}
                                         onInputChange={handleNameChange}

@@ -140,20 +140,11 @@ const AllBlog = () => {
 
                                         <dd className="text-sm font-bold text-neutral-800">{blog?.title}</dd>
                                     </div>
-
-                                    <div>
-                                        <dt className="sr-only">Description</dt>
-                                        <dd className='flex items-end justify-start'>
-                                            <MarkdownPreview content={blog?.description?.length > 60 ? `${blog?.description.slice(0, 60)}...` : blog?.description} />
-                                        </dd>
-                                    </div>
                                 </dl>
                                 <div className='flex justify-between items-center pt-4'>
                                     <p className="text-xs px-2 py-1 rounded-lg bg-gray-800 font-medium text-white md:text-sm">{blog?.category}</p>
                                     <p className="text-xs font-medium md:text-sm">{blog?.formattedDate}</p>
                                 </div>
-
-
                                 <div className="mt-6 flex items-center gap-8">
                                     <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-base mt-1.5 sm:mt-0">
                                         <button onClick={() => open(blog?._id)} className="hover:text-[#EAB308]"><FaEye /></button>
@@ -173,7 +164,9 @@ const AllBlog = () => {
                                                     <p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{details?.category}</p>
                                                     <p className="text-xs font-medium md:text-sm">{details?.formattedDate}</p>
                                                 </div>
-                                                <Iframe iframeData={details?.embed} />
+                                                <div className='flex justify-center items-center my-3'>
+                                                    <Iframe iframeData={details?.embed} />
+                                                </div>
                                                 <p className="mt-4 text-sm text-center">
                                                     <h1 className='gradient-text font-bold py-1'>About This Blog</h1>
                                                     <MarkdownPreview content={details?.description} />

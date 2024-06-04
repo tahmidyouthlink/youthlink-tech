@@ -5,7 +5,7 @@ import useAxiosPublic from '@/hooks/useAxiosPublic';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { ImCross } from "react-icons/im";
@@ -24,6 +24,8 @@ const AddBlog = () => {
     const [isAdmin, pending] = useAdmin();
     const router = useRouter();
     const [names, setNames] = useState([]);
+    const [keywords, setKeywords] = useState([]);
+    const [titles, setTitles] = useState([]);
 
     let temp = [];
     const handleNameChange = (inputValue) => {
@@ -45,12 +47,14 @@ const AddBlog = () => {
             }
         }
     }
+
     const onSubmit = async (data) => {
         const title = data.title;
         const keyword = data.keyword;
         const category = data.category;
         const description = data.description;
         const embed = data.embed;
+        const featured = data?.featured;
         const currentDate = new Date();
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = currentDate.toLocaleDateString('en-US', options);
@@ -69,7 +73,7 @@ const AddBlog = () => {
             }
         });
         const imageURL = uploadImage?.data?.data?.display_url;
-        const blogInfo = { title, keyword, embed, formattedDate, category, description, imageURL, status };
+        const blogInfo = { title, keyword, embed, featured, formattedDate, category, description, imageURL, status };
         const res = await axiosPublic.post("/addBlog", blogInfo);
         if (res?.data?.insertedId) {
             reset();
@@ -78,6 +82,25 @@ const AddBlog = () => {
             router.push("/dashboard/allBlog");
         }
     }
+
+    useEffect(() => {
+        const fetchBlogTitle = async () => {
+            try {
+                if (keywords) {
+                    // Serialize keywords
+                    const serializedKeywords = encodeURIComponent(JSON.stringify(keywords));
+                    const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
+                    setTitles(response?.data?.data);
+                }
+            } catch (err) {
+                toast.error(err);
+            }
+        };
+
+        if (keywords) {
+            fetchBlogTitle();
+        }
+    }, [keywords, axiosPublic]);
 
     if (pending) {
         return <Loading />
@@ -95,7 +118,7 @@ const AddBlog = () => {
                     <div className='w-full'>
                         <form className='flex flex-col max-w-screen-md gap-4 mx-auto mt-6 px-6' onSubmit={handleSubmit(onSubmit)}>
                             <h1 className='font-semibold text-2xl my-2 mt-4 md:mt-8'>Blog details</h1>
-                            <label htmlFor='title ' className='flex justify-start font-medium text-[#EA580C]'>Title *</label>
+                            <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C]'>Title *</label>
                             <input id='title' {...register("title", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
                             {errors.title?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Title is required</p>
@@ -111,9 +134,14 @@ const AddBlog = () => {
                                         {...field}
                                         isMulti
                                         onChange={(selected) => {
-                                            field.onChange(selected);
-                                            setValue("keyword", selected); // Update form value
-                                            trigger("keyword"); // Trigger validation
+                                            setKeywords(selected);
+                                            if (selected.length > 5) {
+                                                toast.error("You can select up to 5 items only.");
+                                            } else {
+                                                field.onChange(selected);
+                                                setValue("keyword", selected); // Update form value
+                                                trigger("keyword"); // Trigger validation
+                                            }
                                         }}
                                         options={names}
                                         onInputChange={handleNameChange}
@@ -123,6 +151,14 @@ const AddBlog = () => {
                             {errors.keyword && (
                                 <p className="text-red-600 text-left pt-1">Skills are required</p>
                             )}
+                            <label htmlFor='featured' className='flex justify-start font-medium text-[#EA580C] pt-2'>Select Featured Post Title *</label>
+                            <select {...register("featured")} className="select select-bordered w-full flex-1">
+                                {
+                                    titles?.map((sector, index) => (
+                                        <option key={index} value={sector}>{sector}</option>
+                                    ))
+                                }
+                            </select>
                             <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C] pt-2'>Select Category *</label>
                             <select id='category' {...register("category")} className="select select-bordered w-full flex-1 mb-3">
                                 <option value="Industry News and Trends">Industry News and Trends</option>
