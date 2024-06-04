@@ -28,18 +28,22 @@ const UpdateBlog = ({ params }) => {
     const [details, setDetails] = useState({});
     const [selectedBlogs, setSelectedBlogs] = useState([]);
     const [options, setOptions] = useState([]);
+    const [titles, setTitles] = useState([]);
+    const [notDouble, setNotDouble] = useState("");
 
     useEffect(() => {
         const fetchBlog = async () => {
             const res = await axiosPublic.get(`/allBlog/${params?.id}`);
             const blog = res.data;
             setDetails(blog);
+            setNotDouble(blog?.title);
             setValue('title', blog?.title);
             setValue('keyword', blog?.keyword);
             setValue('category', blog?.category);
             setValue('description', blog?.description);
             setValue('photo', blog?.photo);
             setValue("embed", blog?.embed);
+            setValue("featured", blog?.featured);
             setSelectedBlogs(blog?.keyword?.map(skill => skill));
             setLoading(false);
         };
@@ -71,6 +75,7 @@ const UpdateBlog = ({ params }) => {
         const title = data.title;
         const keyword = selectedBlogs?.map(skill => skill);
         const embed = data.embed;
+        const featured = data.featured;
         const category = data.category;
         const description = data.description;
         let imageURL = details.imageURL; // Default to current imageURL
@@ -85,7 +90,7 @@ const UpdateBlog = ({ params }) => {
             });
             imageURL = uploadImage?.data?.data?.display_url;
         }
-        const updatedBlogInfo = { title, keyword, embed, category, description, imageURL };
+        const updatedBlogInfo = { title, keyword, embed, featured, category, description, imageURL };
         const res = await axiosPublic.put(`/allBlog/${params?.id}`, updatedBlogInfo);
         if (res.data.modifiedCount > 0) {
             reset();
@@ -96,6 +101,27 @@ const UpdateBlog = ({ params }) => {
             toast.error("Change something first!");
         }
     };
+
+    useEffect(() => {
+        const fetchBlogTitle = async () => {
+            try {
+                if (selectedBlogs) {
+                    // Serialize keywords
+                    const serializedKeywords = encodeURIComponent(JSON.stringify(selectedBlogs));
+                    const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
+                    setTitles(response?.data?.data);
+                }
+            } catch (err) {
+                toast.error(err);
+            }
+        };
+
+        if (selectedBlogs) {
+            fetchBlogTitle();
+        }
+    }, [selectedBlogs, axiosPublic]);
+
+    const theTitles = titles?.filter(title => title !== notDouble);
 
     if (loading) {
         return <Loading />;
@@ -129,8 +155,12 @@ const UpdateBlog = ({ params }) => {
                                         {...field}
                                         options={options}
                                         onChange={(selected) => {
-                                            field.onChange(selected);
-                                            setSelectedBlogs(selected);
+                                            if (selected.length > 5) {
+                                                toast.error("You can select up to 5 items only.");
+                                            } else {
+                                                field.onChange(selected);
+                                                setSelectedBlogs(selected);
+                                            }
                                         }}
                                         onInputChange={handleNameChange}
                                     />
@@ -139,6 +169,14 @@ const UpdateBlog = ({ params }) => {
                             {errors.keyword?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Keyword is required</p>
                             )}
+                            <label htmlFor='featured' className='flex justify-start font-medium text-[#EA580C]'>Change Featured Post Title</label>
+                            <select id='featured' {...register("featured")} className="select select-bordered w-full flex-1 mb-3">
+                                {
+                                    theTitles?.map((sector, index) => (
+                                        <option key={index} value={sector}>{sector}</option>
+                                    ))
+                                }
+                            </select>
                             <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Category</label>
                             <select id='category' {...register("category")} className="select select-bordered w-full flex-1 mb-3">
                                 <option value="Industry News and Trends">Industry News and Trends</option>
