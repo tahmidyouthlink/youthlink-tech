@@ -5,13 +5,13 @@ import PrivateRoute from '@/utils/Provider/PrivateRoute';
 
 const UnderReviewCareers = () => {
     const [reviewJobCircular, isReviewJobCircular] = useReviewCareer();
-    const [showMoreData, setShowMoreData] = useState(6);
+    const [showMoreData, setShowMoreData] = useState(5);
 
     const toggleShowMore = () => {
-        if (showMoreData === 6) {
+        if (showMoreData === 5) {
             setShowMoreData(reviewJobCircular.length);
-        } else if (showMoreData > 6) {
-            setShowMoreData(6);
+        } else if (showMoreData > 5) {
+            setShowMoreData(5);
         }
     };
 
@@ -21,33 +21,47 @@ const UnderReviewCareers = () => {
 
     return (
         <PrivateRoute>
-            <div>
-                <div className="grid grid-cols-2 lg:grid-cols-3  2xl:grid-cols-6 gap-4 max-w-screen-xl mx-auto px-6 mt-8 md:mt-12 xl:mt-16">
-                    {reviewJobCircular?.slice(0, showMoreData).map((job, index) => (
-                        <div key={index}>
-                            <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100 p-4">
-                                <div className="mt-2 p-4">
-                                    <dl>
-                                        <div>
-                                            <dt className="sr-only">Title</dt>
-                                            <dd className="text-sm font-bold text-neutral-800">{job?.title}</dd>
-                                        </div>
-                                        <div>
-                                            <dt className="sr-only">Location & Type</dt>
-                                            <dd>{job?.locationType}</dd>
-                                        </div>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+            {reviewJobCircular?.length > 0 ? <div>
+                <h1 className='mt-8 lg:mt-16 my-4 px-10 text-center font-semibold'>Under Review Job Circulars</h1>
+                <div className="max-w-screen-xl mx-auto px-6">
+                    <div className="overflow-x-auto">
+                        <table className="table">
+                            {/* head */}
+                            <thead>
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>Category</th>
+                                    <th>Keywords</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* row 1 */}
+                                {reviewJobCircular?.slice(0, showMoreData).map((work, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            <div className="flex items-center gap-3">
+                                                <div className="font-bold">{work?.title}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span className="px-4 py-1 text-[10px] md:text-xs lg:text-base bg-gray-200 rounded-lg">{work?.category}</span>
+                                        </td>
+                                        <td>{work?.skillsRequired?.map((skill, index) => <p key={index} className={`text-neutral-400`}>{skill?.value}</p>)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                {reviewJobCircular?.length > 6 && (
+                {reviewJobCircular?.length > 5 && (
                     <div onClick={toggleShowMore} className="my-6 md:my-8 px-6 flex justify-center">
-                        <button className="font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-0.5 px-4 rounded-lg mx-auto">{showMoreData > 6 ? 'Show less' : 'Show More'}</button>
+                        <button className="font-medium bg-gradient-to-r from-[#EA580C] to-[#EAB308] text-white py-2 px-4 rounded-lg mx-auto hover:bg-gradient-to-t hover:from-[#EAB308] hover:to-[#EA580C]">{showMoreData > 5 ? 'Show less' : 'Show More'}</button>
                     </div>
                 )}
-            </div>
+            </div> : <div>
+                <h1 className='mt-8 my-4 px-10 font-semibold text-center'>Under Review Job Circulars</h1>
+                <h1 className='text-center my-8'>There is no under review job circulars</h1>
+            </div>}
         </PrivateRoute>
     );
 };

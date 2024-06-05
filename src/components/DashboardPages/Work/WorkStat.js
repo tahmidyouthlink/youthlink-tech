@@ -1,6 +1,4 @@
 "use client";
-import { SiPoly } from 'react-icons/si';
-import { RiLoaderFill, RiVerifiedBadgeFill } from 'react-icons/ri';
 import Loading from '@/components/shared/Loading/Loading';
 import useWorks from '@/hooks/useWorks';
 import useCheckedWork from '@/hooks/useCheckedWork';
@@ -45,53 +43,27 @@ const WorkStat = () => {
     }
 
     return (
-        <div className='border rounded-lg px-6 mt-8 md:mt-12 xl:mt-16 max-w-screen-md mx-auto'>
-            <div className='flex flex-col justify-center items-center md:flex-row gap-6 lg:gap-12 p-8'>
-                <div className='space-y-2'>
-                    <h1 className='text-xl'>Work Details</h1>
-                    <div className='flex justify-start items-center gap-2 text-sm font-medium pt-4 pb-2'>
-                        <SiPoly size={26} className="text-3xl text-blue-400  " />
-                        <div className='flex flex-col justify-center items-start'>
-                            <p>Total Works</p>
-                            <h1>{allWorkLength}</h1>
-                        </div>
-                    </div>
-                    <div className='flex justify-start items-center gap-2 text-sm font-medium pb-2'>
-                        <RiVerifiedBadgeFill size={26} className="text-3xl text-orange-500" />
-                        <div className='flex flex-col justify-center items-start'>
-                            <p>Approved Works</p>
-                            <h1>{approvedLength}</h1>
-                        </div>
-                    </div>
-                    <div className='flex justify-start items-center gap-2 text-sm font-medium'>
-                        <RiLoaderFill size={26} className="text-3xl text-green-500 0 6s animate-spin" />
-                        <div className='flex flex-col justify-center items-start'>
-                            <p>Under Review Works</p>
-                            <h1>{underReviewLength}</h1>
-                        </div>
-                    </div>
-                </div>
-                <BarChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Bar dataKey="uv" fill="#8884d8" shape={<TriangleBar />} label={{ position: 'top' }}>
-                        {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={colors[index % 20]} />
-                        ))}
-                    </Bar>
-                </BarChart>
-            </div>
+        <div className='flex justify-center items-center mt-20'>
+            <BarChart
+                width={500}
+                height={300}
+                data={data}
+                margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                }}
+            >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Bar dataKey="uv" fill="#8884d8" shape={<TriangleBar />} label={{ position: 'top' }}>
+                    {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={colors[index % 20]} />
+                    ))}
+                </Bar>
+            </BarChart>
         </div>
     );
 };

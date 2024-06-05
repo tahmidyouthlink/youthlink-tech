@@ -6,13 +6,13 @@ import useReviewWork from '@/hooks/useReviewWork';
 
 const UnderReviewWorks = () => {
     const [reviewWork, isReviewWork] = useReviewWork();
-    const [showMoreData, setShowMoreData] = useState(6);
+    const [showMoreData, setShowMoreData] = useState(5);
 
     const toggleShowMore = () => {
-        if (showMoreData === 6) {
+        if (showMoreData === 5) {
             setShowMoreData(reviewWork.length);
-        } else if (showMoreData > 6) {
-            setShowMoreData(6);
+        } else if (showMoreData > 5) {
+            setShowMoreData(5);
         }
     };
 
@@ -22,29 +22,52 @@ const UnderReviewWorks = () => {
 
     return (
         <PrivateRoute>
-            <div>
-                <div className="grid grid-cols-2 md:grid-cols-3  xl:grid-cols-6 gap-6 max-w-screen-xl mx-auto px-6 mt-8 md:mt-12 xl:mt-16">
-                    {reviewWork?.slice(0, showMoreData).map((work, index) => (
-                        <div key={index}>
-                            <div className="group relative block bg-black rounded-xl h-[300px] 2xl:h-[400px]">
-                                <Image
-                                    alt="WORK IMAGE"
-                                    src={work?.imageURL} height={100} width={1600}
-                                    className="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50 rounded-xl"
-                                />
-                                <div className="absolute bottom-4 left-4">
-                                    <p className="text-xs md:text-sm font-medium uppercase tracking-widest text-white">{work?.title}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+            {reviewWork?.length > 0 ? <div>
+                <h1 className='mt-8 my-4 px-10 font-semibold'>Under Review Works</h1>
+                <div className="max-w-screen-xl mx-auto px-6">
+                    <div className="overflow-x-auto">
+                        <table className="table">
+                            {/* head */}
+                            <thead>
+                                <tr>
+                                    <th>Thumbnail / Name</th>
+                                    <th>Category</th>
+                                    <th>Keywords</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* row 1 */}
+                                {reviewWork?.slice(0, showMoreData).map((work, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            <div className="flex items-center gap-3">
+                                                <div className="avatar">
+                                                    <div className="mask mask-squircle w-12 h-12">
+                                                        <Image src={work?.imageURL} alt='image' height={100} width={200} />
+                                                    </div>
+                                                </div>
+                                                <div className="font-bold">{work?.title}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span className="px-4 py-1 text-[10px] md:text-xs lg:text-base bg-gray-200 rounded-lg">{work?.category}</span>
+                                        </td>
+                                        <td>{work?.keyword?.map((skill, index) => <p key={index} className={`text-neutral-400`}>{skill?.value}</p>)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                {reviewWork?.length > 6 && (
+                {reviewWork?.length > 5 && (
                     <div onClick={toggleShowMore} className="my-6 md:my-8 px-6 flex justify-center">
-                        <button className="font-medium bg-gradient-to-r from-[#EA580C] to-[#EAB308] text-white py-2 px-4 rounded-lg mx-auto hover:bg-gradient-to-t hover:from-[#EAB308] hover:to-[#EA580C]">{showMoreData > 6 ? 'Show less' : 'Show More'}</button>
+                        <button className="font-medium bg-gradient-to-r from-[#EA580C] to-[#EAB308] text-white py-2 px-4 rounded-lg mx-auto hover:bg-gradient-to-t hover:from-[#EAB308] hover:to-[#EA580C]">{showMoreData > 5 ? 'Show less' : 'Show More'}</button>
                     </div>
                 )}
-            </div>
+            </div> : <div>
+                <h1 className='mt-8 my-4 px-10 font-semibold'>Under Review Works</h1>
+                <h1 className='text-center my-8'>There is no under review works</h1>
+            </div>}
         </PrivateRoute>
     );
 };

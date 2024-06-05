@@ -105,7 +105,7 @@ const UpdateBlog = ({ params }) => {
     useEffect(() => {
         const fetchBlogTitle = async () => {
             try {
-                if (selectedBlogs) {
+                if (selectedBlogs.length > 0) {
                     // Serialize keywords
                     const serializedKeywords = encodeURIComponent(JSON.stringify(selectedBlogs));
                     const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
@@ -115,10 +115,7 @@ const UpdateBlog = ({ params }) => {
                 toast.error(err);
             }
         };
-
-        if (selectedBlogs) {
-            fetchBlogTitle();
-        }
+        fetchBlogTitle();
     }, [selectedBlogs, axiosPublic]);
 
     const theTitles = titles?.filter(title => title !== notDouble);

@@ -83,24 +83,42 @@ const AddBlog = () => {
         }
     }
 
+    // useEffect(() => {
+    //     const fetchBlogTitle = async () => {
+    //         try {
+    //             if (keywords.length > 0) {
+    //                 // Serialize keywords
+    //                 const serializedKeywords = encodeURIComponent(JSON.stringify(keywords));
+    //                 const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
+    //                 setTitles(response?.data?.data);
+    //             }
+    //         } catch (err) {
+    //             toast.error(err);
+    //         }
+    //     };
+
+    //     if (keywords) {
+    //         fetchBlogTitle();
+    //     }
+    // }, [keywords, axiosPublic]);
+
     useEffect(() => {
         const fetchBlogTitle = async () => {
             try {
-                if (keywords) {
+                if (keywords.length > 0) {
                     // Serialize keywords
                     const serializedKeywords = encodeURIComponent(JSON.stringify(keywords));
                     const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
                     setTitles(response?.data?.data);
                 }
             } catch (err) {
-                toast.error(err);
+                toast.error(err.message);
             }
         };
 
-        if (keywords) {
-            fetchBlogTitle();
-        }
+        fetchBlogTitle();
     }, [keywords, axiosPublic]);
+
 
     if (pending) {
         return <Loading />
