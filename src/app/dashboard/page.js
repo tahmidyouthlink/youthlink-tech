@@ -1,15 +1,12 @@
 "use client";
 import { useState } from "react";
 import PrivateRoute from "@/utils/Provider/PrivateRoute";
-import ApprovedCareers from "@/components/DashboardPages/Career/ApprovedCareers";
-import UnderReviewCareers from "@/components/DashboardPages/Career/UnderReviewCareers";
-import ApprovedWorks from "@/components/DashboardPages/Work/ApprovedWorks";
-import UnderReviewWorks from "@/components/DashboardPages/Work/UnderReviewWorks";
-import ApprovedBlogs from "@/components/DashboardPages/Blog/ApprovedBlogs";
-import UnderReviewBlogs from "@/components/DashboardPages/Blog/UnderReviewBlogs";
 import WorkStat from "@/components/DashboardPages/Work/WorkStat";
 import BlogStat from "@/components/DashboardPages/Blog/BlogStat";
 import CareerStat from "@/components/DashboardPages/Career/CareerStat";
+import WorkTable from "@/components/DashboardPages/Work/WorkTable";
+import BlogTable from "@/components/DashboardPages/Blog/BlogTable";
+import CareerTable from "@/components/DashboardPages/Career/CareerTable";
 
 const Dashboard = () => {
     const [category, setCategory] = useState("Our Work");
@@ -28,10 +25,7 @@ const Dashboard = () => {
                 </select>
                 {category === "Our Work" && <div>
                     <div>
-                        <ApprovedWorks />
-                    </div>
-                    <div>
-                        <UnderReviewWorks />
+                        <WorkTable />
                     </div>
                     <div>
                         <WorkStat />
@@ -39,10 +33,7 @@ const Dashboard = () => {
                 </div>}
                 {category === "Blogs" && <div>
                     <div>
-                        <ApprovedBlogs />
-                    </div>
-                    <div>
-                        <UnderReviewBlogs />
+                        <BlogTable />
                     </div>
                     <div>
                         <BlogStat />
@@ -50,10 +41,7 @@ const Dashboard = () => {
                 </div>}
                 {category === "Careers" && <div>
                     <div>
-                        <ApprovedCareers />
-                    </div>
-                    <div>
-                        <UnderReviewCareers />
+                        <CareerTable />
                     </div>
                     <div>
                         <CareerStat />
