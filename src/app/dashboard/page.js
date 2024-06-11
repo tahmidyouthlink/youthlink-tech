@@ -1,9 +1,6 @@
 "use client";
 import { useState } from "react";
 import PrivateRoute from "@/utils/Provider/PrivateRoute";
-import WorkStat from "@/components/DashboardPages/Work/WorkStat";
-import BlogStat from "@/components/DashboardPages/Blog/BlogStat";
-import CareerStat from "@/components/DashboardPages/Career/CareerStat";
 import WorkTable from "@/components/DashboardPages/Work/WorkTable";
 import BlogTable from "@/components/DashboardPages/Blog/BlogTable";
 import CareerTable from "@/components/DashboardPages/Career/CareerTable";
@@ -27,24 +24,15 @@ const Dashboard = () => {
                     <div>
                         <WorkTable />
                     </div>
-                    <div>
-                        <WorkStat />
-                    </div>
                 </div>}
                 {category === "Blogs" && <div>
                     <div>
                         <BlogTable />
                     </div>
-                    <div>
-                        <BlogStat />
-                    </div>
                 </div>}
                 {category === "Careers" && <div>
                     <div>
                         <CareerTable />
-                    </div>
-                    <div>
-                        <CareerStat />
                     </div>
                 </div>}
             </div>

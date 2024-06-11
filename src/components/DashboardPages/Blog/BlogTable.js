@@ -1,20 +1,11 @@
-// import React, { useState } from 'react';
 import Loading from '@/components/shared/Loading/Loading';
 import Image from 'next/image';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import useBlogs from '@/hooks/useBlogs';
+import Link from 'next/link';
 
 const BlogTable = () => {
     const [allBlog, isBlog] = useBlogs();
-    // const [showMoreData, setShowMoreData] = useState(7);
-
-    // const toggleShowMore = () => {
-    //     if (showMoreData === 7) {
-    //         setShowMoreData(allBlog?.length);
-    //     } else if (showMoreData > 7) {
-    //         setShowMoreData(7);
-    //     }
-    // };
 
     if (isBlog) {
         return <Loading />;
@@ -25,7 +16,7 @@ const BlogTable = () => {
             {allBlog?.length > 0 ? <div>
                 <h1 className='mt-8 my-4 px-10 font-semibold'>Our Blogs</h1>
                 <div className="max-w-screen-xl mx-auto px-6">
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto max-h-[70vh] mt-6">
                         <table className="table">
                             {/* head */}
                             <thead>
@@ -34,11 +25,10 @@ const BlogTable = () => {
                                     <th>Category</th>
                                     <th>Keywords</th>
                                     <th>Status</th>
+                                    <th>Details</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* row 1 */}
-                                {/* {allBlog?.slice(0, showMoreData).map((work, index) => ( */}
                                 {allBlog?.map((work, index) => (
                                     <tr key={index}>
                                         <td>
@@ -56,17 +46,13 @@ const BlogTable = () => {
                                         </td>
                                         <td>{work?.keyword?.map((skill, index) => <p key={index} className={`text-neutral-400`}>{skill?.value}</p>)}</td>
                                         <td>{work?.status === "checked" ? <span className='text-blue-700 font-bold'>Approved</span> : <span className='text-red-700 font-bold'>Under Review</span>}</td>
+                                        <td><Link href={`/dashboard/blogDetails/${work?._id}`}>See Details</Link></td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
                 </div>
-                {/* {allBlog?.length > 7 && (
-                    <div onClick={toggleShowMore} className="my-6 md:my-8 px-6 flex justify-center">
-                        <button className="font-medium bg-gradient-to-r from-[#EA580C] to-[#EAB308] text-white py-2 px-4 rounded-lg mx-auto hover:bg-gradient-to-t hover:from-[#EAB308] hover:to-[#EA580C]">{showMoreData > 7 ? 'Show less' : 'Show More'}</button>
-                    </div>
-                )} */}
             </div> : <div>
                 <h1 className='mt-8 my-4 px-10 font-semibold'>Blogs</h1>
                 <h1 className='text-center my-8'>There is no blogs</h1>
