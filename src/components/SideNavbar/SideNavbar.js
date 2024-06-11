@@ -5,7 +5,7 @@ import { MdViewKanban } from "react-icons/md";
 import { SiPolywork } from "react-icons/si";
 import { FaBlog } from "react-icons/fa";
 import Image from "next/image";
-import logo from "../../assets/YouthLink-removebg-preview (1).png";
+import logo from "/public/logos/logo-black-text.png";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useAuth from "@/hooks/useAuth";

@@ -7,10 +7,10 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import logo from "../../assets/5c1089aa-7d61-4a09-80c4-ed76ffbeb6bc-removebg-preview.png";
+import logo from "/public/logos/logo-white-text.png";
 import Lottie from 'lottie-react';
 import { useForm } from 'react-hook-form';
-import animation from "../../assets/Animation - 1703827244779 (1).json";
+import animation from "/public/lottie-animation/Animation - 1703827244779 (1).json";
 
 const AuthorizedLogin = () => {
 
