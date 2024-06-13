@@ -27,7 +27,9 @@ const UpdateCareer = ({ params }) => {
     const [loading, setLoading] = useState(true);
     const [details, setDetails] = useState({});
     const [selectedSkills, setSelectedSkills] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState([]);
     const [options, setOptions] = useState([]);
+    const [options2, setOptions2] = useState([]);
 
     useEffect(() => {
         const fetchJob = async () => {
@@ -65,6 +67,27 @@ const UpdateCareer = ({ params }) => {
                         temp.push(option);
                     });
                     setOptions(temp);
+                })();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+
+    let temp2 = [];
+    const handleNameChange2 = (inputValue) => {
+        if (inputValue) {
+            try {
+                (async () => {
+                    const res = await axiosPublic.get(`/careerCategory/${inputValue.toLowerCase()}`);
+                    const name = res?.data?.map(data => {
+                        const option = {
+                            label: data?.careerCategory,
+                            value: data?.careerCategory,
+                        }
+                        temp2.push(option);
+                    });
+                    setOptions2(temp2);
                 })();
             } catch (err) {
                 console.log(err);
@@ -153,36 +176,30 @@ const UpdateCareer = ({ params }) => {
                             {errors.type?.type === "required" && (
                                 <p className="text-red-600 text-left pt-1">Job Type is required</p>
                             )}
-                            <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Category</label>
-                            <select id='category' defaultValue={details?.category} {...register("category")} className="select select-bordered w-full flex-1 mb-3">
-                                <option value="Digital Marketing">Digital Marketing</option>
-                                <option value="Software Development">Software Development</option>
-                                <option value="Digital Transformation">Digital Transformation</option>
-                                <option value="Content Management">Content Management</option>
-                                <option value="Experience Design">Experience Design</option>
-                                <option value="Data Strategy">Data Strategy</option>
-                                <option value="Product Information Management">Product Information Management</option>
-                                <option value="Strategy and Organization">Strategy and Organization</option>
-                                <option value="Internet Solutions">Internet Solutions</option>
-                                <option value="E-Commerce">E-Commerce</option>
-                                <option value="SEO/SEM">SEO/SEM</option>
-                                <option value="Social Media Management">Social Media Management</option>
-                                <option value="Client Relations">Client Relations</option>
-                                <option value="Project Management">Project Management</option>
-                                <option value="Technical Support">Technical Support</option>
-                                <option value="Quality Assurance">Quality Assurance</option>
-                                <option value="UX/UI Design">UX/UI Design</option>
-                                <option value="Sales and Marketing">Sales and Marketing</option>
-                                <option value="Business Development">Business Development</option>
-                                <option value="Innovation and R&D">Innovation and R&D</option>
-                                <option value="IT Infrastructure">IT Infrastructure</option>
-                                <option value="Cybersecurity">Cybersecurity</option>
-                                <option value="Cloud Services">Cloud Services</option>
-                                <option value="Mobile App Development">Mobile App Development</option>
-                                <option value="Web Development">Web Development</option>
-                            </select>
+                            <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Categories</label>
+                            <Controller
+                                name="category"
+                                defaultValue={selectedCategory}
+                                control={control}
+                                render={({ field }) => (
+                                    <CreatableSelect
+                                        isMulti
+                                        {...field}
+                                        options={options2}
+                                        onChange={(selected) => {
+                                            if (selected?.length > 3) {
+                                                toast.error("You can select up to 3 items only.")
+                                            } else {
+                                                field.onChange(selected);
+                                                setSelectedCategory(selected);
+                                            }
+                                        }}
+                                        onInputChange={handleNameChange2}
+                                    />
+                                )}
+                            />
                             {errors.category?.type === "required" && (
-                                <p className="text-red-600 text-left pt-1">Category is required</p>
+                                <p className="text-red-600 text-left pt-1">Categories is required</p>
                             )}
                             <label htmlFor='skillsRequired' className='flex justify-start font-medium text-[#EA580C]'>Change Required Skills</label>
                             <Controller
@@ -195,8 +212,12 @@ const UpdateCareer = ({ params }) => {
                                         {...field}
                                         options={options}
                                         onChange={(selected) => {
-                                            field.onChange(selected);
-                                            setSelectedSkills(selected);
+                                            if (selected?.length > 3) {
+                                                toast.error("You can select up to 3 items only.")
+                                            } else {
+                                                field.onChange(selected);
+                                                setSelectedSkills(selected);
+                                            }
                                         }}
                                         onInputChange={handleNameChange}
                                     />

@@ -184,8 +184,12 @@ const UpdateWork = ({ params }) => {
 										{...field}
 										options={options2}
 										onChange={(selected) => {
-											field.onChange(selected);
-											setSelectedCategories(selected);
+											if (selected?.length > 3) {
+												toast.error("You can select up to 3 items only.")
+											} else {
+												field.onChange(selected);
+												setSelectedCategories(selected);
+											}
 										}}
 										onInputChange={handleNameChange2}
 									/>
