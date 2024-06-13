@@ -26,12 +26,15 @@ const AllWork = () => {
   const [isAdmin, pending] = useAdmin();
   const [workInfo, setWorkInfo] = useState(allWork);
   const [category, setCategory] = useState("All");
+  const [category2, setCategory2] = useState(null);
 
   function open(id) {
     setOpenModal(true);
     const singleData = allWork?.find(work => work?._id === id);
     setDetails(singleData);
   }
+
+  console.log(category2);
 
   const handleCategory = (e) => {
     setCategory(e.target.value);
@@ -104,9 +107,9 @@ const AllWork = () => {
             </button>
           </Link>
         </div>
-        <div className='flex items-center justify-center mt-6 md:mt-12 lg:mb-8 mb-4'>
-          <h1 className="px-6 lg:px-12 text-2xl md:text-4xl font-semibold">All Works</h1>
-          <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
+        <h1 className="px-6 mt-6 md:mt-12 lg:px-12 text-2xl md:text-4xl font-semibold">All Works</h1>
+        <div className='flex items-center justify-center lg:mb-8 mb-4'>
+          {/* <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
             <option value="All">All</option>
             <option value="Digital Marketing">Digital Marketing</option>
             <option value="E-Commerce">E-Commerce</option>
@@ -117,17 +120,27 @@ const AllWork = () => {
             <option value="Product Information Management">Product Information Management</option>
             <option value="Strategy and Organization">Strategy and Organization</option>
             <option value="Experience Design">Experience Design</option>
-          </select>
+          </select> */}
+          {/* <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
+            {
+              allWork?.map((categoryArray, index) =>
+                <div key={index}>
+                  {categoryArray?.category?.map((category, index2) => <option key={index2}>
+                    {category?.label}
+                  </option>)}
+                </div>
+              )}
+          </select> */}
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
           {workInfo?.map((work, index) => <div key={index}>
-            <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100">
+            <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100 relative">
+              <p className="text-xs font-medium md:text-sm absolute right-0 px-4 py-1 rounded-lg border border-white/20 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 shadow-2xl text-white">{work?.formattedDate}</p>
               <Image
                 alt="work images"
                 src={work?.imageURL} height={224} width={1000}
                 className="h-56 w-full rounded-t-md object-cover"
               />
-
               <div className="mt-2 p-4">
                 <dl>
                   <div>
@@ -142,9 +155,8 @@ const AllWork = () => {
                     <dd className="">{work?.heading}</dd>
                   </div>
                 </dl>
-                <div className='flex justify-between items-center pt-4'>
-                  <p className="text-xs px-2 py-1 rounded-lg bg-gray-800 font-medium text-white md:text-sm">{work?.category?.map((cat, index) => <p key={index} className={`text-neutral-400 px-8`}>{cat?.value}</p>)}</p>
-                  <p className="text-xs font-medium md:text-sm">{work?.formattedDate}</p>
+                <div className='pt-4'>
+                  <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{work?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
                 </div>
 
                 <div className="mt-6 flex items-center gap-8">
@@ -165,10 +177,10 @@ const AllWork = () => {
                         <p className="mt-4 px-8 text-sm text-center font-bold">
                           {details?.keyword?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}>{skill?.value}</p>)}
                         </p>
-                        <div className='flex justify-evenly items-center py-3'>
-                          <p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{details?.category?.map((cat, index) => <p key={index} className={`text-neutral-400 px-8`}>{cat?.value}</p>)}</p>
-                          <p className="text-xs font-medium md:text-sm">{details?.formattedDate}</p>
+                        <div className='flex justify-center items-center py-3'>
+                          <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{details?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
                         </div>
+                        <p className="text-xs font-medium md:text-sm">Published Date : {details?.formattedDate}</p>
                         <p className="mt-4 text-sm text-center">
                           <h1 className='gradient-text font-bold py-1'>About The Project</h1>
                           <MarkdownPreview content={details?.aboutTheProject} />

@@ -44,10 +44,10 @@ const WorkDetails = ({ params }) => {
                     <p className="px-8 text-sm text-center font-bold">
                         {workDetails?.keyword?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}>{skill?.value}</p>)}
                     </p>
-                    <div className='flex flex-col gap-2 justify-evenly items-center'>
-                        <p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{workDetails?.category}</p>
-                        <p className="text-xs font-medium md:text-sm">{workDetails?.formattedDate}</p>
+                    <div className='flex justify-center items-center py-3'>
+                        <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{workDetails?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
                     </div>
+                    <p className="text-xs font-medium md:text-sm">Published Date : {workDetails?.formattedDate}</p>
                     <p className="mt-4 text-sm text-center">
                         <h1 className='gradient-text font-bold pb-3'>About The Project</h1>
                         <MarkdownPreview content={workDetails?.aboutTheProject} />
