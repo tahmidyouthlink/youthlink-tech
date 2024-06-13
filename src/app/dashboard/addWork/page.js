@@ -125,10 +125,10 @@ const AddWork = () => {
           <div className='w-full'>
             <form className='flex flex-col max-w-screen-md gap-4 mx-auto mt-6 px-6' onSubmit={handleSubmit(onSubmit)}>
               <h1 className='font-semibold text-2xl my-2 mt-4 md:mt-8'>Work details</h1>
-              <label htmlFor='title ' className='flex justify-start font-medium text-[#EA580C]'>Title *</label>
+              <label htmlFor='title ' className='flex justify-start font-medium text-[#EA580C]'>Company Name *</label>
               <input id='title' {...register("title", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
               {errors.title?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Title is required</p>
+                <p className="text-red-600 text-left pt-1">Company Name is required</p>
               )}
               <label htmlFor='heading' className='flex justify-start font-medium text-[#EA580C]'>Heading *</label>
               <input id='heading' {...register("heading", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
