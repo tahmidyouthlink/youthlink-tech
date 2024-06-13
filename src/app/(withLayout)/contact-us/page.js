@@ -8,12 +8,12 @@ import Form from '@/components/ContactForm/Form';
 
 const ContactUs = () => {
   return (
-    <div style={{ backgroundImage: 'url("https://i.ibb.co/ZdTsQL1/Our-Work-3-3-gradient-bg-abstract.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }} className='bg-fixed w-full h-full px-5 sm:px-8'>
+    <div style={{ backgroundImage: 'url("https://i.ibb.co/ZdTsQL1/Our-Work-3-3-gradient-bg-abstract.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }} className='bg-fixed w-full h-full px-5 sm:px-8 border'>
       <div className='h-[80px] w-[80px] lg:w-[200px] lg:h-[350px] bg-[#124b36] blur-[90px] absolute hidden 2xl:block'></div>
       <div className='w-[100px] h-[100px] lg:w-[350px] lg:h-[350px] bg-[#124b36] blur-[90px] absolute left-[55%] top-24'></div>
       <div className='w-[100px] h-[100px] md:w-[200px] md:h-[250px] bg-[#124b36] blur-[90px] absolute xl:left-[75%] top-[90%]'></div>
       <div className='w-[100px] h-[100px] md:w-[200px] md:h-[250px] bg-[#124b36] blur-[90px] absolute left-[3%] top-[90%]'></div>
-      <div className='w-[100px] h-[100px] md:w-[200px] md:h-[250px] bg-[#111111] blur-[90px] absolute left-[3%] top-[90%]'></div>
+      <div className='w-[100px] h-[100px] lg:w-[200px] lg:h-[250px] bg-[#111111] blur-[90px] absolute left-[3%] top-[90%]'></div>
       <div className='xl:max-w-[1200px] mx-auto'>
         <h6 className='text-[#EAB308] font-semibold text-xs md:text-sm pt-28 md:pt-44'>CONTACT</h6>
         <h1 className='text-white font-bold text-2xl md:text-3xl lg:text-5xl pt-4 w-3/4 lg:w-1/2'>Seamless Communication, Global Impact.</h1>

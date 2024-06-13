@@ -45,7 +45,7 @@ const UpdateWork = ({ params }) => {
 			setValue('theResults', work?.theResults);
 			setValue('photo', work?.photo);
 			setSelectedKeywords(work?.keyword?.map(skill => skill));
-			setSelectedKeywords(work?.category?.map(cat => cat));
+			setSelectedCategories(work?.category?.map(cat => cat));
 			setLoading(false);
 		};
 		fetchWork();
@@ -173,7 +173,7 @@ const UpdateWork = ({ params }) => {
 								<p className="text-red-600 text-left pt-1">Keyword is required</p>
 							)}
 
-							<label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Categories</label>
+							<label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Categories</label>
 							<Controller
 								name="category"
 								defaultValue={selectedCategories}

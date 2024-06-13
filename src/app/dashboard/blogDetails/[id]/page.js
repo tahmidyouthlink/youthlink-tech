@@ -42,10 +42,10 @@ const BlogDetails = ({ params }) => {
                     <p className="px-8 text-sm text-center font-bold">
                         {blogDetails?.keyword?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}>{skill?.value}</p>)}
                     </p>
-                    <div className='flex flex-col justify-evenly items-center gap-3 py-3'>
-                        <p className="text-xs px-2 py-1 rounded-lg bg-gray-300 font-medium text-white md:text-sm">{blogDetails?.category}</p>
-                        <p className="text-xs font-medium md:text-sm">{blogDetails?.formattedDate}</p>
+                    <div className='flex justify-center items-center py-3'>
+                        <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{blogDetails?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
                     </div>
+                    <p className="text-xs font-medium md:text-sm">Published Date : {blogDetails?.formattedDate}</p>
                     <div className='flex justify-center items-center my-3'>
                         <Iframe iframeData={blogDetails?.embed} />
                     </div>

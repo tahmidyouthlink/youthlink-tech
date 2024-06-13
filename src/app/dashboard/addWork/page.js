@@ -191,21 +191,6 @@ const AddWork = () => {
                 <p className="text-red-600 text-left pt-1">Categories are required</p>
               )}
 
-              {/* <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C] pt-2'>Select Category *</label>
-              <select id='category' {...register("category")} className="select select-bordered w-full flex-1 mb-3">
-                <option value="Digital Marketing">Digital Marketing</option>
-                <option value="E-Commerce">E-Commerce</option>
-                <option value="Digital Transformation">Digital Transformation</option>
-                <option value="Content Management">Content Management</option>
-                <option value="Experience Design">Experience Design</option>
-                <option value="Data Strategy">Data Strategy</option>
-                <option value="Product Information Management">Product Information Management</option>
-                <option value="Strategy and Organization">Strategy and Organization</option>
-                <option value="Experience Design">Experience Design</option>
-              </select>
-              {errors.category?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Category is required</p>
-              )} */}
               <label htmlFor='aboutWork' className='flex justify-start font-medium text-[#EA580C]'>Details About This Work *</label>
               <Controller
                 name="aboutTheProject"
