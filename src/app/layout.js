@@ -18,7 +18,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="light">
       <body className={`${ubuntu.className} max-sm:text-sm`}>
         <ReactTanstackProvider>
           <AuthProvider>

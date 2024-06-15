@@ -7,39 +7,39 @@ const Form = () => {
 
   return (
     <div>
-      <form>
+      <form className=''>
         <div className='space-y-4'>
           <div className='flex flex-col md:flex-row items-center justify-center gap-6'>
             <div className='flex flex-col flex-1 w-full'>
-              <label className='text-white font-bold' htmlFor='name'>Name</label>
-              <input className='py-2 px-3 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 text-white rounded shadow-2xl font-inter' id='name' required type='text' placeholder='Name'></input>
+              <label className='font-bold' htmlFor='name'>Name</label>
+              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id='name' required type='text' placeholder='Name'></input>
             </div>
             <div className='flex flex-col flex-1 w-full'>
-              <label className='text-white font-bold' htmlFor='company'>Company</label>
-              <input className='py-2 px-3 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 text-white rounded shadow-2xl font-inter' id='company' required type='text' placeholder='Company'></input>
+              <label className='font-bold' htmlFor='company'>Company</label>
+              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id='company' required type='text' placeholder='Company'></input>
             </div>
           </div>
           <div className='flex flex-col md:flex-row items-center justify-center gap-6'>
             <div className='flex flex-col flex-1 w-full'>
-              <label className='text-white font-bold' htmlFor='phone'>Phone</label>
-              <input className='py-2 px-3 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 text-white rounded shadow-2xl font-inter' id='phone' type='number' required placeholder='Phone'></input>
+              <label className='font-bold' htmlFor='phone'>Phone</label>
+              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id='phone' type='number' required placeholder='Phone'></input>
             </div>
             <div className='flex flex-col flex-1 w-full'>
-              <label className='text-white font-bold' htmlFor='email'>Email</label>
-              <input className='py-2 px-3 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 text-white rounded shadow-2xl font-inter' id="email" required type='email' placeholder='Email'></input>
+              <label className='font-bold' htmlFor='email'>Email</label>
+              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id="email" required type='email' placeholder='Email'></input>
             </div>
           </div>
           <div className='flex flex-col w-full'>
-            <label className='text-white font-bold' htmlFor='subject'>Subject</label>
-            <input className='py-2 px-3 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 text-white rounded shadow-2xl font-inter' id="subject" type='text' required placeholder='Subject'></input>
+            <label className='font-bold' htmlFor='subject'>Subject</label>
+            <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id="subject" type='text' required placeholder='Subject'></input>
           </div>
           <div>
-            <label htmlFor="message" className='text-white font-bold'>Message</label>
+            <label htmlFor="message" className='font-bold'>Message</label>
             <div className="overflow-hidden">
               <textarea
                 id="message"
                 name="message"
-                className="w-full bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 text-white rounded-lg p-4 sm:text-sm "
+                className="w-full border rounded-lg p-4 sm:text-sm outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white"
                 rows="8"
                 placeholder="Message" required
               ></textarea>

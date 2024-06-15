@@ -105,8 +105,7 @@ const AllBlog = () => {
             </button>
           </Link>
         </div>
-        <div className='flex items-center justify-center mt-6 md:mt-12 lg:mb-8 mb-4'>
-          <h1 className="px-6 lg:px-12 text-2xl md:text-4xl font-semibold">All Blogs</h1>
+        <div className='flex items-center justify-center lg:mb-8 mb-4'>
           {/* <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
             <option value="All">All</option>
             <option value="Industry News and Trends">Industry News and Trends</option>
@@ -122,9 +121,9 @@ const AllBlog = () => {
             <option value="Event Coverage">Event Coverage</option>
             <option value="Interviews with Experts">Interviews with Experts</option>
             <option value="Future of IT">Future of IT</option>
-          </select> */}
+            </select> */}
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
+        {blogInfo?.length > 0 ? <> <h1 className="px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6 md:mt-12">All Blogs</h1><div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
           {blogInfo?.map((blog, index) => <div key={index}>
             <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100 relative">
               <p className="text-xs font-medium md:text-sm absolute right-0 px-4 py-1 rounded-lg border border-white/20 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 shadow-2xl text-white">{blog?.formattedDate}</p>
@@ -200,7 +199,7 @@ const AllBlog = () => {
               </div>
             </div>
           </div>)}
-        </div>
+        </div> </> : <div className='text-2xl font-medium flex justify-center min-h-[80vh] items-center lg:text-3xl'><h1>There is no blog published</h1></div>}
       </div>
     </PrivateRoute>
   );

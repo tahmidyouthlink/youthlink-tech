@@ -53,10 +53,7 @@ const BlogTable = () => {
             </table>
           </div>
         </div>
-      </div> : <div>
-        <h1 className='mt-8 my-4 px-10 font-semibold'>Blogs</h1>
-        <h1 className='text-center my-8'>There is no blogs</h1>
-      </div>}
+      </div> : <div className='text-2xl font-medium flex justify-center min-h-[80vh] items-center lg:text-3xl'><h1>There is no blog published</h1></div>}
     </PrivateRoute>
   );
 };
