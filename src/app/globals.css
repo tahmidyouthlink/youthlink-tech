@@ -69,4 +69,29 @@
   swiper-container::part(bullet-active) {
     @apply h-5 rounded-lg bg-white opacity-100 transition-all duration-[250ms] sm:h-7 sm:w-2.5 lg:h-9 lg:w-3;
   }
+
+  /* For main headings of item details section */
+  .item-details > div > h3 {
+    @apply text-4xl font-medium text-[#f7f7f7];
+  }
+
+  /* For sub headings of item details section */
+  .item-details > div > div > h3 {
+    @apply mb-2 text-xl text-neutral-300;
+  }
+
+  /* For larger texts of item details section */
+  .item-details .ql-size-large {
+    @apply text-xl text-neutral-400;
+  }
+
+  /* For normal texts of item details section */
+  .item-details p {
+    @apply text-neutral-400;
+  }
+
+  /* For list items of item details section */
+  .item-details li {
+    @apply ml-8 text-neutral-400 before:mr-2 before:content-["•"] first:mt-3;
+  }
 }

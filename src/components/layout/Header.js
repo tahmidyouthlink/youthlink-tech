@@ -58,7 +58,9 @@ export default function Header() {
             </li>
             <li>
               <Link
-                className={pathname === "/our-work" ? "active" : undefined}
+                className={
+                  pathname.startsWith("/our-work") ? "active" : undefined
+                }
                 href="/our-work"
               >
                 Work
@@ -66,7 +68,9 @@ export default function Header() {
             </li>
             <li>
               <Link
-                className={pathname === "/services" ? "active" : undefined}
+                className={
+                  pathname.startsWith("/services") ? "active" : undefined
+                }
                 href="/services"
               >
                 Services
@@ -74,7 +78,9 @@ export default function Header() {
             </li>
             <li>
               <Link
-                className={pathname === "/industries" ? "active" : undefined}
+                className={
+                  pathname.startsWith("/industries") ? "active" : undefined
+                }
                 href="/industries"
               >
                 Industries
@@ -82,7 +88,9 @@ export default function Header() {
             </li>
             <li>
               <Link
-                className={pathname === "/about-us" ? "active" : undefined}
+                className={
+                  pathname.startsWith("/about-us") ? "active" : undefined
+                }
                 href="/about-us"
               >
                 About
@@ -90,7 +98,9 @@ export default function Header() {
             </li>
             <li>
               <Link
-                className={pathname === "/contact-us" ? "active" : undefined}
+                className={
+                  pathname.startsWith("/contact-us") ? "active" : undefined
+                }
                 href="/contact-us"
               >
                 Contact
@@ -132,7 +142,9 @@ export default function Header() {
                 </li>
                 <li>
                   <Link
-                    className={pathname === "/our-work" ? "active" : undefined}
+                    className={
+                      pathname.startsWith("/our-work") ? "active" : undefined
+                    }
                     href="/our-work"
                   >
                     <IoMdBriefcase />
@@ -141,7 +153,9 @@ export default function Header() {
                 </li>
                 <li>
                   <Link
-                    className={pathname === "/services" ? "active" : undefined}
+                    className={
+                      pathname.startsWith("/services") ? "active" : undefined
+                    }
                     href="/services"
                   >
                     <IoMdConstruct />
@@ -151,7 +165,7 @@ export default function Header() {
                 <li>
                   <Link
                     className={
-                      pathname === "/industries" ? "active" : undefined
+                      pathname.startsWith("/industries") ? "active" : undefined
                     }
                     href="/industries"
                   >
@@ -161,7 +175,9 @@ export default function Header() {
                 </li>
                 <li>
                   <Link
-                    className={pathname === "/about-us" ? "active" : undefined}
+                    className={
+                      pathname.startsWith("/about-us") ? "active" : undefined
+                    }
                     href="/about-us"
                   >
                     <IoMdPeople />
@@ -171,7 +187,7 @@ export default function Header() {
                 <li>
                   <Link
                     className={
-                      pathname === "/contact-us" ? "active" : undefined
+                      pathname.startsWith("/contact-us") ? "active" : undefined
                     }
                     href="/contact-us"
                   >
