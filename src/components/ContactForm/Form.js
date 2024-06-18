@@ -1,37 +1,57 @@
 "use client";
-// import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { FaMessage } from 'react-icons/fa6';
-// import emailjs from '@emailjs/browser';
+import emailjs from '@emailjs/browser';
+import toast from 'react-hot-toast';
 
 const Form = () => {
 
+  const formRef = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs.sendForm(
+      'service_2oxaxtt',
+      'template_fmbrm8e',
+      formRef.current,
+      'kM2ZZ-I4QiQPp3W81'
+    )
+      .then(() => {
+        toast.success('Message sent successfully!');
+      }, () => {
+        toast.error('Failed to send message, please try again.');
+      });
+    formRef.current.reset();
+  };
+
   return (
     <div>
-      <form className=''>
+      <form ref={formRef} onSubmit={sendEmail}>
         <div className='space-y-4'>
           <div className='flex flex-col md:flex-row items-center justify-center gap-6'>
             <div className='flex flex-col flex-1 w-full'>
               <label className='font-bold' htmlFor='name'>Name</label>
-              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id='name' required type='text' placeholder='Name'></input>
+              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' name='user_name' id='name' required type='text' placeholder='Name'></input>
             </div>
             <div className='flex flex-col flex-1 w-full'>
               <label className='font-bold' htmlFor='company'>Company</label>
-              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id='company' required type='text' placeholder='Company'></input>
+              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' name='company' id='company' required type='text' placeholder='Company'></input>
             </div>
           </div>
           <div className='flex flex-col md:flex-row items-center justify-center gap-6'>
             <div className='flex flex-col flex-1 w-full'>
               <label className='font-bold' htmlFor='phone'>Phone</label>
-              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id='phone' type='number' required placeholder='Phone'></input>
+              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' name='phoneNumber' id='phone' type='number' required placeholder='Phone'></input>
             </div>
             <div className='flex flex-col flex-1 w-full'>
               <label className='font-bold' htmlFor='email'>Email</label>
-              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id="email" required type='email' placeholder='Email'></input>
+              <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' name='user_email' id="email" required type='email' placeholder='Email'></input>
             </div>
           </div>
           <div className='flex flex-col w-full'>
             <label className='font-bold' htmlFor='subject'>Subject</label>
-            <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' id="subject" type='text' required placeholder='Subject'></input>
+            <input className='py-2 px-3 border rounded font-inter outline-none focus:border-yellow-400 transition-colors duration-1000 bg-white' name='subject' id="subject" type='text' required placeholder='Subject'></input>
           </div>
           <div>
             <label htmlFor="message" className='font-bold'>Message</label>
