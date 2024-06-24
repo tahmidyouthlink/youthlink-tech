@@ -6,7 +6,7 @@ import SideNavbar from "@/components/SideNavbar/SideNavbar";
 const layout = ({ children }) => {
     return (
         <PrivateRoute>
-            <div>
+            <div className="bg-white">
                 <div className="inset-y-0 flex-col hidden md:flex">
                     <SideNavbar />
                 </div>
