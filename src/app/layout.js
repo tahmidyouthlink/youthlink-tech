@@ -18,7 +18,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={`${ubuntu.className} bg-black max-sm:text-sm`}>
         <ReactTanstackProvider>
           <AuthProvider>{children}</AuthProvider>

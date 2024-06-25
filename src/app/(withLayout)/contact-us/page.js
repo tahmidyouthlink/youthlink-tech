@@ -8,7 +8,7 @@ import Form from '@/components/ContactForm/Form';
 
 const ContactUs = () => {
   return (
-    <div className='w-full h-full bg-[#FFFFFF]'>
+    <div className='w-full h-full'>
       <div style={{ backgroundImage: 'url("https://i.ibb.co/ZdTsQL1/Our-Work-3-3-gradient-bg-abstract.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }} className='bg-fixed' >
         <div className='max-w-[1200px] mx-auto pb-12 px-5 md:px-8 2xl:px-0'>
           <h6 className='text-[#EAB308] font-semibold text-xs md:text-sm pt-28 md:pt-44'>CONTACT</h6>
