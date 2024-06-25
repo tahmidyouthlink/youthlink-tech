@@ -34,7 +34,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/">
           <Image
-            className="h-8 w-auto sm:h-10"
+            className="md:h-[44px] w-auto h-10"
             src={logoWhiteImage}
             alt="YouthLink logo with white text"
           />
