@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Ubuntu } from "next/font/google";
+import { Ubuntu, Inter } from "next/font/google";
 import ReactTanstackProvider from "@/utils/Provider/ReactTanstackProvider";
 import AuthProvider from "@/utils/Provider/AuthProvider";
 import { Toaster } from "react-hot-toast";
@@ -8,6 +8,12 @@ const ubuntu = Ubuntu({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
   variable: "--font-ubuntu",
+});
+
+const inter = Inter({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata = {

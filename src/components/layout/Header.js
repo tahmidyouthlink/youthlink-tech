@@ -12,6 +12,7 @@ import {
   FaSquareFacebook,
   FaBuilding,
   FaInstagram,
+  FaXTwitter,
 } from "react-icons/fa6";
 import {
   IoMdBriefcase,
@@ -203,32 +204,24 @@ export default function Header() {
               <ul className="social-icons flex gap-x-1.5">
                 <li>
                   <Link
-                    className="hover:bg-neutral-800 hover:text-neutral-100"
-                    href="mailto:someone@example.com"
-                  >
-                    <FaEnvelope />
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="hover:bg-[#ffcacb] hover:text-[#ff0f1c]"
-                    href="https://www.youtube.com/@youthlink"
-                  >
-                    <FaYoutube />
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     className="hover:bg-[#c8ecff] hover:text-[#0075b4]"
-                    href="https://www.linkedin.com/company/youthlink-tech/"
+                    href="https://www.linkedin.com/company/youthlink-tech/" target="_blank"
                   >
                     <FaLinkedin />
                   </Link>
                 </li>
                 <li>
                   <Link
+                    className="hover:bg-black hover:text-white"
+                    href="https://www.twitter.com/youthlink/" target="_blank"
+                  >
+                    <FaXTwitter />
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     className="hover:bg-[#cfe6ff] hover:text-[#0080ff]"
-                    href="https://www.facebook.com/youthlink/"
+                    href="https://www.facebook.com/youthlink/" target="_blank"
                   >
                     <FaSquareFacebook />
                   </Link>
@@ -236,9 +229,25 @@ export default function Header() {
                 <li>
                   <Link
                     className="from-[#405de6] via-[#dc2743] to-[#f09433] hover:bg-gradient-to-b hover:text-white"
-                    href="https://www.instagram.com/youthlink/"
+                    href="https://www.instagram.com/youthlink/" target="_blank"
                   >
                     <FaInstagram />
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="hover:bg-[#ffcacb] hover:text-[#ff0f1c]"
+                    href="https://www.youtube.com/@youthlink" target="_blank"
+                  >
+                    <FaYoutube />
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="hover:bg-neutral-800 hover:text-neutral-100"
+                    href="mailto:info@youthlink.tech"
+                  >
+                    <FaEnvelope />
                   </Link>
                 </li>
               </ul>

@@ -32,14 +32,17 @@ export default function CardsSection({
               >
                 <Image
                   className="object-cover"
-                  src={item.imageURL}
-                  alt={item.heading}
+                  src={item?.imageURL}
+                  alt={item?.heading}
                   fill
                   sizes={itemIndex === activeSlideIndex ? "100vw" : "1080px"}
                 />
                 <div className="absolute inset-0 bg-black/0 transition-[background-color] duration-500 ease-in-out" />
+                <h3 className="absolute bottom-[72px] left-3 right-3 line-clamp-2 opacity-0 transition-[opacity] duration-500 ease-in-out text-yellow-500 font-bold">
+                  {item?.title}
+                </h3>
                 <h3 className="absolute bottom-4 left-3 right-3 line-clamp-2 text-lg font-medium opacity-0 transition-[opacity] duration-500 ease-in-out">
-                  {item.heading}
+                  {item?.heading}
                 </h3>
               </div>
             )
@@ -47,7 +50,7 @@ export default function CardsSection({
         })}
         {/* Left navigation button */}
         <div
-          className={`"opacity-1 [&>*]:hover:text-[#272727]" absolute -left-0 top-[162.5px] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[#d5d5d5]/10 ring-1 ring-white/50 backdrop-blur-xl transition-[background-color,opacity] duration-500 ease-in-out sm:-translate-x-1/2 ${items?.length < 2 ? "opcaity-50 cursor-not-allowed" : "cursor-pointer hover:bg-white [&>*]:hover:text-[#272727]"}`}
+          className={`"opacity-1 [&>*]:hover:text-[#272727]" absolute -left-0 top-[162.5px] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out sm:-translate-x-1/2 ${items?.length < 2 ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-white hover:bg-[50%_100%]"}`}
           onClick={() => {
             items?.length &&
               setItems((prevItems) => [
@@ -60,7 +63,7 @@ export default function CardsSection({
         </div>
         {/* Right navigation button */}
         <div
-          className={`"opacity-1 [&>*]:hover:text-[#272727]" absolute -right-0 top-[162.5px] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[#d5d5d5]/10 ring-1 ring-white/50 backdrop-blur-xl transition-[background-color,opacity] duration-500 ease-in-out xl:translate-x-1/2 ${items?.length < 2 ? "opcaity-50 cursor-not-allowed" : "cursor-pointer hover:bg-white [&>*]:hover:text-[#272727]"}`}
+          className={`"opacity-1 [&>*]:hover:text-[#272727]" absolute -right-0 top-[162.5px] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out xl:translate-x-1/2 ${items?.length < 2 ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-white hover:bg-[50%_100%]"}`}
           onClick={() => {
             items?.length &&
               setItems((prevItems) => [...prevItems.slice(1), prevItems[0]]);

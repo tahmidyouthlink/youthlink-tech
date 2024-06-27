@@ -38,8 +38,12 @@ export default function CardsAndDetailsLayout({
               })}
             </div>
           )}
+          {/* Company Name */}
+          <h2 className="mt-8 text-xl font-bold max-xl:line-clamp-2 sm:text-xl text-yellow-500">
+            {itemToDisplay?.title || ""}
+          </h2>
           {/* Work heading */}
-          <h2 className="mt-3 text-2xl font-medium max-xl:line-clamp-2 sm:text-3xl">
+          <h2 className="mt-1 text-2xl font-medium max-xl:line-clamp-2 sm:text-3xl">
             {itemToDisplay?.heading || "No work Found"}
           </h2>
           {itemToDisplay?.description && (
@@ -50,7 +54,7 @@ export default function CardsAndDetailsLayout({
           {/* All works button */}
           {itemToDisplay && (
             <button
-              className="mt-8 w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%] sm:mt-12"
+              className="mt-10 w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%] sm:mt-12"
               onClick={() =>
                 router.push(
                   pageType === "details"
