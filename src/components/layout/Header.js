@@ -51,14 +51,6 @@ export default function Header() {
           <ul className="flex space-x-6 lg:space-x-8">
             <li>
               <Link
-                className={pathname === "/" ? "active" : undefined}
-                href="/"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
                 className={
                   pathname.startsWith("/our-work") ? "active" : undefined
                 }
@@ -132,15 +124,6 @@ export default function Header() {
               </Link>
               {/* Navigation links */}
               <ul className="space-y-2 md:space-y-3">
-                <li>
-                  <Link
-                    className={pathname === "/" ? "active" : undefined}
-                    href="/"
-                  >
-                    <IoMdHome />
-                    Home
-                  </Link>
-                </li>
                 <li>
                   <Link
                     className={

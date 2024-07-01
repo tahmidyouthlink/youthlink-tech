@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { register } from "swiper/element/bundle";
 
@@ -14,14 +15,17 @@ export default function Home() {
     {
       heading: "Transforming Ideas into Digital Reality",
       buttonText: "Our Work",
+      link: "/our-work"
     },
     {
       heading: "Innovative Solutions, Tailored for You",
       buttonText: "Our Services",
+      link: "/services"
     },
     {
       heading: "Digital Solutions for Every Sector",
       buttonText: "Industries",
+      link: "/industries"
     },
   ];
   const INDIVIDUAL_VIDEO_LENGTH_IN_SECONDS = 5;
@@ -126,11 +130,12 @@ export default function Home() {
                   {content.heading}
                 </h1>
                 {/* Call-to-action button */}
-                <button
-                  className={`${index === 0 ? "translate-y-0 opacity-100" : "translate-y-7 opacity-0"} mt-8 w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out hover:bg-[50%_100%] sm:mb-12`}
+                <Link
+                  href={content?.link}
+                  className={`${index === 0 ? "translate-y-0 opacity-100" : "translate-y-7 opacity-0"} mt-8 w-fit block rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out hover:bg-[50%_100%] sm:mb-12`}
                 >
                   {content.buttonText}
-                </button>
+                </Link>
               </div>
             </swiper-slide>
           );
