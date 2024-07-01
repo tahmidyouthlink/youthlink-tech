@@ -1,6 +1,4 @@
-import Image from 'next/image';
 import React from 'react';
-import abstractImage from "/public/abstract-photo/t4.png"
 import { FaLocationDot } from 'react-icons/fa6';
 import { MdEmail } from 'react-icons/md';
 import { IoIosCall } from 'react-icons/io';
