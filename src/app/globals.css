@@ -21,13 +21,6 @@ body {
   font-family: var(--font-ubuntu);
 }
 
-.border-gradient {
-  border: 1px solid;
-  border-image-slice: 1;
-  border-width: 1px;
-  border-image-source: linear-gradient(to right, #ea6c0b, #eab208);
-}
-
 @layer base {
   /* For all texts */
   p {
