@@ -29,7 +29,7 @@ const AddWork = () => {
 
   let temp = [];
   const handleNameChange = (inputValue) => {
-    if (inputValue) {
+    if (inputValue && inputValue.trim()) {
       try {
         (async () => {
           const res = await axiosPublic.get(`/workKeywords/${inputValue.toLowerCase()}`);
@@ -50,7 +50,7 @@ const AddWork = () => {
 
   let temp2 = [];
   const handleNameChange2 = (inputValue) => {
-    if (inputValue) {
+    if (inputValue && inputValue.trim()) {
       try {
         (async () => {
           const res = await axiosPublic.get(`/workCategory/${inputValue.toLowerCase()}`);

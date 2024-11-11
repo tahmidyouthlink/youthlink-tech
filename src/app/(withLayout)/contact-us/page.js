@@ -7,7 +7,14 @@ import Form from '@/components/ContactForm/Form';
 const ContactUs = () => {
   return (
     <div className='w-full h-full'>
-      <div style={{ backgroundImage: 'url("https://i.ibb.co/ZdTsQL1/Our-Work-3-3-gradient-bg-abstract.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }} className='bg-fixed' >
+      <div
+        style={{
+          backgroundImage: 'url("/abstract-photo/Our Work 3.3 (gradient bg + abstract).jpg")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+        className="bg-fixed"
+      >
         <div className='max-w-[1200px] mx-auto pb-12 px-5 md:px-8 2xl:px-0'>
           <h6 className='text-[#EAB308] font-semibold text-xs md:text-sm pt-28 md:pt-44'>CONTACT</h6>
           <h1 className='text-white font-bold text-2xl md:text-3xl lg:text-5xl pt-4 w-3/4 lg:w-1/2'>Seamless Communication, Global Impact.</h1>
@@ -37,7 +44,6 @@ const ContactUs = () => {
                 <div>
                   <h1 className='font-bold text-xl'>Email Support</h1>
                   <p className='font-inter text-white'>info@youthlink.tech</p>
-                  <p className='font-inter text-white'>a.sharia@youthlink.tech</p>
                 </div>
               </div>
               <div className='flex items-center gap-4 p-4 lg:p-6 rounded-lg mt-6 bg-gradient-to-r from-white/5 to-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30'>

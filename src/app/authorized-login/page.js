@@ -2,13 +2,15 @@
 import "./authorized.css";
 import useAuth from '@/hooks/useAuth';
 import toast from "react-hot-toast";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from "/public/logos/logo-white-text.png";
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import { useForm } from 'react-hook-form';
 import animation from "/public/lottie-animation/Animation - 1703827244779 (1).json";
 
@@ -19,6 +21,15 @@ const AuthorizedLogin = () => {
     const router = useRouter();
 
     const { register, handleSubmit, formState: { errors } } = useForm();
+
+    useEffect(() => {
+        if (typeof document !== 'undefined') {
+            const element = document.getElementById('yourElementId');
+            if (element) {
+                element.style.backgroundColor = "yellow"; // Change color to yellow
+            }
+        }
+    }, []);
 
     const onSubmit = data => {
         const email = data?.email;
@@ -34,7 +45,7 @@ const AuthorizedLogin = () => {
     }
 
     return (
-        <div>
+        <div id="yourElementId">
             <div className="flex flex-col-reverse lg:flex-row-reverse items-center bg-gradient-to-b from-black via-black to-[#b63327] px-4 pb-8 lg:pb-0 md:px-0 min-h-screen">
                 <div className="mx-auto space-y-8 rounded-lg p-5 md:p-12 xl:p-24 glass">
                     <div>

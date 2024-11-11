@@ -29,7 +29,7 @@ const AddCareer = () => {
 
 	let temp = [];
 	const handleNameChange = (inputValue) => {
-		if (inputValue) {
+		if (inputValue && inputValue.trim()) {
 			try {
 				(async () => {
 					const res = await axiosPublic.get(`/allSkills/${inputValue.toLowerCase()}`);
@@ -50,7 +50,7 @@ const AddCareer = () => {
 
 	let temp2 = [];
 	const handleNameChange2 = (inputValue) => {
-		if (inputValue) {
+		if (inputValue && inputValue.trim()) {
 			try {
 				(async () => {
 					const res = await axiosPublic.get(`/careerCategory/${inputValue.toLowerCase()}`);

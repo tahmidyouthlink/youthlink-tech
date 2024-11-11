@@ -3,16 +3,19 @@ import Loading from '@/components/shared/Loading/Loading';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { ImCross } from 'react-icons/im';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import useBlogs from '@/hooks/useBlogs';
 import CreatableSelect from 'react-select/creatable';
+import useBlogKeywords from '@/hooks/useBlogKeywords';
+import useBlogCategories from '@/hooks/useBlogCategories';
+import { FaArrowLeft } from 'react-icons/fa6';
+import { MdOutlineFileUpload } from 'react-icons/md';
+import { RxCross2 } from 'react-icons/rx';
 
 const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
 
@@ -25,29 +28,35 @@ const UpdateBlog = ({ params }) => {
   const axiosPublic = useAxiosPublic();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [details, setDetails] = useState({});
   const [selectedBlogs, setSelectedBlogs] = useState([]);
   const [selectedCategoryBlogs, setSelectedCategoryBlogs] = useState([]);
   const [options, setOptions] = useState([]);
   const [options2, setOptions2] = useState([]);
   const [titles, setTitles] = useState([]);
   const [notDouble, setNotDouble] = useState("");
+  const [activeTab, setActiveTab] = useState('cover image');
+  const [image, setImage] = useState(null);
+  const [imageError, setImageError] = useState(false);
+  const [allBlogKeywords, isBlogKeywordPending, refetchBlogKeywords] = useBlogKeywords();
+  const [allBlogCategories, isBlogCategoryPending, refetchBlogCategories] = useBlogCategories();
+  const [blogDetails, setBlogDetails] = useState(null);
 
   useEffect(() => {
     const fetchBlog = async () => {
       const res = await axiosPublic.get(`/allBlog/${params?.id}`);
       const blog = res.data;
-      setDetails(blog);
       setNotDouble(blog?.title);
       setValue('title', blog?.title);
       setValue('keyword', blog?.keyword);
       setValue('category', blog?.category);
       setValue('description', blog?.description);
-      setValue('photo', blog?.photo);
+      setImage(blog?.imageURL || null);
       setValue("embed", blog?.embed);
       setValue("featured", blog?.featured);
+      setActiveTab(blog?.activeTab);
       setSelectedBlogs(blog?.keyword?.map(skill => skill));
       setSelectedCategoryBlogs(blog?.category?.map(cat => cat));
+      setBlogDetails(blog);
       setLoading(false);
     };
     fetchBlog();
@@ -93,37 +102,6 @@ const UpdateBlog = ({ params }) => {
         console.log(err);
       }
     }
-  }
-
-  const onSubmit = async (data) => {
-    const title = data.title;
-    const keyword = selectedBlogs?.map(skill => skill);
-    const embed = data.embed;
-    const featured = data.featured;
-    const category = data.category;
-    const description = data.description;
-    let imageURL = details.imageURL; // Default to current imageURL
-    if (data.photo && data.photo[0]) {
-      const photo = data.photo[0];
-      const formData = new FormData();
-      formData.append('image', photo);
-      const uploadImage = await axiosPublic.post(apiURL, formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-        }
-      });
-      imageURL = uploadImage?.data?.data?.display_url;
-    }
-    const updatedBlogInfo = { title, keyword, embed, featured, category, description, imageURL };
-    const res = await axiosPublic.put(`/allBlog/${params?.id}`, updatedBlogInfo);
-    if (res.data.modifiedCount > 0) {
-      reset();
-      refetch();
-      toast.success("Blog updated successfully");
-      router.push("/dashboard/allBlog");
-    } else {
-      toast.error("Change something first!");
-    }
   };
 
   useEffect(() => {
@@ -142,117 +120,366 @@ const UpdateBlog = ({ params }) => {
     fetchBlogTitle();
   }, [selectedBlogs, axiosPublic]);
 
-  const theTitles = titles?.filter(title => title !== notDouble);
+  const theTitles = useMemo(() => {
+    return titles?.filter(title => title !== notDouble);
+  }, [titles, notDouble]);
 
-  if (loading) {
-    return <Loading />;
+  const handleGoBack = () => {
+    router.push("/dashboard/allBlog");
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage({
+        src: URL.createObjectURL(file),
+        file,
+      });
+      setImageError(false); // Reset error when a file is selected
+    } else {
+      setImageError(true); // Set error if no file selected
+    }
+  };
+
+  const handleImageRemove = () => {
+    setImage(null);
+  };
+
+  const uploadImageToImgbb = async (imageFile) => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    try {
+      const response = await fetch(apiURL, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.data && data.data.url) {
+        return data.data.url; // Imgbb URL of the uploaded image
+      } else {
+        console.error('Error uploading image:', data);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      return null;
+    }
+  };
+
+  // Handle tab switching
+  const handleTabSwitch = (tab) => {
+    setActiveTab(tab);
+
+    // Clear values for the inactive tab
+    if (tab === 'cover image') {
+      setValue('embed', ''); // Clear embed video field when switching to cover image
+    } else if (tab === 'embed video code') {
+      setImage(null); // Clear image selection when switching to embed video
+      setValue('imageUpload', null); // Clear the value in the form as well
+    }
+  };
+
+  const onSubmit = async (data) => {
+    const title = data.title;
+    const keyword = data.keyword;
+    const newKeywords = data.keyword.map(k => k.value);
+    const category = data.category;
+    const newCategories = data.category.map(c => c.value);
+    const description = data.description;
+    const embed = data.embed || "";
+    const featured = data?.featured || "";
+    const activeTabEmbedImage = activeTab;
+
+    if (activeTab === "cover image") {
+      if (image === null) {
+        setImageError(true);
+        return;
+      }
+      else {
+        setImageError(false);
+      }
+    }
+
+    // Initialize imageUrl with the existing one
+    let imageURL = blogDetails.imageURL || '';
+
+    // If a new image is uploaded, upload it to Imgbb
+    if (image && image.file) {
+      imageURL = await uploadImageToImgbb(image.file);
+      if (!imageURL) {
+        toast.error('Image upload failed, cannot proceed.');
+      }
+    } else if (image === null) {
+      // If the image is removed, explicitly set imageURL to an empty string
+      imageURL = '';
+    }
+
+    // Extract existing keywords from `allBlogKeywords`
+    const existingKeywords = allBlogKeywords.map(item => item.blogKeywords);
+
+    // Identify only new keywords that are not in the existing list
+    const uniqueNewKeywords = newKeywords.filter(keyword => !existingKeywords.includes(keyword));
+
+    // Only proceed if there are unique new keywords to add
+    if (uniqueNewKeywords.length > 0) {
+      try {
+        // Send only the new keywords to be added to the backend
+        const response = await axiosPublic.post('/publishBlogKeywords', { keywords: uniqueNewKeywords });
+        if (response?.data?.result?.insertedCount > 0) {
+          refetchBlogKeywords();
+        }
+
+      } catch (error) {
+        console.error('Error publishing blog keywords:', error);
+      }
+    }
+    // Extract existing keywords from `allBlogKeywords`
+    const existingCategories = allBlogCategories.map(item => item.blogCategory);
+
+    // Identify only new keywords that are not in the existing list
+    const uniqueNewCategories = newCategories.filter(category => !existingCategories.includes(category));
+
+    // Only proceed if there are unique new categories to add
+    if (uniqueNewCategories.length > 0) {
+      try {
+        // Send only the new keywords to be added to the backend
+        const response = await axiosPublic.post('/publishBlogCategories', { categories: uniqueNewCategories });
+        if (response?.data?.result?.insertedCount > 0) {
+          refetchBlogCategories();
+        }
+
+      } catch (error) {
+        console.error('Error publishing blog keywords:', error);
+      }
+    }
+
+    const updatedBlogInfo = { title, keyword, embed, featured, category, description, imageURL, activeTab: activeTabEmbedImage };
+    const res = await axiosPublic.put(`/allBlog/${params?.id}`, updatedBlogInfo);
+    if (res.data.modifiedCount > 0) {
+      reset();
+      refetch();
+      toast.success("Blog updated successfully");
+      router.push("/dashboard/allBlog");
+    } else {
+      toast.error("Change something first!");
+    }
   }
+
+  if (loading || isBlogKeywordPending || isBlogCategoryPending) {
+    return <Loading />
+  };
 
   return (
     <PrivateRoute>
-      <div>
-        <div className='fixed right-2 top-2'>
-          <Link href={'/dashboard/allBlog'}>
-            <ImCross className='hover:scale-105' size={20} />
-          </Link>
-        </div>
-        <div className="flex flex-col items-center justify-center space-y-4 w-full">
-          <div className='w-full'>
-            <form className='flex flex-col max-w-screen-md gap-4 mx-auto mt-6 px-6' onSubmit={handleSubmit(onSubmit)}>
-              <h1 className='font-semibold text-2xl my-2 mt-4 md:mt-8'>Update Blog details</h1>
-              <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C]'>Edit Title</label>
-              <input id='title' {...register("title", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
-              {errors.title?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Title is required</p>
-              )}
-              <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Keywords</label>
-              <Controller
-                name="keyword"
-                defaultValue={selectedBlogs}
-                control={control}
-                render={({ field }) => (
-                  <CreatableSelect
-                    isMulti
-                    {...field}
-                    options={options}
-                    onChange={(selected) => {
-                      if (selected.length > 5) {
-                        toast.error("You can select up to 5 items only.");
-                      } else {
-                        field.onChange(selected);
-                        setSelectedBlogs(selected);
-                      }
-                    }}
-                    onInputChange={handleNameChange}
-                  />
-                )}
-              />
-              {errors.keyword?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Keyword is required</p>
-              )}
-              <label htmlFor='featured' className='flex justify-start font-medium text-[#EA580C]'>Change Featured Post Title</label>
-              <select id='featured' {...register("featured")} className="select select-bordered w-full flex-1 mb-3">
-                {
-                  theTitles?.map((sector, index) => (
-                    <option key={index} value={sector}>{sector}</option>
-                  ))
-                }
-              </select>
-              <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Categories</label>
-              <Controller
-                name="category"
-                defaultValue={selectedCategoryBlogs}
-                control={control}
-                render={({ field }) => (
-                  <CreatableSelect
-                    isMulti
-                    {...field}
-                    options={options2}
-                    onChange={(selected) => {
-                      if (selected.length > 3) {
-                        toast.error("You can select up to 3 items only.");
-                      } else {
-                        field.onChange(selected);
-                        setSelectedCategoryBlogs(selected);
-                      }
-                    }}
-                    onInputChange={handleNameChange2}
-                  />
-                )}
-              />
-              {errors.category?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Category is required</p>
-              )}
+      <div className='min-h-screen'>
 
-              <label htmlFor='description' className='flex justify-start font-medium text-[#EA580C]'>Edit Details About This Blog</label>
-              <Controller
-                name="description"
-                control={control}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-              />
-              {errors.description?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">This field is required</p>
-              )}
-              {/* Display the current image */}
-              {details?.imageURL && (
-                <div className="mb-4">
-                  <Image height={300} width={300} src={details.imageURL} alt="Current" className="w-full max-w-xs mx-auto" />
-                </div>
-              )}
+        <div className='max-w-screen-2xl px-6 mx-auto'>
 
-              <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Change Blog Thumbnail</label>
-              <input id='photo' {...register("photo")} className="file-input file-input-bordered w-full" type="file" />
-              {errors.photo?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Photo is required.</p>
-              )}
-              <label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3'>Change Embed video code</label>
-              <textarea className='w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50' id='embed' {...register("embed")} rows={4} cols={50} />
-              <input type='submit' value="Update" className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
-            </form>
+          <div className='max-w-screen-xl mx-auto pt-3 pb-1 sticky top-0 z-10 bg-white'>
+            <div className='flex items-center justify-between'>
+              <h3 className='w-full font-semibold text-lg md:text-xl lg:text-2xl'>Edit Blog Configuration</h3>
+              <button className='flex items-center gap-2 text-[10px] md:text-base justify-end w-full' onClick={() => handleGoBack()}> <span className='border border-black hover:scale-105 duration-300 rounded-full p-1 md:p-2'><FaArrowLeft /></span> Go Back</button>
+            </div>
           </div>
+
+          <form className='max-w-screen-xl mx-auto pt-1 pb-6 flex flex-col' onSubmit={(e) => {
+            e.preventDefault(); // Prevent default form submit behavior
+            handleSubmit(onSubmit)(); // Explicitly call onSubmit when necessary
+          }}>
+
+            <div className='grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-6'>
+
+              <div className='grid grid-cols-1 lg:col-span-7 gap-8 mt-3 py-3 h-fit'>
+                <div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+                  <div>
+                    <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C] pb-2'>Title *</label>
+                    <input id='title' {...register("title", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
+                    {errors.title?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">Title is required</p>
+                    )}
+                  </div>
+                  <div>
+                    <label htmlFor='description' className='flex justify-start font-medium text-[#EA580C] pb-2'>Details About This Blog *</label>
+                    <Controller
+                      name="description"
+                      control={control}
+                      defaultValue=""
+                      rules={{ required: true }}
+                      render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
+                    />
+                    {errors.description?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">This field is required</ p>
+                    )}
+                  </div>
+                </div>
+                <div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+                  <div>
+                    <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C] pb-2'>Change Categories</label>
+                    <Controller
+                      name="category"
+                      defaultValue={selectedCategoryBlogs}
+                      control={control}
+                      render={({ field }) => (
+                        <CreatableSelect
+                          isMulti
+                          {...field}
+                          options={options2}
+                          onChange={(selected) => {
+                            if (selected.length > 3) {
+                              toast.error("You can select up to 3 items only.");
+                            } else {
+                              field.onChange(selected);
+                              setSelectedCategoryBlogs(selected);
+                            }
+                          }}
+                          onInputChange={handleNameChange2}
+                        />
+                      )}
+                    />
+                    {errors.category?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">Category is required</p>
+                    )}
+                  </div>
+                  <div>
+                    <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C] pb-2'>Change Keywords</label>
+                    <Controller
+                      name="keyword"
+                      defaultValue={selectedBlogs}
+                      control={control}
+                      render={({ field }) => (
+                        <CreatableSelect
+                          isMulti
+                          {...field}
+                          options={options}
+                          onChange={(selected) => {
+                            if (selected.length > 5) {
+                              toast.error("You can select up to 5 items only.");
+                            } else {
+                              field.onChange(selected);
+                              setSelectedBlogs(selected);
+                            }
+                          }}
+                          onInputChange={handleNameChange}
+                        />
+                      )}
+                    />
+                    {errors.keyword?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">Keyword is required</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className='grid grid-cols-1 lg:col-span-5 gap-8 mt-3 py-3 h-fit'>
+
+                <div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+
+                  <div className='flex flex-wrap items-center gap-3 bg-white'>
+                    <button type='button'
+                      className={`relative text-sm py-1 transition-all duration-300
+        ${activeTab === 'cover image' ? 'text-[#D2016E] font-semibold' : 'text-neutral-400 font-medium'}
+        after:absolute after:left-0 after:right-0 hover:text-[#D2016E] after:bottom-0 
+        after:h-[2px] after:bg-[#D2016E] after:transition-all after:duration-300
+        ${activeTab === 'cover image' ? 'after:w-full font-bold' : 'after:w-0 hover:after:w-full'}
+      `}
+                      onClick={() => handleTabSwitch('cover image')}
+                    >
+                      Blog thumbnail
+                    </button>
+
+                    <button type='button'
+                      className={`relative text-sm py-1 transition-all duration-300
+        ${activeTab === 'embed video code' ? 'text-[#D2016E] font-semibold' : 'text-neutral-400 font-medium'}
+        after:absolute after:left-0 after:right-0 after:bottom-0 
+        after:h-[2px] after:bg-[#D2016E] hover:text-[#D2016E] after:transition-all after:duration-300
+        ${activeTab === 'embed video code' ? 'after:w-full' : 'after:w-0 hover:after:w-full'}
+      `}
+                      onClick={() => handleTabSwitch('embed video code')}
+                    >
+                      Embed video code
+                    </button>
+                  </div>
+
+                  {activeTab === "cover image" && <div className='flex flex-col gap-4 mt-6'>
+                    <input
+                      id='imageUpload'
+                      type='file'
+                      className='hidden'
+                      onChange={handleImageChange}
+                    />
+                    <label
+                      htmlFor='imageUpload'
+                      className='mx-auto flex flex-col items-center justify-center space-y-3 rounded-lg border-2 border-dashed border-gray-400 p-6 bg-white cursor-pointer'
+                    >
+                      <MdOutlineFileUpload size={60} />
+                      <div className='space-y-1.5 text-center'>
+                        <h5 className='whitespace-nowrap text-lg font-medium tracking-tight'>
+                          Upload Thumbnail
+                        </h5>
+                        <p className='text-sm text-gray-500'>
+                          Photo Should be in PNG, JPEG or JPG format
+                        </p>
+                      </div>
+                    </label>
+                    {imageError && <p className="text-red-600">Blog thumbnail is required</p>}
+
+                    {image && (
+                      <div className='relative'>
+                        <Image
+                          src={typeof image === 'string' ? image : image.src}
+                          alt='Uploaded image'
+                          height={3000}
+                          width={3000}
+                          className='w-full min-h-[200px] max-h-[200px] rounded-md object-contain'
+                        />
+                        <button
+                          onClick={handleImageRemove}
+                          className='absolute top-1 right-1 rounded-full p-1 bg-red-600 hover:bg-red-700 text-white font-bold'
+                        >
+                          <RxCross2 size={24} />
+                        </button>
+                      </div>
+                    )}
+
+                  </div>}
+
+                  {activeTab === "embed video code" && <div>
+                    <label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3 pb-2'>Upload embed video code</label>
+                    <textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#D2016E] transition-colors duration-1000' id='embed' {...register('embed', { required: activeTab === 'embed video code' })} rows={4} cols={50} />
+                    {errors.embed && <p className="text-red-600">Embed video code is required</p>}
+                  </div>}
+
+                  {theTitles?.length > 0 ? <div>
+                    <label htmlFor='featured' className='flex justify-start font-medium text-[#EA580C] pt-6 pb-2'>Select Featured Post Title *</label>
+                    <select {...register("featured")} className="select select-bordered w-full flex-1">
+                      {
+                        theTitles?.map((sector, index) => (
+                          <option key={index} value={sector}>{sector}</option>
+                        ))
+                      }
+                    </select>
+                  </div> : <div>
+                    <p className='pt-10'>No featured posts available. Please select a keyword instead!</p>
+                  </div>}
+
+                </div>
+              </div>
+
+            </div>
+
+            <div className='flex justify-end items-center mt-3'>
+
+              <button type='submit' className={`bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-2 px-4 text-sm md:text-base rounded-md cursor-pointer font-medium flex items-center gap-2`}>
+                Update
+              </button>
+            </div>
+
+          </form>
         </div>
+
       </div>
     </PrivateRoute>
   );

@@ -139,3 +139,32 @@ body {
     @apply ml-8 text-neutral-400 before:mr-2 before:content-["•"] first:mt-3;
   }
 }
+
+.custom-editor {
+  font-family: "Oxygen", sans-serif; /* Apply Oxygen font */
+  border: 1px solid #dbd3d1a1; /* Custom border */
+  border-radius: 5px; /* Custom border radius */
+  overflow: hidden; /* To ensure the border radius is applied correctly */
+}
+
+.custom-editor .ql-container {
+  height: 100%; /* Ensure the editor takes the full height */
+  border: none; /* Remove default border */
+  font-family: "Oxygen", sans-serif; /* Apply Oxygen font */
+}
+
+.custom-editor .ql-editor {
+  /* Custom styles for the editor input field */
+  min-height: 250px;
+  padding: 14px;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: "Oxygen", sans-serif; /* Apply Oxygen font */
+  border: none; /* Remove default border */
+}
+
+.custom-editor .ql-toolbar {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd; /* Custom border */
+  font-family: "Oxygen", sans-serif; /* Apply Oxygen font */
+}
