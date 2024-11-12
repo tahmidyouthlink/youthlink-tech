@@ -99,14 +99,14 @@ const AllWork = () => {
       <div className='relative'>
         <div className='fixed bottom-4 right-12 z-50'>
           <Link href={`/dashboard/addWork`}>
-            <button className='flex items-center font-medium bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white px-4 hover:scale-105 transition duration-300 py-2 rounded-md'>
+            <button className='flex items-center gap-2 text-white w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]'>
               <FiPlus size={20} />
               <h1>Add Work</h1>
             </button>
           </Link>
         </div>
-        <div className='flex items-center justify-center lg:mb-8 mb-4'>
-          {/* <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
+        {/* <div className='flex items-center justify-center lg:mb-8 mb-4'> */}
+        {/* <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
             <option value="All">All</option>
             <option value="Digital Marketing">Digital Marketing</option>
             <option value="E-Commerce">E-Commerce</option>
@@ -118,7 +118,7 @@ const AllWork = () => {
             <option value="Strategy and Organization">Strategy and Organization</option>
             <option value="Experience Design">Experience Design</option>
           </select> */}
-          {/* <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
+        {/* <select className="w-2/5 mx-auto lg:w-1/5 bg-gradient-to-r from-white to-gray-200 border p-2 rounded-lg" onChange={handleCategory}>
             {
               allWork?.map((categoryArray, index) =>
                 <div key={index}>
@@ -128,36 +128,23 @@ const AllWork = () => {
                 </div>
               )}
           </select> */}
-        </div>
-        {workInfo?.length > 0 ? <><h1 className="px-6 mt-6 md:mt-12 lg:px-12 text-2xl md:text-4xl font-semibold">All Works</h1>
-          <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
+        {/* </div> */}
+        {workInfo?.length > 0 ? <><h1 className="px-6 mt-6 lg:px-12 text-2xl md:text-4xl font-semibold">All Works</h1>
+          <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
             {workInfo?.map((work, index) => <div key={index}>
-              <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100 relative">
+              <div className="bg-white rounded-2xl shadow relative lg:min-h-[530px]">
                 <p className="text-xs font-medium md:text-sm absolute right-0 px-4 py-1 rounded-lg border border-white/20 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 shadow-2xl text-white">{work?.formattedDate}</p>
                 <Image
                   alt="work images"
                   src={work?.imageURL} height={224} width={1000}
-                  className="h-56 w-full rounded-t-md object-cover"
+                  className="h-56 w-full rounded-t-2xl object-cover"
                 />
-                <div className="mt-2 p-4">
-                  <dl>
-                    <div>
-                      <dt className="sr-only">Title</dt>
+                <div className="mt-2 p-5">
+                  <p className="font-semibold text-neutral-800">{work?.title}</p>
+                  <p className='text-neutral-500 pt-2'>{work?.heading}</p>
+                  <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3 pt-4 h-fit">{work?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-4 py-2 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>{cat?.value}</p>)}</p>
 
-                      <dd className="text-sm font-bold text-neutral-800">{work?.title}</dd>
-                    </div>
-
-                    <div>
-                      <dt className="sr-only">Heading</dt>
-
-                      <dd className="">{work?.heading}</dd>
-                    </div>
-                  </dl>
-                  <div className='pt-4'>
-                    <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{work?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
-                  </div>
-
-                  <div className="mt-6 flex items-center gap-8">
+                  <div className="mt-6 flex items-center gap-8 lg:absolute lg:bottom-4">
                     <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-base mt-1.5 sm:mt-0">
                       <button onClick={() => open(work?._id)} className="hover:text-[#EAB308]"><FaEye /></button>
                       <div className={`fixed z-[100] flex items-center justify-center ${openModal ? 'opacity-1 visible' : 'invisible opacity-0'} inset-0 bg-black/20 backdrop-blur-sm duration-100`}>

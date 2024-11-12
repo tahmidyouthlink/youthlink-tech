@@ -168,3 +168,9 @@ body {
   border-bottom: 1px solid #ddd; /* Custom border */
   font-family: "Oxygen", sans-serif; /* Apply Oxygen font */
 }
+
+.custom-editor .ql-editor img {
+  max-width: 100%; /* Ensure the image scales responsively */
+  display: block; /* Display the image as a block to avoid inline styling issues */
+  margin: 10px 0; /* Add spacing around the image */
+}

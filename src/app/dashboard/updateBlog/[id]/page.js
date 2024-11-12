@@ -472,7 +472,7 @@ const UpdateBlog = ({ params }) => {
 
             <div className='flex justify-end items-center mt-3'>
 
-              <button type='submit' className={`bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-2 px-4 text-sm md:text-base rounded-md cursor-pointer font-medium flex items-center gap-2`}>
+              <button type='submit' className={`text-white bg-gray-800 w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>
                 Update
               </button>
             </div>

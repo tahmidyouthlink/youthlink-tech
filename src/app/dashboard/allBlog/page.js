@@ -94,14 +94,12 @@ const AllBlog = () => {
     return <Loading />
   }
 
-  console.log(allBlog);
-
   return (
     <PrivateRoute>
       <div className='relative'>
         <div className='fixed bottom-4 right-12 z-50'>
           <Link href={`/dashboard/addBlog`}>
-            <button className='flex items-center font-medium bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white px-4 hover:scale-105 transition duration-300 py-2 rounded-md'>
+            <button className='flex items-center text-white bg-gray-800 w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]'>
               <FiPlus size={20} />
               <h1>Add Blog</h1>
             </button>
@@ -110,10 +108,10 @@ const AllBlog = () => {
 
         {blogInfo?.length > 0 ?
           <>
-            <h1 className="px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6 md:mt-12">All Blogs</h1><div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 px-6 lg:px-12 mt-4 mb-12'>
+            <h1 className="px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6">All Blogs</h1><div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
               {blogInfo?.map((blog, index) =>
                 <div key={index}>
-                  <div className="block bg-gradient-to-r from-gray-100 via-white to-gray-400 rounded-lg shadow-sm shadow-indigo-100 relative">
+                  <div className="bg-white rounded-2xl shadow relative lg:min-h-[530px]">
                     <p className="text-xs font-medium md:text-sm absolute right-0 px-4 py-1 rounded-lg border border-white/20 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 shadow-2xl text-white">{blog?.formattedDate}</p>
                     {blog?.imageURL ? (
                       <Image
@@ -128,21 +126,11 @@ const AllBlog = () => {
                         <Iframe iframeData={blog.embed} className="w-full h-72" />
                       </div>
                     )}
+                    <div className="mt-2 p-5">
+                      <h2 className="font-semibold text-neutral-800">{blog?.title}</h2>
+                      <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3 pt-4 h-fit">{blog?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-4 py-2 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>{cat?.value}</p>)}</p>
 
-
-
-                    <div className="mt-2 p-4">
-                      <dl>
-                        <div>
-                          <dt className="sr-only">Title</dt>
-
-                          <dd className="text-sm font-bold text-neutral-800">{blog?.title}</dd>
-                        </div>
-                      </dl>
-                      <div className='pt-4'>
-                        <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{blog?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
-                      </div>
-                      <div className="mt-6 flex items-center gap-8">
+                      <div className="mt-6 flex items-center gap-8 lg:absolute lg:bottom-4">
                         <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-base mt-1.5 sm:mt-0">
                           <button onClick={() => open(blog?._id)} className="hover:text-[#EAB308]"><FaEye /></button>
                           <div className={`fixed z-[100] flex items-center justify-center ${openModal ? 'opacity-1 visible' : 'invisible opacity-0'} inset-0 bg-black/20 backdrop-blur-sm duration-100`}>
