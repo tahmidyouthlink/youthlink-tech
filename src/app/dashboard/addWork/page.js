@@ -4,15 +4,19 @@ import useAdmin from '@/hooks/useAdmin';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import useWorks from '@/hooks/useWorks';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { ImCross } from "react-icons/im";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import CreatableSelect from "react-select/creatable";
+import { FaArrowLeft } from 'react-icons/fa6';
+import { MdOutlineFileUpload } from 'react-icons/md';
+import { RxCross2 } from 'react-icons/rx';
+import useWorkCategories from '@/hooks/useWorkCategories';
+import useWorkKeywords from '@/hooks/useWorkKeywords';
+import Image from 'next/image';
 
 const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
 const apiKey = "bcc91618311b97a1be1dd7020d5af85f";
@@ -26,6 +30,10 @@ const AddWork = () => {
   const router = useRouter();
   const [names, setNames] = useState([]);
   const [names2, setNames2] = useState([]);
+  const [image, setImage] = useState(null);
+  const [imageError, setImageError] = useState(false);
+  const [workCategory, isWorkCategoryPending, refetchWorkCategory] = useWorkCategories();
+  const [workKeywords, isWorkKeywordsPending, refetchWorkKeywords] = useWorkKeywords();
 
   let temp = [];
   const handleNameChange = (inputValue) => {
@@ -46,7 +54,7 @@ const AddWork = () => {
         console.log(err);
       }
     }
-  }
+  };
 
   let temp2 = [];
   const handleNameChange2 = (inputValue) => {
@@ -67,35 +75,129 @@ const AddWork = () => {
         console.log(err);
       }
     }
-  }
+  };
+
+  const handleGoBack = () => {
+    router.push("/dashboard/allWork");
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage({
+        src: URL.createObjectURL(file),
+        file,
+      });
+      setImageError(false); // Reset error when a file is selected
+    } else {
+      setImageError(true); // Set error if no file selected
+    }
+  };
+
+  const handleImageRemove = () => {
+    setImage(null);
+  };
+
+  const uploadImageToImgbb = async (image) => {
+    const formData = new FormData();
+    formData.append('image', image.file);
+    formData.append('key', apiKey);
+
+    try {
+      const response = await axiosPublic.post(apiURL, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (response.data && response.data.data && response.data.data.url) {
+        return response.data.data.url; // Return the single image URL
+      } else {
+        toast.error('Failed to get image URL from response.');
+      }
+    } catch (error) {
+      toast.error(`Upload failed: ${error.response?.data?.error?.message || error.message}`);
+    }
+    return null;
+  };
 
   const onSubmit = async (data) => {
     try {
       const title = data.title;
-      const heading = data.heading;
+      const heading = data.projectMission;
       const aboutTheProject = data.aboutTheProject;
       const ourSolution = data.ourSolution;
       const theResults = data.theResults;
       const keyword = data.keyword;
       const category = data.category;
+      const newKeywords = data.keyword.map(k => k.value);
+      const newCategories = data.category.map(c => c.value);
       const currentDate = new Date();
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       const formattedDate = currentDate.toLocaleDateString('en-US', options);
+
+      if (image === null) {
+        setImageError(true);
+        return;
+      } else {
+        setImageError(false);
+      }
+
       let status;
       if (isAdmin) {
         status = "checked";
       } else {
         status = "pending";
       }
-      const photo = data.photo[0];
-      const formData = new FormData();
-      formData.append('image', photo);
-      const uploadImage = await axiosPublic.post(apiURL, formData, {
-        headers: {
-          "content-type": "multipart/form-data",
+
+      let imageURL = '';
+      if (image) {
+        imageURL = await uploadImageToImgbb(image);
+        if (!imageURL) {
+          toast.error('Image upload failed, cannot proceed.');
+          return;
         }
-      });
-      const imageURL = uploadImage?.data?.data?.display_url;
+      }
+
+      // Extract existing keywords from `allBlogKeywords`
+      const existingKeywords = workKeywords.map(item => item.workKeywords);
+
+      // Identify only new keywords that are not in the existing list
+      const uniqueNewKeywords = newKeywords.filter(keyword => !existingKeywords.includes(keyword));
+
+      // Only proceed if there are unique new keywords to add
+      if (uniqueNewKeywords.length > 0) {
+        try {
+          // Send only the new keywords to be added to the backend
+          const response = await axiosPublic.post('/publishWorkKeywords', { keywords: uniqueNewKeywords });
+          if (response?.data?.result?.insertedCount > 0) {
+            refetchWorkKeywords();
+          }
+
+        } catch (error) {
+          console.error('Error publishing blog keywords:', error);
+        }
+      }
+
+      // Extract existing keywords from `allWorkCategories`
+      const existingCategories = workCategory.map(item => item.workCategory);
+
+      // Identify only new keywords that are not in the existing list
+      const uniqueNewCategories = newCategories.filter(category => !existingCategories.includes(category));
+
+      // Only proceed if there are unique new categories to add
+      if (uniqueNewCategories.length > 0) {
+        try {
+          // Send only the new keywords to be added to the backend
+          const response = await axiosPublic.post('/publishWorkCategories', { categories: uniqueNewCategories });
+          if (response?.data?.result?.insertedCount > 0) {
+            refetchWorkCategory();
+          }
+
+        } catch (error) {
+          console.error('Error publishing blog keywords:', error);
+        }
+      }
+
       const workInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL, status, formattedDate };
       const res = await axiosPublic.post("/addWork", workInfo);
       if (res?.data?.insertedId) {
@@ -109,129 +211,211 @@ const AddWork = () => {
     }
   }
 
-  if (pending) {
+  if (pending || isWorkCategoryPending || isWorkKeywordsPending) {
     return <Loading />
   }
 
   return (
     <PrivateRoute>
-      <div>
-        <div className='fixed right-2 top-2'>
-          <Link href={'/dashboard/allWork'}>
-            <ImCross className='hover:scale-105' size={20} />
-          </Link>
-        </div>
-        <div className="flex flex-col items-center justify-center space-y-4 w-full">
-          <div className='w-full'>
-            <form className='flex flex-col max-w-screen-md gap-4 mx-auto mt-6 px-6' onSubmit={handleSubmit(onSubmit)}>
-              <h1 className='font-semibold text-2xl my-2 mt-4 md:mt-8'>Work details</h1>
-              <label htmlFor='title ' className='flex justify-start font-medium text-[#EA580C]'>Company Name *</label>
-              <input id='title' {...register("title", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
-              {errors.title?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Company Name is required</p>
-              )}
-              <label htmlFor='heading' className='flex justify-start font-medium text-[#EA580C]'>Heading *</label>
-              <input id='heading' {...register("heading", { required: true })} className="w-full p-3 mb-4 border rounded-md bg-gradient-to-r from-white to-gray-50" type="text" />
-              {errors.heading?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Heading is required</p>
-              )}
-              <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C] pt-2'>Keywords *</label>
-              <Controller
-                name="keyword"
-                control={control}
-                defaultValue={[]}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <CreatableSelect
-                    {...field}
-                    isMulti
-                    onChange={(selected) => {
-                      if (selected.length > 5) {
-                        toast.error("You can select up to 5 items only.");
-                      } else {
-                        field.onChange(selected);
-                        setValue("keyword", selected); // Update form value
-                        trigger("keyword"); // Trigger validation
-                      }
-                    }}
-                    options={names}
-                    onInputChange={handleNameChange}
-                  />
-                )}
-              />
-              {errors.keyword && (
-                <p className="text-red-600 text-left pt-1">Skills are required</p>
-              )}
+      <div className='min-h-screen'>
+        <div className='max-w-screen-2xl px-6 mx-auto'>
 
-              <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C] pt-2'>Select Categories *</label>
-              <Controller
-                name="category"
-                control={control}
-                defaultValue={[]}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <CreatableSelect
-                    {...field}
-                    isMulti
-                    onChange={(selected) => {
-                      if (selected.length > 3) {
-                        toast.error("You can select up to 3 items only.");
-                      } else {
-                        field.onChange(selected);
-                        setValue("category", selected); // Update form value
-                        trigger("category"); // Trigger validation
-                      }
-                    }}
-                    options={names2}
-                    onInputChange={handleNameChange2}
-                  />
-                )}
-              />
-              {errors.category && (
-                <p className="text-red-600 text-left pt-1">Categories are required</p>
-              )}
-
-              <label htmlFor='aboutWork' className='flex justify-start font-medium text-[#EA580C]'>Details About This Work *</label>
-              <Controller
-                name="aboutTheProject"
-                control={control}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-              />
-              {errors.aboutTheProject?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">This field is required</ p>
-              )}
-              <label htmlFor='ourSolution' className='flex justify-start font-medium text-[#EA580C]'>Our Solution *</label>
-              <Controller
-                name="ourSolution"
-                control={control}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-              />
-              {errors.ourSolution?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">This field is required</ p>
-              )}
-              <label htmlFor='theResults' className='flex justify-start font-medium text-[#EA580C]'>The Results *</label>
-              <Controller
-                name="theResults"
-                control={control}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-              />
-              {errors.theResults?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">This field is required</ p>
-              )}
-              <label htmlFor='photo' className='flex justify-start font-medium text-[#EA580C]'>Upload Work Thumbnail *</label>
-              <input {...register("photo", { required: true })} className="file-input file-input-bordered w-full" id='photo' type="file" />
-              {errors.photo?.type === "required" && (
-                <p className="text-red-600 text-left pt-1">Photo is required.</p>
-              )}
-              <input type='submit' className='block w-full font-bold bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-4 mx-auto mt-5 rounded-3xl shadow-lg shadow-[#EA580C]/80 border-0 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-[#EA580C]/80 active:scale-95 active:shadow-md active:shadow-[#EA580C]/80' />
-            </form>
+          <div className='max-w-screen-2xl mx-auto pt-3 pb-1 sticky top-0 z-10 bg-white'>
+            <div className='max-w-screen-xl mx-auto flex items-center justify-between'>
+              <h3 className='w-full font-semibold text-lg md:text-xl lg:text-2xl'>Work Configuration</h3>
+              <button className='flex items-center gap-2 text-[10px] md:text-base justify-end w-full' onClick={() => handleGoBack()}> <span className='border border-black hover:scale-105 duration-300 rounded-full p-1 md:p-2'><FaArrowLeft /></span> Go Back</button>
+            </div>
           </div>
+
+          <form className='max-w-screen-xl mx-auto pt-1 pb-6 flex flex-col' onSubmit={handleSubmit(onSubmit)}>
+
+            <div className='grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-6'>
+
+              <div className='grid grid-cols-1 lg:col-span-7 gap-8 mt-3 py-3 h-fit'>
+
+                <div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+                  <div>
+                    <label htmlFor='title ' className='flex justify-start font-medium text-[#EA580C] pb-2'>Company Name *</label>
+                    <input id='title' {...register("title", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
+                    {errors.title?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">Company Name is required</p>
+                    )}
+                  </div>
+                  <div>
+                    <label htmlFor='projectMission' className='flex justify-start font-medium text-[#EA580C] pb-2'>Project Mission *</label>
+                    <input id='projectMission' {...register("projectMission", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
+                    {errors.projectMission?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">Project Mission is required</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+                  <div>
+                    <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Keywords *</label>
+                    <Controller
+                      name="keyword"
+                      control={control}
+                      defaultValue={[]}
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <CreatableSelect
+                          {...field}
+                          isMulti
+                          onChange={(selected) => {
+                            if (selected.length > 5) {
+                              toast.error("You can select up to 5 items only.");
+                            } else {
+                              field.onChange(selected);
+                              setValue("keyword", selected); // Update form value
+                              trigger("keyword"); // Trigger validation
+                            }
+                          }}
+                          options={names}
+                          onInputChange={handleNameChange}
+                        />
+                      )}
+                    />
+                    {errors.keyword && (
+                      <p className="text-red-600 text-left pt-1">Keywords are required</p>
+                    )}
+                  </div>
+                  <div>
+                    <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Select Categories *</label>
+                    <Controller
+                      name="category"
+                      control={control}
+                      defaultValue={[]}
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <CreatableSelect
+                          {...field}
+                          isMulti
+                          onChange={(selected) => {
+                            if (selected.length > 3) {
+                              toast.error("You can select up to 3 items only.");
+                            } else {
+                              field.onChange(selected);
+                              setValue("category", selected); // Update form value
+                              trigger("category"); // Trigger validation
+                            }
+                          }}
+                          options={names2}
+                          onInputChange={handleNameChange2}
+                        />
+                      )}
+                    />
+                    {errors.category && (
+                      <p className="text-red-600 text-left pt-1">Categories are required</p>
+                    )}
+                  </div>
+                  <div>
+                    <label htmlFor='aboutWork' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Details About This Work *</label>
+                    <Controller
+                      name="aboutTheProject"
+                      control={control}
+                      defaultValue=""
+                      rules={{ required: true }}
+                      render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
+                    />
+                    {errors.aboutTheProject?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">This field is required</ p>
+                    )}
+
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div className='grid grid-cols-1 lg:col-span-5 gap-8 mt-3 py-3 h-fit'>
+
+                <div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 gap-4 rounded-lg h-fit'>
+
+                  <div>
+                    <label htmlFor='ourSolution' className='flex justify-start font-medium text-[#EA580C] pb-2'>Our Solution *</label>
+                    <Controller
+                      name="ourSolution"
+                      control={control}
+                      defaultValue=""
+                      rules={{ required: true }}
+                      render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
+                    />
+                    {errors.ourSolution?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">This field is required</ p>
+                    )}
+                  </div>
+                  <div>
+                    <label htmlFor='theResults' className='flex justify-start font-medium text-[#EA580C] pb-2'>The Results *</label>
+                    <Controller
+                      name="theResults"
+                      control={control}
+                      defaultValue=""
+                      rules={{ required: true }}
+                      render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
+                    />
+                    {errors.theResults?.type === "required" && (
+                      <p className="text-red-600 text-left pt-1">This field is required</ p>
+                    )}
+                  </div>
+                </div>
+
+                <div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+                  <div className='flex flex-col gap-4 mt-6'>
+                    <input
+                      id='imageUpload'
+                      type='file'
+                      className='hidden'
+                      onChange={handleImageChange}
+                    />
+                    <label
+                      htmlFor='imageUpload'
+                      className='mx-auto flex flex-col items-center justify-center space-y-3 rounded-lg border-2 border-dashed border-gray-400 p-6 bg-white cursor-pointer'
+                    >
+                      <MdOutlineFileUpload size={60} />
+                      <div className='space-y-1.5 text-center'>
+                        <h5 className='whitespace-nowrap text-lg font-medium tracking-tight'>
+                          Upload Work Thumbnail
+                        </h5>
+                        <p className='text-sm text-gray-500'>
+                          Photo Should be in PNG, JPEG or JPG format
+                        </p>
+                      </div>
+                    </label>
+                    {imageError && <p className="text-red-600">Work thumbnail is required</p>}
+
+                    {image && (
+                      <div className='relative'>
+                        <Image
+                          src={image.src}
+                          alt='Uploaded image'
+                          height={3000}
+                          width={3000}
+                          className='w-full min-h-[200px] max-h-[200px] rounded-md object-contain'
+                        />
+                        <button
+                          onClick={handleImageRemove}
+                          className='absolute top-1 right-1 rounded-full p-1 bg-red-600 hover:bg-red-700 text-white font-bold'
+                        >
+                          <RxCross2 size={24} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className='flex justify-end items-center mt-3'>
+
+              <button type='submit' className={`bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-2 px-4 text-sm md:text-base rounded-md cursor-pointer font-medium flex items-center gap-2`}>
+                Submit
+              </button>
+            </div>
+
+          </form>
         </div>
       </div>
     </PrivateRoute>

@@ -35,7 +35,7 @@ const BlogTable = () => {
                       <div className="flex items-center gap-3">
                         <div className="avatar">
                           <div className="mask mask-squircle w-12 h-12">
-                            <Image src={work?.imageURL} alt='image' height={100} width={200} />
+                            {work?.imageURL && <Image src={work?.imageURL} alt='image' height={100} width={200} />}
                           </div>
                         </div>
                         <div className="font-bold">{work?.title}</div>

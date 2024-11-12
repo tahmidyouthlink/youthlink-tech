@@ -380,9 +380,9 @@ const UpdateBlog = ({ params }) => {
                   <div className='flex flex-wrap items-center gap-3 bg-white'>
                     <button type='button'
                       className={`relative text-sm py-1 transition-all duration-300
-        ${activeTab === 'cover image' ? 'text-[#D2016E] font-semibold' : 'text-neutral-400 font-medium'}
-        after:absolute after:left-0 after:right-0 hover:text-[#D2016E] after:bottom-0 
-        after:h-[2px] after:bg-[#D2016E] after:transition-all after:duration-300
+        ${activeTab === 'cover image' ? 'text-[#EA580C] font-semibold' : 'text-neutral-400 font-medium'}
+        after:absolute after:left-0 after:right-0 hover:text-[#EA580C] after:bottom-0 
+        after:h-[2px] after:bg-[#EA580C] after:transition-all after:duration-300
         ${activeTab === 'cover image' ? 'after:w-full font-bold' : 'after:w-0 hover:after:w-full'}
       `}
                       onClick={() => handleTabSwitch('cover image')}
@@ -392,9 +392,9 @@ const UpdateBlog = ({ params }) => {
 
                     <button type='button'
                       className={`relative text-sm py-1 transition-all duration-300
-        ${activeTab === 'embed video code' ? 'text-[#D2016E] font-semibold' : 'text-neutral-400 font-medium'}
+        ${activeTab === 'embed video code' ? 'text-[#EA580C] font-semibold' : 'text-neutral-400 font-medium'}
         after:absolute after:left-0 after:right-0 after:bottom-0 
-        after:h-[2px] after:bg-[#D2016E] hover:text-[#D2016E] after:transition-all after:duration-300
+        after:h-[2px] after:bg-[#EA580C] hover:text-[#EA580C] after:transition-all after:duration-300
         ${activeTab === 'embed video code' ? 'after:w-full' : 'after:w-0 hover:after:w-full'}
       `}
                       onClick={() => handleTabSwitch('embed video code')}
@@ -448,7 +448,7 @@ const UpdateBlog = ({ params }) => {
 
                   {activeTab === "embed video code" && <div>
                     <label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3 pb-2'>Upload embed video code</label>
-                    <textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#D2016E] transition-colors duration-1000' id='embed' {...register('embed', { required: activeTab === 'embed video code' })} rows={4} cols={50} />
+                    <textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#EA580C] transition-colors duration-1000' id='embed' {...register('embed', { required: activeTab === 'embed video code' })} rows={4} cols={50} />
                     {errors.embed && <p className="text-red-600">Embed video code is required</p>}
                   </div>}
 

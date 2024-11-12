@@ -155,8 +155,8 @@ const AddBlog = () => {
 	const onSubmit = async (data) => {
 		const title = data.title;
 		const keyword = data.keyword;
-		const newKeywords = data.keyword.map(k => k.value);
 		const category = data.category;
+		const newKeywords = data.keyword.map(k => k.value);
 		const newCategories = data.category.map(c => c.value);
 		const description = data.description;
 		const embed = data.embed || "";
@@ -245,16 +245,14 @@ const AddBlog = () => {
 		return <Loading />
 	};
 
-	// console.log(titles);
-
 	return (
 		<PrivateRoute>
 			<div className='min-h-screen'>
 
 				<div className='max-w-screen-2xl px-6 mx-auto'>
 
-					<div className='max-w-screen-xl mx-auto pt-3 pb-1 sticky top-0 z-10 bg-white'>
-						<div className='flex items-center justify-between'>
+					<div className='max-w-screen-2xl mx-auto pt-3 pb-1 sticky top-0 z-10 bg-white'>
+						<div className='max-w-screen-xl mx-auto flex items-center justify-between'>
 							<h3 className='w-full font-semibold text-lg md:text-xl lg:text-2xl'>Blog Configuration</h3>
 							<button className='flex items-center gap-2 text-[10px] md:text-base justify-end w-full' onClick={() => handleGoBack()}> <span className='border border-black hover:scale-105 duration-300 rounded-full p-1 md:p-2'><FaArrowLeft /></span> Go Back</button>
 						</div>
@@ -300,7 +298,7 @@ const AddBlog = () => {
 													{...field}
 													isMulti
 													onChange={(selected) => {
-														setKeywords(selected);
+														// setKeywords(selected);
 														if (selected.length > 3) {
 															toast.error("You can select up to 3 items only.");
 														} else {
@@ -356,11 +354,11 @@ const AddBlog = () => {
 								<div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
 
 									<div className='flex flex-wrap items-center gap-3 bg-white'>
-										<button
+										<button type='button'
 											className={`relative text-sm py-1 transition-all duration-300
-        ${activeTab === 'cover image' ? 'text-[#D2016E] font-semibold' : 'text-neutral-400 font-medium'}
-        after:absolute after:left-0 after:right-0 hover:text-[#D2016E] after:bottom-0 
-        after:h-[2px] after:bg-[#D2016E] after:transition-all after:duration-300
+        ${activeTab === 'cover image' ? 'text-[#EA580C] font-semibold' : 'text-neutral-400 font-medium'}
+        after:absolute after:left-0 after:right-0 hover:text-[#EA580C] after:bottom-0 
+        after:h-[2px] after:bg-[#EA580C] after:transition-all after:duration-300
         ${activeTab === 'cover image' ? 'after:w-full font-bold' : 'after:w-0 hover:after:w-full'}
       `}
 											onClick={() => handleTabSwitch('cover image')}
@@ -368,11 +366,11 @@ const AddBlog = () => {
 											Blog thumbnail
 										</button>
 
-										<button
+										<button type='button'
 											className={`relative text-sm py-1 transition-all duration-300
-        ${activeTab === 'embed video code' ? 'text-[#D2016E] font-semibold' : 'text-neutral-400 font-medium'}
+        ${activeTab === 'embed video code' ? 'text-[#EA580C] font-semibold' : 'text-neutral-400 font-medium'}
         after:absolute after:left-0 after:right-0 after:bottom-0 
-        after:h-[2px] after:bg-[#D2016E] hover:text-[#D2016E] after:transition-all after:duration-300
+        after:h-[2px] after:bg-[#EA580C] hover:text-[#EA580C] after:transition-all after:duration-300
         ${activeTab === 'embed video code' ? 'after:w-full' : 'after:w-0 hover:after:w-full'}
       `}
 											onClick={() => handleTabSwitch('embed video code')}
@@ -425,7 +423,7 @@ const AddBlog = () => {
 
 									{activeTab === "embed video code" && <div>
 										<label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3 pb-2'>Upload embed video code</label>
-										<textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#D2016E] transition-colors duration-1000' id='embed' {...register('embed', { required: activeTab === 'embed video code' })} rows={4} cols={50} />
+										<textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#EA580C] transition-colors duration-1000' id='embed' {...register('embed', { required: activeTab === 'embed video code' })} rows={4} cols={50} />
 										{errors.embed && <p className="text-red-600">Embed video code is required</p>}
 									</div>}
 
