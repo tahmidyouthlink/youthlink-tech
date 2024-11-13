@@ -34,7 +34,7 @@ const BlogDetails = ({ params }) => {
             <div className='max-w-screen-xl mx-auto px-6'>
                 <div className="mt-6 items-center gap-4 flex flex-col px-6">
                     <div className='flex justify-center items-center mt-6'>
-                        <Image src={blogDetails?.imageURL} alt='image' width={800} height={300} />
+                        {blogDetails?.imageURL && <Image src={blogDetails?.imageURL} alt='image' height={100} width={200} />}
                     </div>
                     <div className="text-base px-8 font-black text-center">
                         {blogDetails?.title}

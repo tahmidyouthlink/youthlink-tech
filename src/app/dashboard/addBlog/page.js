@@ -8,7 +8,6 @@ import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { RxCross2 } from 'react-icons/rx';
-import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import useBlogs from '@/hooks/useBlogs';
 import CreatableSelect from "react-select/creatable";
@@ -17,7 +16,7 @@ import Image from 'next/image';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import useBlogKeywords from '@/hooks/useBlogKeywords';
 import useBlogCategories from '@/hooks/useBlogCategories';
-const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
+import Editor from '@/utils/Markdown/Editor/Editor';
 const apiKey = "bcc91618311b97a1be1dd7020d5af85f";
 const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
@@ -231,14 +230,14 @@ const AddBlog = () => {
 		}
 
 		const blogInfo = { title, keyword, embed, featured, formattedDate, category, description, imageURL, status, activeTab };
-		console.log(blogInfo);
-		// const res = await axiosPublic.post("/addBlog", blogInfo);
-		// if (res?.data?.insertedId) {
-		// 	reset();
-		// 	refetch();
-		// 	toast.success("Your blog successfully published");
-		// 	router.push("/dashboard/allBlog");
-		// }
+
+		const res = await axiosPublic.post("/addBlog", blogInfo);
+		if (res?.data?.insertedId) {
+			reset();
+			refetch();
+			toast.success("Your blog successfully published");
+			router.push("/dashboard/allBlog");
+		}
 	}
 
 	if (pending || isBlogKeywordPending || isBlogCategoryPending) {

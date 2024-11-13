@@ -3,6 +3,7 @@ import { Ubuntu, Inter } from "next/font/google";
 import ReactTanstackProvider from "@/utils/Provider/ReactTanstackProvider";
 import AuthProvider from "@/utils/Provider/AuthProvider";
 import { Toaster } from "react-hot-toast";
+import { NextUIProvider } from "@nextui-org/react";
 
 const ubuntu = Ubuntu({
   weight: ["400", "500", "700"],
@@ -30,8 +31,10 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${ubuntu.className} bg-black max-sm:text-sm`}>
         <ReactTanstackProvider>
-          <AuthProvider>{children}</AuthProvider>
-          <Toaster />
+          <NextUIProvider>
+            <AuthProvider>{children}</AuthProvider>
+            <Toaster />
+          </NextUIProvider>
         </ReactTanstackProvider>
       </body>
     </html>

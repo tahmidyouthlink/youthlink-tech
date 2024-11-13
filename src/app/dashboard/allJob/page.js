@@ -3,7 +3,7 @@ import Loading from '@/components/shared/Loading/Loading';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import { FaEye } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
-import { FaRegEdit } from "react-icons/fa";
+import { MdOutlineModeEditOutline } from "react-icons/md";
 import Image from 'next/image';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
@@ -14,6 +14,7 @@ import Link from 'next/link';
 import useAdmin from '@/hooks/useAdmin';
 import dynamic from 'next/dynamic';
 import useJobs from '@/hooks/useJobs';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
 
 const MarkdownPreview = dynamic(() => import('@/utils/Markdown/MarkdownPreview/MarkdownPreview'), { ssr: false });
 
@@ -21,12 +22,11 @@ const CareerPage = () => {
 
   const [allJob, isJob, refetch] = useJobs();
   const [details, setDetails] = useState({});
-  const [openModal, setOpenModal] = useState(false);
   const axiosPublic = useAxiosPublic();
   const [isAdmin, pending] = useAdmin();
+  const [isColumnModalOpen, setColumnModalOpen] = useState(false);
 
   function open(id) {
-    setOpenModal(true);
     const singleData = allJob?.find(job => job?._id === id);
     setDetails(singleData);
   }
@@ -45,7 +45,7 @@ const CareerPage = () => {
         const res = await axiosPublic.delete(`/deleteJobCircular/${id}`);
         if (res?.data?.deletedCount) {
           refetch();
-          toast.success("Your file has been deleted.")
+          toast.success("Job has been deleted.")
         }
       }
     });
@@ -111,68 +111,22 @@ const CareerPage = () => {
                   </div>
 
                   <div className="mt-6 flex items-center gap-8">
-                    <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-base mt-1.5 sm:mt-0">
-                      <button onClick={() => open(job?._id)} className="hover:text-[#EA580C]"><FaEye /></button>
-                      <div className={`fixed z-[100] flex items-center justify-center ${openModal ? 'opacity-1 visible' : 'invisible opacity-0'} inset-0 bg-black/20 backdrop-blur-sm duration-100`}>
-                        <div className={`absolute max-w-screen-md max-h-[95vh] overflow-y-auto px-12 md:px-16 lg:px-20 rounded-lg bg-white mx-4 md:mx-0 p-3 pb-5 text-center drop-shadow-2xl dark:bg-gray-800 dark:text-white ${openModal ? 'scale-1 opacity-1 duration-300' : 'scale-0 opacity-0 duration-150'} `}>
-                          <svg onClick={() => setOpenModal(false)} className="mx-auto mr-0 w-8 cursor-pointer fill-black dark:fill-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g strokeWidth="0"></g><g strokeLinecap="round" strokeLinejoin="round"></g><g><path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"></path></g></svg>
-                          <div className="text-base px-8 font-black text-center mt-6">
-                            {details?.title}
-                          </div>
-                          <div className='flex justify-center items-center my-4'>
-                            <h1 className='font-medium'>{details?.locationType}</h1>
-                            <span className='px-2'>|</span>
-                            <h1 className='font-medium'>{details?.type}</h1>
-                          </div>
-                          <div className='flex justify-center items-center py-3'>
-                            <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{details?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
-                          </div>
-                          <div className='flex justify-center items-center mt-6'>
-                            <Image src={details?.imageURL} alt='image' width={40} height={40} className='rounded-full' />
-                          </div>
-                          <p className="mt-4 px-8 text-sm text-center font-medium">
-                            <h1><span className='font-bold'>{details?.recruiter}</span></h1>
-                          </p>
-                          <p className="mt-4 px-8 text-sm text-center font-medium">
-                            <h1><span className='font-bold'>{details?.recruiterEmail}</span></h1>
-                          </p>
-                          <p className="mt-4 text-sm text-center">
-                            <h1 className='gradient-text font-bold py-1'>Job Description</h1>
-                            <MarkdownPreview content={details?.jobDescription} />
-                          </p>
-                          <p className="mt-4 text-sm text-center">
-                            <h1 className='gradient-text font-bold py-1'>Key Responsibilities</h1>
-
-                            <MarkdownPreview content={details?.keyResponsibilities} />
-                          </p>
-                          <p className="mt-4 text-sm text-center">
-                            <h1 className='gradient-text font-bold py-1'>Preferred Qualifications</h1>
-
-                            <MarkdownPreview content={details?.preferredQualifications} />
-                          </p>
-                          <p className="mt-4 text-sm text-center">
-                            <h1 className='gradient-text font-bold py-1'>Skills Required</h1>
-                            {details?.skillsRequired?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}>{skill?.value}</p>)}
-                          </p>
-                        </div>
-                      </div>
+                    <div className='group relative'>
+                      <Button isIconOnly color='secondary' variant="ghost" onClick={() => { setColumnModalOpen(true); open(job?._id) }}><FaEye size={20} /></Button>
+                      <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">View</span>
                     </div>
-
-                    <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-xl">
-                      <div className="mt-1.5 sm:mt-0">
-                        <button className='hover:text-red-800' onClick={() => handleDelete(job?._id)}> <MdOutlineDelete /></button>
-                      </div>
+                    <div className='group relative'>
+                      <Button isIconOnly color="danger" onClick={() => handleDelete(job?._id)}> <MdOutlineDelete size={20} /></Button>
+                      <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Delete</span>
                     </div>
-                    <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-xl">
-                      <div className="mt-1.5 sm:mt-0">
-                        <Link href={`/dashboard/updateJob/${job?._id}`}><button className="hover:text-[#EA580C]"><FaRegEdit /></button></Link>
-                      </div>
+                    <div className='group relative'>
+                      <Link href={`/dashboard/updateJob/${job?._id}`}><Button isIconOnly color="primary" variant="ghost"><MdOutlineModeEditOutline size={20} /></Button></Link>
+                      <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Edit</span>
                     </div>
-                    <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 text-base">
-                      <div className="mt-1.5 sm:mt-0">
-                        {job?.status === "checked" ? <p className='text-blue-700 font-bold'>Approved</p> : <button onClick={() => handleChecked(job?._id)} className={`${isAdmin ? "text-red-700 border border-red-700 px-3 text-sm hover:text-white hover:bg-red-700 py-0.5 rounded" : "text-red-700"}`}>Under Review</button>}
-                      </div>
-                    </div>
+                    {job?.status === "checked" ? <p className='text-blue-700 font-bold'>Approved</p> : <div className='group relative'>
+                      <button onClick={() => handleChecked(job?._id)} className={`${isAdmin ? "block text-red-700 border border-red-700 px-3 text-sm hover:text-white hover:bg-red-700 py-0.5 rounded" : "text-red-700"}`}>Under Review</button>
+                      <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Edit</span>
+                    </div>}
                   </div>
                 </div>
               </div>
@@ -180,7 +134,65 @@ const CareerPage = () => {
           </div>
         </> : <div className='text-2xl font-medium flex justify-center min-h-[80vh] items-center lg:text-3xl'><h1>There is no job published</h1></div>}
       </div>
-    </PrivateRoute>
+
+      <Modal size='2xl' isOpen={isColumnModalOpen} onClose={() => setColumnModalOpen(false)}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col bg-gray-200 gap-1">Job Details</ModalHeader>
+              <ModalBody className="modal-body-scroll">
+                <div className='px-7'>
+                  <div className="text-base px-8 font-black text-center mt-6">
+                    {details?.title}
+                  </div>
+                  <div className='flex justify-center items-center my-4'>
+                    <h1 className='font-medium'>{details?.locationType}</h1>
+                    <span className='px-2'>|</span>
+                    <h1 className='font-medium'>{details?.type}</h1>
+                  </div>
+                  <div className='flex justify-center items-center py-3'>
+                    <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{details?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
+                  </div>
+                  <div className='flex justify-center items-center mt-6'>
+                    <Image src={details?.imageURL} alt='image' width={40} height={40} className='rounded-full' />
+                  </div>
+                  <p className="mt-4 px-8 text-sm text-center font-medium">
+                    <h1><span className='font-bold'>{details?.recruiter}</span></h1>
+                  </p>
+                  <p className="mt-4 px-8 text-sm text-center font-medium">
+                    <h1><span className='font-bold'>{details?.recruiterEmail}</span></h1>
+                  </p>
+                  <p className="mt-4 text-sm text-center">
+                    <h1 className='gradient-text font-bold py-1'>Job Description</h1>
+                    <MarkdownPreview content={details?.jobDescription} />
+                  </p>
+                  <p className="mt-4 text-sm text-center">
+                    <h1 className='gradient-text font-bold py-1'>Key Responsibilities</h1>
+
+                    <MarkdownPreview content={details?.keyResponsibilities} />
+                  </p>
+                  <p className="mt-4 text-sm text-center">
+                    <h1 className='gradient-text font-bold py-1'>Preferred Qualifications</h1>
+
+                    <MarkdownPreview content={details?.preferredQualifications} />
+                  </p>
+                  <p className="mt-4 text-sm text-center">
+                    <h1 className='gradient-text font-bold py-1'>Skills Required</h1>
+                    {details?.skillsRequired?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}>{skill?.value}</p>)}
+                  </p>
+                </div>
+              </ModalBody>
+              <ModalFooter className="border">
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal >
+
+    </PrivateRoute >
   );
 };
 
