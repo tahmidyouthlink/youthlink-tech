@@ -91,19 +91,20 @@ const AllWork = () => {
         {allWork?.length > 0 ? <><h1 className="px-6 mt-6 lg:px-12 text-2xl md:text-4xl font-semibold">All Works</h1>
           <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
             {allWork?.map((work, index) => <div key={index}>
-              <div className="bg-white rounded-2xl shadow relative lg:min-h-[530px]">
-                <p className="text-xs font-medium md:text-sm absolute right-0 px-4 py-1 rounded-lg border border-white/20 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 shadow-2xl text-white">{work?.formattedDate}</p>
+              <div className="bg-white rounded-2xl drop-shadow relative">
+                <p className="text-xs font-medium md:text-sm absolute right-0 px-4 py-1 rounded-3xl border border-white/20 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 shadow-2xl text-white">{work?.formattedDate}</p>
                 <Image
                   alt="work images"
                   src={work?.imageURL} height={2240} width={2000}
-                  className="h-56 w-full rounded-t-2xl object-cover"
+                  className="h-56 w-full rounded-t-3xl object-cover"
                 />
                 <div className="mt-2 p-5">
                   <p className="font-semibold text-neutral-800">{work?.title}</p>
-                  <p className='text-neutral-500 pt-2'>{work?.heading}</p>
-                  <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3 pt-4 h-fit">{work?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-4 py-2 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>{cat?.value}</p>)}</p>
+                  <div className='h-20'>
+                    <p className='text-neutral-500 pt-2'>{work?.heading}</p>
+                  </div>
 
-                  <div className="mt-6 flex items-center gap-8 lg:absolute lg:bottom-4">
+                  <div className="mt-6 flex items-center gap-8">
                     <div className='group relative'>
                       <Button isIconOnly color='secondary' variant="ghost" onClick={() => { setColumnModalOpen(true); open(work?._id) }}><FaEye size={20} /></Button>
                       <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">View</span>
@@ -131,7 +132,7 @@ const AllWork = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col bg-gray-200 gap-1">work Details</ModalHeader>
+              <ModalHeader className="flex flex-col bg-gray-200 gap-1">Work details</ModalHeader>
               <ModalBody className="modal-body-scroll">
                 <div className='px-7'>
                   <div className='flex justify-center items-center mt-6'>
@@ -144,10 +145,10 @@ const AllWork = () => {
                     {details?.heading}
                   </p>
                   <p className="mt-4 px-8 text-sm text-center font-bold">
-                    {details?.keyword?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}>{skill?.value}</p>)}
+                    {details?.keyword?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}># {skill?.value}</p>)}
                   </p>
                   <div className='flex justify-center items-center py-3'>
-                    <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{details?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
+                    <p className="text-xs font-medium md:text-sm flex justify-center flex-wrap gap-3">{details?.category?.map((cat, index) => <p key={index} className={`text-white w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>{cat?.value}</p>)}</p>
                   </div>
                   <p className="text-xs font-medium md:text-sm text-center">Published Date : {details?.formattedDate}</p>
                   <p className="mt-4 text-sm text-center">

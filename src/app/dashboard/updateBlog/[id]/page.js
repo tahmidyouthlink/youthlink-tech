@@ -34,7 +34,6 @@ const UpdateBlog = ({ params }) => {
   const [options2, setOptions2] = useState([]);
   const [titles, setTitles] = useState([]);
   const [notDouble, setNotDouble] = useState("");
-  const [activeTab, setActiveTab] = useState('cover image');
   const [image, setImage] = useState(null);
   const [imageError, setImageError] = useState(false);
   const [allBlogKeywords, isBlogKeywordPending, refetchBlogKeywords] = useBlogKeywords();
@@ -53,7 +52,6 @@ const UpdateBlog = ({ params }) => {
       setImage(blog?.imageURL || null);
       setValue("embed", blog?.embed);
       setValue("featured", blog?.featured);
-      setActiveTab(blog?.activeTab);
       setSelectedBlogs(blog?.keyword?.map(skill => skill));
       setSelectedCategoryBlogs(blog?.category?.map(cat => cat));
       setBlogDetails(blog);
@@ -169,19 +167,6 @@ const UpdateBlog = ({ params }) => {
     }
   };
 
-  // Handle tab switching
-  const handleTabSwitch = (tab) => {
-    setActiveTab(tab);
-
-    // Clear values for the inactive tab
-    if (tab === 'cover image') {
-      setValue('embed', ''); // Clear embed video field when switching to cover image
-    } else if (tab === 'embed video code') {
-      setImage(null); // Clear image selection when switching to embed video
-      setValue('imageUpload', null); // Clear the value in the form as well
-    }
-  };
-
   const onSubmit = async (data) => {
     const title = data.title;
     const keyword = data.keyword;
@@ -191,16 +176,13 @@ const UpdateBlog = ({ params }) => {
     const description = data.description;
     const embed = data.embed || "";
     const featured = data?.featured || "";
-    const activeTabEmbedImage = activeTab;
 
-    if (activeTab === "cover image") {
-      if (image === null) {
-        setImageError(true);
-        return;
-      }
-      else {
-        setImageError(false);
-      }
+    if (image === null) {
+      setImageError(true);
+      return;
+    }
+    else {
+      setImageError(false);
     }
 
     // Initialize imageUrl with the existing one
@@ -256,7 +238,7 @@ const UpdateBlog = ({ params }) => {
       }
     }
 
-    const updatedBlogInfo = { title, keyword, embed, featured, category, description, imageURL, activeTab: activeTabEmbedImage };
+    const updatedBlogInfo = { title, keyword, embed, featured, category, description, imageURL };
     const res = await axiosPublic.put(`/allBlog/${params?.id}`, updatedBlogInfo);
     if (res.data.modifiedCount > 0) {
       reset();
@@ -376,34 +358,12 @@ const UpdateBlog = ({ params }) => {
               <div className='grid grid-cols-1 lg:col-span-5 gap-8 mt-3 py-3 h-fit'>
 
                 <div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
-
-                  <div className='flex flex-wrap items-center gap-3 bg-white'>
-                    <button type='button'
-                      className={`relative text-sm py-1 transition-all duration-300
-        ${activeTab === 'cover image' ? 'text-[#EA580C] font-semibold' : 'text-neutral-400 font-medium'}
-        after:absolute after:left-0 after:right-0 hover:text-[#EA580C] after:bottom-0 
-        after:h-[2px] after:bg-[#EA580C] after:transition-all after:duration-300
-        ${activeTab === 'cover image' ? 'after:w-full font-bold' : 'after:w-0 hover:after:w-full'}
-      `}
-                      onClick={() => handleTabSwitch('cover image')}
-                    >
-                      Blog thumbnail
-                    </button>
-
-                    <button type='button'
-                      className={`relative text-sm py-1 transition-all duration-300
-        ${activeTab === 'embed video code' ? 'text-[#EA580C] font-semibold' : 'text-neutral-400 font-medium'}
-        after:absolute after:left-0 after:right-0 after:bottom-0 
-        after:h-[2px] after:bg-[#EA580C] hover:text-[#EA580C] after:transition-all after:duration-300
-        ${activeTab === 'embed video code' ? 'after:w-full' : 'after:w-0 hover:after:w-full'}
-      `}
-                      onClick={() => handleTabSwitch('embed video code')}
-                    >
-                      Embed video code
-                    </button>
+                  <div>
+                    <label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3 pb-2'>Upload embed video code</label>
+                    <textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#EA580C] transition-colors duration-1000' id='embed' {...register('embed')} rows={7} cols={50} />
                   </div>
 
-                  {activeTab === "cover image" && <div className='flex flex-col gap-4 mt-6'>
+                  <div className='flex flex-col gap-4 mt-6'>
                     <input
                       id='imageUpload'
                       type='file'
@@ -417,7 +377,7 @@ const UpdateBlog = ({ params }) => {
                       <MdOutlineFileUpload size={60} />
                       <div className='space-y-1.5 text-center'>
                         <h5 className='whitespace-nowrap text-lg font-medium tracking-tight'>
-                          Upload Thumbnail
+                          Upload Blog Cover
                         </h5>
                         <p className='text-sm text-gray-500'>
                           Photo Should be in PNG, JPEG or JPG format
@@ -444,23 +404,18 @@ const UpdateBlog = ({ params }) => {
                       </div>
                     )}
 
-                  </div>}
-
-                  {activeTab === "embed video code" && <div>
-                    <label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3 pb-2'>Upload embed video code</label>
-                    <textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#EA580C] transition-colors duration-1000' id='embed' {...register('embed', { required: activeTab === 'embed video code' })} rows={4} cols={50} />
-                    {errors.embed && <p className="text-red-600">Embed video code is required</p>}
-                  </div>}
+                  </div>
 
                   {theTitles?.length > 0 ? <div>
                     <label htmlFor='featured' className='flex justify-start font-medium text-[#EA580C] pt-6 pb-2'>Select Featured Post Title *</label>
-                    <select {...register("featured")} className="select select-bordered w-full flex-1">
+                    <select {...register("featured", { required: true })} className="select select-bordered w-full flex-1">
                       {
                         theTitles?.map((sector, index) => (
                           <option key={index} value={sector}>{sector}</option>
                         ))
                       }
                     </select>
+                    {errors.featured && <p className="text-red-600">Featured title selection is required</p>}
                   </div> : <div>
                     <p className='pt-10'>No featured posts available. Please select a keyword instead!</p>
                   </div>}

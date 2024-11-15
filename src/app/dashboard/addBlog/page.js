@@ -22,19 +22,20 @@ const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
 const AddBlog = () => {
 	const { register, handleSubmit, formState: { errors }, reset, control, setValue, trigger } = useForm();
-	const [, , refetch] = useBlogs();
+	const [allBlog, isBlog, refetch] = useBlogs();
 	const axiosPublic = useAxiosPublic();
 	const [isAdmin, pending] = useAdmin();
 	const router = useRouter();
 	const [names, setNames] = useState([]);
 	const [names2, setNames2] = useState([]);
-	const [keywords, setKeywords] = useState([]);
-	const [titles, setTitles] = useState([]);
-	const [activeTab, setActiveTab] = useState('cover image');
+	// const [keywords, setKeywords] = useState([]);
+	// const [titles, setTitles] = useState([]);
 	const [image, setImage] = useState(null);
 	const [imageError, setImageError] = useState(false);
 	const [allBlogKeywords, isBlogKeywordPending, refetchBlogKeywords] = useBlogKeywords();
 	const [allBlogCategories, isBlogCategoryPending, refetchBlogCategories] = useBlogCategories();
+	const [selectedCategory, setSelectedCategory] = useState('');
+	const [filteredTitles, setFilteredTitles] = useState([]);
 
 	let temp = [];
 	const handleNameChange = (inputValue) => {
@@ -78,22 +79,39 @@ const AddBlog = () => {
 		}
 	};
 
-	useEffect(() => {
-		const fetchBlogTitle = async () => {
-			try {
-				if (keywords.length > 0) {
-					// Serialize keywords
-					const serializedKeywords = encodeURIComponent(JSON.stringify(keywords));
-					const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
-					setTitles(response?.data?.data);
-				}
-			} catch (err) {
-				toast.error(err.message);
-			}
-		};
+	// useEffect(() => {
+	// 	const fetchBlogTitle = async () => {
+	// 		try {
+	// 			if (keywords.length > 0) {
+	// 				// Serialize keywords
+	// 				const serializedKeywords = encodeURIComponent(JSON.stringify(keywords));
+	// 				const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
+	// 				setTitles(response?.data?.data);
+	// 			}
+	// 		} catch (err) {
+	// 			toast.error(err.message);
+	// 		}
+	// 	};
 
-		fetchBlogTitle();
-	}, [keywords, axiosPublic]);
+	// 	fetchBlogTitle();
+	// }, [keywords, axiosPublic]);
+
+
+	// Handle category change
+	const handleCategoryChange = (event) => {
+
+		// Reset title and filtered titles when category changes
+		setValue("featuredTitle", ""); // Reset the title in the form
+		setFilteredTitles([]); // Clear filtered titles
+
+		const category = event.target.value;
+		setSelectedCategory(category);
+
+		// Filter titles based on selected category
+		const titles = allBlog?.filter(blog => blog.category.some(cat => cat.value === category))
+			.map(blog => blog.title);
+		setFilteredTitles(titles);
+	};
 
 	const handleGoBack = () => {
 		router.push("/dashboard/allBlog");
@@ -138,19 +156,6 @@ const AddBlog = () => {
 		return null;
 	};
 
-	// Handle tab switching
-	const handleTabSwitch = (tab) => {
-		setActiveTab(tab);
-
-		// Clear values for the inactive tab
-		if (tab === 'cover image') {
-			setValue('embed', ''); // Clear embed video field when switching to cover image
-		} else if (tab === 'embed video code') {
-			setImage(null); // Clear image selection when switching to embed video
-			setValue('imageUpload', null); // Clear the value in the form as well
-		}
-	};
-
 	const onSubmit = async (data) => {
 		const title = data.title;
 		const keyword = data.keyword;
@@ -159,19 +164,17 @@ const AddBlog = () => {
 		const newCategories = data.category.map(c => c.value);
 		const description = data.description;
 		const embed = data.embed || "";
-		const featured = data?.featured || "";
+		const featuredTitle = data?.featuredTitle || "";
 		const currentDate = new Date();
 		const options = { year: 'numeric', month: 'long', day: 'numeric' };
 		const formattedDate = currentDate.toLocaleDateString('en-US', options);
 
-		if (activeTab === "cover image") {
-			if (image === null) {
-				setImageError(true);
-				return;
-			}
-			else {
-				setImageError(false);
-			}
+		if (image === null) {
+			setImageError(true);
+			return;
+		}
+		else {
+			setImageError(false);
 		}
 
 		let status;
@@ -229,18 +232,20 @@ const AddBlog = () => {
 			}
 		}
 
-		const blogInfo = { title, keyword, embed, featured, formattedDate, category, description, imageURL, status, activeTab };
+		const blogInfo = { title, keyword, embed, featuredTitle, formattedDate, category, description, imageURL, status };
 
-		const res = await axiosPublic.post("/addBlog", blogInfo);
-		if (res?.data?.insertedId) {
-			reset();
-			refetch();
-			toast.success("Your blog successfully published");
-			router.push("/dashboard/allBlog");
-		}
+		console.log(blogInfo);
+
+		// const res = await axiosPublic.post("/addBlog", blogInfo);
+		// if (res?.data?.insertedId) {
+		// 	reset();
+		// 	refetch();
+		// 	toast.success("Your blog successfully published");
+		// 	router.push("/dashboard/allBlog");
+		// }
 	}
 
-	if (pending || isBlogKeywordPending || isBlogCategoryPending) {
+	if (pending || isBlog || isBlogKeywordPending || isBlogCategoryPending) {
 		return <Loading />
 	};
 
@@ -297,7 +302,6 @@ const AddBlog = () => {
 													{...field}
 													isMulti
 													onChange={(selected) => {
-														// setKeywords(selected);
 														if (selected.length > 3) {
 															toast.error("You can select up to 3 items only.");
 														} else {
@@ -327,7 +331,7 @@ const AddBlog = () => {
 													{...field}
 													isMulti
 													onChange={(selected) => {
-														setKeywords(selected);
+														// setKeywords(selected);
 														if (selected.length > 5) {
 															toast.error("You can select up to 5 items only.");
 														} else {
@@ -352,33 +356,12 @@ const AddBlog = () => {
 
 								<div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
 
-									<div className='flex flex-wrap items-center gap-3 bg-white'>
-										<button type='button'
-											className={`relative text-sm py-1 transition-all duration-300
-        ${activeTab === 'cover image' ? 'text-[#EA580C] font-semibold' : 'text-neutral-400 font-medium'}
-        after:absolute after:left-0 after:right-0 hover:text-[#EA580C] after:bottom-0 
-        after:h-[2px] after:bg-[#EA580C] after:transition-all after:duration-300
-        ${activeTab === 'cover image' ? 'after:w-full font-bold' : 'after:w-0 hover:after:w-full'}
-      `}
-											onClick={() => handleTabSwitch('cover image')}
-										>
-											Blog thumbnail
-										</button>
-
-										<button type='button'
-											className={`relative text-sm py-1 transition-all duration-300
-        ${activeTab === 'embed video code' ? 'text-[#EA580C] font-semibold' : 'text-neutral-400 font-medium'}
-        after:absolute after:left-0 after:right-0 after:bottom-0 
-        after:h-[2px] after:bg-[#EA580C] hover:text-[#EA580C] after:transition-all after:duration-300
-        ${activeTab === 'embed video code' ? 'after:w-full' : 'after:w-0 hover:after:w-full'}
-      `}
-											onClick={() => handleTabSwitch('embed video code')}
-										>
-											Embed video code
-										</button>
+									<div>
+										<label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3 pb-2'>Upload embed video code</label>
+										<textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#EA580C] transition-colors duration-1000' id='embed' {...register('embed')} rows={7} cols={50} />
 									</div>
 
-									{activeTab === "cover image" && <div className='flex flex-col gap-4 mt-6'>
+									<div className='flex flex-col gap-4 mt-6'>
 										<input
 											id='imageUpload'
 											type='file'
@@ -392,7 +375,7 @@ const AddBlog = () => {
 											<MdOutlineFileUpload size={60} />
 											<div className='space-y-1.5 text-center'>
 												<h5 className='whitespace-nowrap text-lg font-medium tracking-tight'>
-													Upload Blog Thumbnail
+													Upload Blog Cover
 												</h5>
 												<p className='text-sm text-gray-500'>
 													Photo Should be in PNG, JPEG or JPG format
@@ -418,27 +401,86 @@ const AddBlog = () => {
 												</button>
 											</div>
 										)}
-									</div>}
+									</div>
 
-									{activeTab === "embed video code" && <div>
-										<label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3 pb-2'>Upload embed video code</label>
-										<textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#EA580C] transition-colors duration-1000' id='embed' {...register('embed', { required: activeTab === 'embed video code' })} rows={4} cols={50} />
-										{errors.embed && <p className="text-red-600">Embed video code is required</p>}
-									</div>}
-
-									{titles?.length > 0 ? <div>
+									{/* {titles?.length > 0 ? <div>
 										<label htmlFor='featured' className='flex justify-start font-medium text-[#EA580C] pt-6 pb-2'>Select Featured Post Title *</label>
-										<select {...register("featured")} className="select select-bordered w-full flex-1">
+										<select {...register("featured", { required: true })} className="select select-bordered w-full flex-1">
 											{
 												titles?.map((sector, index) => (
 													<option key={index} value={sector}>{sector}</option>
 												))
 											}
 										</select>
+										{errors.featured && <p className="text-red-600">Featured title selection is required</p>}
 									</div> : <div>
 										<p className='pt-10'>No featured posts available. Please select a keyword instead!</p>
-									</div>}
+									</div>} */}
 
+									<div>
+										{/* Category Selection */}
+										<div>
+											<label
+												htmlFor="featured"
+												className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
+											>
+												Select Category *
+											</label>
+											<select
+												onChange={handleCategoryChange}
+												className="select select-bordered w-full flex-1"
+											>
+												<option value="">Select a Category</option>
+												{allBlogCategories?.map((cat) => (
+													<option key={cat._id} value={cat.blogCategory}>
+														{cat.blogCategory}
+													</option>
+												))}
+											</select>
+											{errors.category && (
+												<p className="text-red-600">Category selection is required</p>
+											)}
+										</div>
+
+										{/* Title Selection */}
+										{selectedCategory && filteredTitles?.length > 0 && (
+											<div>
+												<label
+													htmlFor="featuredTitle"
+													className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
+												>
+													Select Featured Post Title *
+												</label>
+												<select
+													{...register("featuredTitle", { required: true })}
+													className="select select-bordered w-full flex-1"
+												>
+													<option disabled value="">
+														Select a Title
+													</option>
+													{filteredTitles.map((title, index) => (
+														<option key={index} value={title}>
+															{title}
+														</option>
+													))}
+												</select>
+												{errors.featuredTitle && (
+													<p className="text-red-600">Title selection is required</p>
+												)}
+											</div>
+										)}
+										{selectedCategory && filteredTitles?.length === 0 && (
+											<div>
+												<label
+													htmlFor="title"
+													className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
+												>
+													Select Featured Post Title *
+												</label>
+												<p>This category has no titles. Please select another category.</p>
+											</div>
+										)}
+									</div>
 								</div>
 							</div>
 

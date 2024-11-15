@@ -106,9 +106,6 @@ const CareerPage = () => {
                       <dd className="">{job?.type}</dd>
                     </div>
                   </dl>
-                  <div className='flex items-left pt-4'>
-                    <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{job?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-4 py-2 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>{cat?.value}</p>)}</p>
-                  </div>
 
                   <div className="mt-6 flex items-center gap-8">
                     <div className='group relative'>
@@ -139,7 +136,7 @@ const CareerPage = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col bg-gray-200 gap-1">Job Details</ModalHeader>
+              <ModalHeader className="flex flex-col bg-gray-200 gap-1">Job details</ModalHeader>
               <ModalBody className="modal-body-scroll">
                 <div className='px-7'>
                   <div className="text-base px-8 font-black text-center mt-6">
@@ -151,7 +148,7 @@ const CareerPage = () => {
                     <h1 className='font-medium'>{details?.type}</h1>
                   </div>
                   <div className='flex justify-center items-center py-3'>
-                    <p className="text-xs font-medium md:text-sm flex flex-wrap gap-3">{details?.category?.map((cat, index) => <p key={index} className={`text-white bg-gray-800 rounded-lg px-3 py-1`}>{cat?.value}</p>)}</p>
+                    <p className="text-xs font-medium md:text-sm flex justify-center flex-wrap gap-3">{details?.category?.map((cat, index) => <p key={index} className={`text-white w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>{cat?.value}</p>)}</p>
                   </div>
                   <div className='flex justify-center items-center mt-6'>
                     <Image src={details?.imageURL} alt='image' width={40} height={40} className='rounded-full' />
