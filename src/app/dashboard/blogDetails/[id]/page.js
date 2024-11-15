@@ -56,7 +56,7 @@ const BlogDetails = ({ params }) => {
                     <div className="mb-4 text-sm text-center">
                         <h1 className='gradient-text font-bold py-1'>Featured Post Title</h1>
                         <p>
-                            {blogDetails?.featured ? blogDetails?.featured : "Not Selected"}
+                            {blogDetails?.featuredTitle ? blogDetails?.featuredTitle : "Not Selected"}
                         </p>
                     </div>
                 </div>

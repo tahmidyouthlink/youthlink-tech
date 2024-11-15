@@ -24,7 +24,7 @@ const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
 const UpdateBlog = ({ params }) => {
   const { register, handleSubmit, formState: { errors }, reset, control, setValue } = useForm();
-  const [, , refetch] = useBlogs();
+  const [allBlog, isBlog, refetch] = useBlogs();
   const axiosPublic = useAxiosPublic();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -32,26 +32,30 @@ const UpdateBlog = ({ params }) => {
   const [selectedCategoryBlogs, setSelectedCategoryBlogs] = useState([]);
   const [options, setOptions] = useState([]);
   const [options2, setOptions2] = useState([]);
-  const [titles, setTitles] = useState([]);
-  const [notDouble, setNotDouble] = useState("");
+  // const [titles, setTitles] = useState([]);
+  // const [notDouble, setNotDouble] = useState("");
   const [image, setImage] = useState(null);
   const [imageError, setImageError] = useState(false);
   const [allBlogKeywords, isBlogKeywordPending, refetchBlogKeywords] = useBlogKeywords();
   const [allBlogCategories, isBlogCategoryPending, refetchBlogCategories] = useBlogCategories();
   const [blogDetails, setBlogDetails] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [filteredTitles, setFilteredTitles] = useState([]);
 
   useEffect(() => {
     const fetchBlog = async () => {
       const res = await axiosPublic.get(`/allBlog/${params?.id}`);
       const blog = res.data;
-      setNotDouble(blog?.title);
+      // setNotDouble(blog?.title);
       setValue('title', blog?.title);
       setValue('keyword', blog?.keyword);
       setValue('category', blog?.category);
       setValue('description', blog?.description);
       setImage(blog?.imageURL || null);
       setValue("embed", blog?.embed);
-      setValue("featured", blog?.featured);
+      setSelectedCategory(blog?.selectedCategoryForFeaturedTitle);
+      setValue("featuredTitle", blog?.featuredTitle);
+      setFilteredTitles(blog?.filteredTitlesOfSelectedCategory);
       setSelectedBlogs(blog?.keyword?.map(skill => skill));
       setSelectedCategoryBlogs(blog?.category?.map(cat => cat));
       setBlogDetails(blog);
@@ -102,25 +106,40 @@ const UpdateBlog = ({ params }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchBlogTitle = async () => {
-      try {
-        if (selectedBlogs.length > 0) {
-          // Serialize keywords
-          const serializedKeywords = encodeURIComponent(JSON.stringify(selectedBlogs));
-          const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
-          setTitles(response?.data?.data);
-        }
-      } catch (err) {
-        toast.error(err);
-      }
-    };
-    fetchBlogTitle();
-  }, [selectedBlogs, axiosPublic]);
+  // useEffect(() => {
+  //   const fetchBlogTitle = async () => {
+  //     try {
+  //       if (selectedBlogs.length > 0) {
+  //         // Serialize keywords
+  //         const serializedKeywords = encodeURIComponent(JSON.stringify(selectedBlogs));
+  //         const response = await axiosPublic.get(`/blogTitle/${serializedKeywords}`);
+  //         setTitles(response?.data?.data);
+  //       }
+  //     } catch (err) {
+  //       toast.error(err);
+  //     }
+  //   };
+  //   fetchBlogTitle();
+  // }, [selectedBlogs, axiosPublic]);
 
-  const theTitles = useMemo(() => {
-    return titles?.filter(title => title !== notDouble);
-  }, [titles, notDouble]);
+  const handleCategoryChange = (event) => {
+
+    // Reset title and filtered titles when category changes
+    setValue("featuredTitle", ""); // Reset the title in the form
+    setFilteredTitles([]); // Clear filtered titles
+
+    const category = event.target.value;
+    setSelectedCategory(category);
+
+    // Filter titles based on selected category
+    const titles = allBlog?.filter(blog => blog.category.some(cat => cat.value === category))
+      .map(blog => blog.title);
+    setFilteredTitles(titles);
+  };
+
+  // const theTitles = useMemo(() => {
+  //   return titles?.filter(title => title !== notDouble);
+  // }, [titles, notDouble]);
 
   const handleGoBack = () => {
     router.push("/dashboard/allBlog");
@@ -175,7 +194,9 @@ const UpdateBlog = ({ params }) => {
     const newCategories = data.category.map(c => c.value);
     const description = data.description;
     const embed = data.embed || "";
-    const featured = data?.featured || "";
+    const featuredTitle = data?.featuredTitle || "";
+    const selectedCategoryForFeaturedTitle = selectedCategory || "";
+    const filteredTitlesOfSelectedCategory = filteredTitles || [];
 
     if (image === null) {
       setImageError(true);
@@ -238,7 +259,7 @@ const UpdateBlog = ({ params }) => {
       }
     }
 
-    const updatedBlogInfo = { title, keyword, embed, featured, category, description, imageURL };
+    const updatedBlogInfo = { title, keyword, embed, featuredTitle, category, description, imageURL, selectedCategoryForFeaturedTitle, filteredTitlesOfSelectedCategory };
     const res = await axiosPublic.put(`/allBlog/${params?.id}`, updatedBlogInfo);
     if (res.data.modifiedCount > 0) {
       reset();
@@ -250,7 +271,7 @@ const UpdateBlog = ({ params }) => {
     }
   }
 
-  if (loading || isBlogKeywordPending || isBlogCategoryPending) {
+  if (loading || isBlogKeywordPending || isBlogCategoryPending || isBlog) {
     return <Loading />
   };
 
@@ -406,7 +427,7 @@ const UpdateBlog = ({ params }) => {
 
                   </div>
 
-                  {theTitles?.length > 0 ? <div>
+                  {/* {theTitles?.length > 0 ? <div>
                     <label htmlFor='featured' className='flex justify-start font-medium text-[#EA580C] pt-6 pb-2'>Select Featured Post Title *</label>
                     <select {...register("featured", { required: true })} className="select select-bordered w-full flex-1">
                       {
@@ -418,7 +439,80 @@ const UpdateBlog = ({ params }) => {
                     {errors.featured && <p className="text-red-600">Featured title selection is required</p>}
                   </div> : <div>
                     <p className='pt-10'>No featured posts available. Please select a keyword instead!</p>
-                  </div>}
+                  </div>} */}
+
+                  <div>
+
+                    {/* Category Selection */}
+                    <div>
+                      <label
+                        htmlFor="category"
+                        className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
+                      >
+                        Select Category
+                      </label>
+                      <select
+                        value={selectedCategory}
+                        onChange={handleCategoryChange}
+                        className="select select-bordered w-full flex-1"
+                      >
+                        <option value="">Select a Category</option>
+                        {allBlogCategories?.map((cat) => (
+                          <option key={cat._id} value={cat.blogCategory}>
+                            {cat.blogCategory}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.category && (
+                        <p className="text-red-600">Category selection is required</p>
+                      )}
+                    </div>
+
+                    {/* Title Selection */}
+                    {selectedCategory && filteredTitles?.length > 0 && (
+                      <div>
+                        <label
+                          htmlFor="featuredTitle"
+                          className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
+                        >
+                          Select Featured Post Title *
+                        </label>
+
+                        <select
+                          {...register("featuredTitle", { required: true })}
+                          className="select select-bordered w-full flex-1"
+                        >
+                          <option disabled value="">
+                            Select a Title
+                          </option>
+                          {filteredTitles.map((title, index) => (
+                            <option key={index} value={title}>
+                              {title}
+                            </option>
+                          ))}
+                        </select>
+
+                        {errors.featuredTitle && (
+                          <p className="text-red-600">Title selection is required</p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* If no featured titles available, then show this message */}
+                    {selectedCategory && filteredTitles?.length === 0 && (
+                      <div>
+                        <label
+                          htmlFor="title"
+                          className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
+                        >
+                          Select Featured Post Title *
+                        </label>
+                        <p className='font-semibold'>Your selected category has no featured post titles. </p>
+                        <p className='font-semibold'>Please select another category.</p>
+                      </div>
+                    )}
+
+                  </div>
 
                 </div>
               </div>

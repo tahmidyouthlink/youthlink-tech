@@ -165,7 +165,7 @@ const AllBlog = () => {
                   <div className="mt-4 text-sm text-center">
                     <h1 className='gradient-text font-bold py-1'>Featured Post Title</h1>
                     <p>
-                      {details?.featured ? details?.featured : "Not Selected"}
+                      {details?.featuredTitle ? details?.featuredTitle : "Not Selected"}
                     </p>
                   </div>
                 </div>

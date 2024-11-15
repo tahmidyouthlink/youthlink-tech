@@ -34,7 +34,7 @@ const AddBlog = () => {
 	const [imageError, setImageError] = useState(false);
 	const [allBlogKeywords, isBlogKeywordPending, refetchBlogKeywords] = useBlogKeywords();
 	const [allBlogCategories, isBlogCategoryPending, refetchBlogCategories] = useBlogCategories();
-	const [selectedCategory, setSelectedCategory] = useState('');
+	const [selectedCategory, setSelectedCategory] = useState("");
 	const [filteredTitles, setFilteredTitles] = useState([]);
 
 	let temp = [];
@@ -98,6 +98,7 @@ const AddBlog = () => {
 
 
 	// Handle category change
+
 	const handleCategoryChange = (event) => {
 
 		// Reset title and filtered titles when category changes
@@ -168,6 +169,8 @@ const AddBlog = () => {
 		const currentDate = new Date();
 		const options = { year: 'numeric', month: 'long', day: 'numeric' };
 		const formattedDate = currentDate.toLocaleDateString('en-US', options);
+		const selectedCategoryForFeaturedTitle = selectedCategory || "";
+		const filteredTitlesOfSelectedCategory = filteredTitles || [];
 
 		if (image === null) {
 			setImageError(true);
@@ -232,17 +235,15 @@ const AddBlog = () => {
 			}
 		}
 
-		const blogInfo = { title, keyword, embed, featuredTitle, formattedDate, category, description, imageURL, status };
+		const blogInfo = { title, keyword, embed, featuredTitle, formattedDate, category, description, imageURL, status, selectedCategoryForFeaturedTitle, filteredTitlesOfSelectedCategory };
 
-		console.log(blogInfo);
-
-		// const res = await axiosPublic.post("/addBlog", blogInfo);
-		// if (res?.data?.insertedId) {
-		// 	reset();
-		// 	refetch();
-		// 	toast.success("Your blog successfully published");
-		// 	router.push("/dashboard/allBlog");
-		// }
+		const res = await axiosPublic.post("/addBlog", blogInfo);
+		if (res?.data?.insertedId) {
+			reset();
+			refetch();
+			toast.success("Your blog successfully published");
+			router.push("/dashboard/allBlog");
+		}
 	}
 
 	if (pending || isBlog || isBlogKeywordPending || isBlogCategoryPending) {
@@ -421,10 +422,10 @@ const AddBlog = () => {
 										{/* Category Selection */}
 										<div>
 											<label
-												htmlFor="featured"
+												htmlFor="category"
 												className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
 											>
-												Select Category *
+												Select Category
 											</label>
 											<select
 												onChange={handleCategoryChange}
@@ -437,9 +438,6 @@ const AddBlog = () => {
 													</option>
 												))}
 											</select>
-											{errors.category && (
-												<p className="text-red-600">Category selection is required</p>
-											)}
 										</div>
 
 										{/* Title Selection */}
@@ -469,6 +467,8 @@ const AddBlog = () => {
 												)}
 											</div>
 										)}
+
+										{/* If no featured titles available, then show this message */}
 										{selectedCategory && filteredTitles?.length === 0 && (
 											<div>
 												<label
@@ -477,9 +477,10 @@ const AddBlog = () => {
 												>
 													Select Featured Post Title *
 												</label>
-												<p>This category has no titles. Please select another category.</p>
+												<p>Your selected category has no featured post titles. Please select another category.</p>
 											</div>
 										)}
+
 									</div>
 								</div>
 							</div>
