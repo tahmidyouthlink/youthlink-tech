@@ -9,7 +9,7 @@ const ContactUs = () => {
     <div className='w-full h-full'>
       <div
         style={{
-          backgroundImage: 'url("/abstract-photo/Our Work 3.3 (gradient bg + abstract).jpg")',
+          backgroundImage: 'url("/abstract-photo/Our_Work_3.3_gradient_bg_abstract.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
