@@ -2,14 +2,15 @@ import dynamic from 'next/dynamic';
 import React, { useRef, useMemo } from 'react';
 import 'react-quill/dist/quill.snow.css';
 
+// Dynamically load ReactQuill
 const ReactQuill = dynamic(
     async () => {
         const { default: RQ } = await import('react-quill');
-        return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />;
+        const ForwardedReactQuill = ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />;
+        ForwardedReactQuill.displayName = 'ReactQuill'; // Assign display name here
+        return ForwardedReactQuill;
     },
-    {
-        ssr: false,
-    }
+    { ssr: false }
 );
 
 export default function Editor({ value, onChange }) {
