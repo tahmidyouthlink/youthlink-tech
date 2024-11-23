@@ -475,7 +475,7 @@ const UpdateBlog = ({ params }) => {
                           htmlFor="featuredTitle"
                           className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
                         >
-                          Select Featured Post Title *
+                          Select featured post *
                         </label>
 
                         <select
@@ -483,7 +483,7 @@ const UpdateBlog = ({ params }) => {
                           className="select select-bordered w-full flex-1"
                         >
                           <option disabled value="">
-                            Select a Title
+                            Select a post
                           </option>
                           {filteredTitles.map((title, index) => (
                             <option key={index} value={title}>
@@ -493,7 +493,7 @@ const UpdateBlog = ({ params }) => {
                         </select>
 
                         {errors.featuredTitle && (
-                          <p className="text-red-600">Title selection is required</p>
+                          <p className="text-red-600">Featured post selection is required</p>
                         )}
                       </div>
                     )}
@@ -505,9 +505,9 @@ const UpdateBlog = ({ params }) => {
                           htmlFor="title"
                           className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
                         >
-                          Select Featured Post Title *
+                          Select featured post *
                         </label>
-                        <p className='font-semibold'>Your selected category has no featured post titles. </p>
+                        <p className='font-semibold'>Your selected category has no featured post available. </p>
                         <p className='font-semibold'>Please select another category.</p>
                       </div>
                     )}

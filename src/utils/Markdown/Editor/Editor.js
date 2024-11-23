@@ -70,6 +70,7 @@ export default function Editor({ value, onChange }) {
                 [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
                 ['link', 'image'],
                 [{ align: [] }],
+                [{ color: [] }, { background: [] }],
                 ['clean'],
             ],
             handlers: {

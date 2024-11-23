@@ -447,14 +447,14 @@ const AddBlog = () => {
 													htmlFor="featuredTitle"
 													className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
 												>
-													Select Featured Post Title *
+													Select featured post *
 												</label>
 												<select
 													{...register("featuredTitle", { required: true })}
 													className="select select-bordered w-full flex-1"
 												>
 													<option disabled value="">
-														Select a Title
+														Select a post
 													</option>
 													{filteredTitles.map((title, index) => (
 														<option key={index} value={title}>
@@ -463,7 +463,7 @@ const AddBlog = () => {
 													))}
 												</select>
 												{errors.featuredTitle && (
-													<p className="text-red-600">Title selection is required</p>
+													<p className="text-red-600">Featured post selection is required</p>
 												)}
 											</div>
 										)}
@@ -475,9 +475,10 @@ const AddBlog = () => {
 													htmlFor="title"
 													className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
 												>
-													Select Featured Post Title *
+													Select featured post *
 												</label>
-												<p>Your selected category has no featured post titles. Please select another category.</p>
+												<p className='font-semibold'>Your selected category has no featured post available.</p>
+												<p className='font-semibold'>Please select another category.</p>
 											</div>
 										)}
 
