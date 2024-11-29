@@ -4,7 +4,7 @@ import useAdmin from '@/hooks/useAdmin';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { RxCross2 } from 'react-icons/rx';
@@ -164,6 +164,7 @@ const AddBlog = () => {
 		const newKeywords = data.keyword.map(k => k.value);
 		const newCategories = data.category.map(c => c.value);
 		const description = data.description;
+		const overview = data.overview;
 		const embed = data.embed || "";
 		const featuredTitle = data?.featuredTitle || "";
 		const currentDate = new Date();
@@ -235,7 +236,7 @@ const AddBlog = () => {
 			}
 		}
 
-		const blogInfo = { title, keyword, embed, featuredTitle, formattedDate, category, description, imageURL, status, selectedCategoryForFeaturedTitle, filteredTitlesOfSelectedCategory };
+		const blogInfo = { title, keyword, embed, featuredTitle, formattedDate, category, description, overview, imageURL, status, selectedCategoryForFeaturedTitle, filteredTitlesOfSelectedCategory };
 
 		const res = await axiosPublic.post("/addBlog", blogInfo);
 		if (res?.data?.insertedId) {
@@ -276,6 +277,21 @@ const AddBlog = () => {
 											<p className="text-red-600 text-left pt-1">Title is required</p>
 										)}
 									</div>
+
+									<div>
+										<label htmlFor='overview' className='flex justify-start font-medium text-[#EA580C] pb-2'>Blog overview *</label>
+										<Controller
+											name="overview"
+											control={control}
+											defaultValue=""
+											rules={{ required: true }}
+											render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
+										/>
+										{errors.overview?.type === "required" && (
+											<p className="text-red-600 text-left pt-1">This field is required</ p>
+										)}
+									</div>
+
 									<div>
 										<label htmlFor='description' className='flex justify-start font-medium text-[#EA580C] pb-2'>Details About This Blog *</label>
 										<Controller
@@ -289,6 +305,7 @@ const AddBlog = () => {
 											<p className="text-red-600 text-left pt-1">This field is required</ p>
 										)}
 									</div>
+
 								</div>
 								<div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
 									<div>

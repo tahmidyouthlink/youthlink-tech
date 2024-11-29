@@ -50,6 +50,10 @@ const BlogDetails = ({ params }) => {
                         <Iframe iframeData={blogDetails?.embed} />
                     </div>
                     <p className="text-sm text-center">
+                        <h1 className='gradient-text font-bold py-1'>Blog overview</h1>
+                        <MarkdownPreview content={blogDetails?.overview} />
+                    </p>
+                    <p className="text-sm text-center">
                         <h1 className='gradient-text font-bold py-1'>About This Blog</h1>
                         <MarkdownPreview content={blogDetails?.description} />
                     </p>
