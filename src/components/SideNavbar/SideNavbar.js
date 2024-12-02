@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import Loading from "../shared/Loading/Loading";
 import useAdmin from "@/hooks/useAdmin";
 import { FaUser } from "react-icons/fa";
+import { BiBookContent } from "react-icons/bi";
 
 const SideNavbar = () => {
     const pathname = usePathname();
@@ -36,6 +37,11 @@ const SideNavbar = () => {
             path: "/dashboard/allBlog"
         },
         {
+            name: "Content",
+            icon: <BiBookContent />,
+            path: "/dashboard/marketingContent"
+        },
+        {
             name: "Careers",
             icon: <MdViewKanban />,
             path: "/dashboard/allJob"
@@ -57,6 +63,11 @@ const SideNavbar = () => {
             name: "Blogs Overview",
             icon: <FaBlog />,
             path: "/dashboard/allBlog"
+        },
+        {
+            name: "Content",
+            icon: <BiBookContent />,
+            path: "/dashboard/content"
         },
         {
             name: "Careers",
