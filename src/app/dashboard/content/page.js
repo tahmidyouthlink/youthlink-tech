@@ -15,7 +15,7 @@ const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 const MarketingContent = () => {
 
   const axiosPublic = useAxiosPublic();
-  const { handleSubmit } = useForm();
+  const { handleSubmit, register, formState: { errors }, setValue } = useForm();
   const [image, setImage] = useState(null);
   const [imageError, setImageError] = useState(false);
   const [marketingContentList, isMarketingContentPending, refetchContent] = useMarketingContent();
@@ -23,6 +23,7 @@ const MarketingContent = () => {
   useEffect(() => {
     if (marketingContentList && marketingContentList.length > 0) {
       setImage({ src: marketingContentList[0]?.imageUrl, file: null });
+      setValue('url', marketingContentList[0]?.url);
     }
   }, [marketingContentList]);
 
@@ -62,7 +63,7 @@ const MarketingContent = () => {
     return null;
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
 
     if (!image && !marketingContentList?.length) {
       setImageError(true);
@@ -80,14 +81,15 @@ const MarketingContent = () => {
       }
     } else if (marketingContentList?.length > 0) {
       // Use the existing URL if no new image was uploaded
-      imageUrl = marketingContentList[0]?.url;
+      imageUrl = marketingContentList[0]?.imageUrl;
     }
 
     if (marketingContentList?.length > 0) {
       const contentId = marketingContentList[0]?._id;
 
       const contentData = {
-        imageUrl
+        imageUrl,
+        url: data?.url
       };
 
       try {
@@ -114,7 +116,14 @@ const MarketingContent = () => {
     <div className='px-6'>
       <div className='bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg max-w-screen-sm mx-auto mt-16 lg:mt-28'>
         <h1 className='py-4 text-xl lg:text-2xl font-semibold'>Marketing content configuration</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className='pt-1 pb-6 flex flex-col'>
+        <form onSubmit={handleSubmit(onSubmit)} className='pt-1 pb-6 flex flex-col gap-4'>
+          <div>
+            <label htmlFor='url' className='flex justify-start font-medium text-[#EA580C] pb-2'>Content Url *</label>
+            <input id='url' {...register("url", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
+            {errors.url?.type === "required" && (
+              <p className="text-red-600 text-left pt-1">Url is required</p>
+            )}
+          </div>
           <div className='flex flex-col gap-4'>
             <input
               id='imageUpload'
