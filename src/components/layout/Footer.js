@@ -12,7 +12,7 @@ import footerLogo from "/public/logos/logo-black-text.png";
 
 export default function Footer() {
   return (
-    <footer className="divide-y-2 divide-neutral-200 bg-neutral-50 px-5 sm:px-8 lg:px-12 [&>*]:mx-auto [&>*]:max-w-[1200px]">
+    <footer className="relative divide-y-2 divide-neutral-200 bg-neutral-50 px-5 sm:px-8 lg:px-12 [&>*]:mx-auto [&>*]:max-w-[1200px]">
       {/* Top footer section - logo and links */}
       <div className="grid grid-cols-2 gap-y-8 py-11 md:grid md:grid-cols-[auto_1fr_auto_auto] md:grid-rows-[auto_auto] md:gap-x-8 lg:grid-cols-[1fr_1fr_1fr_auto]">
         {/* Main links subsection */}
@@ -86,7 +86,8 @@ export default function Footer() {
             <li>
               <Link
                 className="hover:bg-[#c8ecff] hover:text-[#0075b4]"
-                href="https://www.linkedin.com/company/youthlink-tech/" target="_blank"
+                href="https://www.linkedin.com/company/youthlink-tech/"
+                target="_blank"
               >
                 <FaLinkedin />
               </Link>
@@ -94,7 +95,8 @@ export default function Footer() {
             <li>
               <Link
                 className="hover:bg-black hover:text-white"
-                href="https://www.twitter.com/youthlink/" target="_blank"
+                href="https://www.twitter.com/youthlink/"
+                target="_blank"
               >
                 <FaXTwitter />
               </Link>
@@ -102,7 +104,8 @@ export default function Footer() {
             <li>
               <Link
                 className="hover:bg-[#cfe6ff] hover:text-[#0080ff]"
-                href="https://www.facebook.com/youthlink/" target="_blank"
+                href="https://www.facebook.com/youthlink/"
+                target="_blank"
               >
                 <FaSquareFacebook />
               </Link>
@@ -110,7 +113,8 @@ export default function Footer() {
             <li>
               <Link
                 className="from-[#405de6] via-[#dc2743] to-[#f09433] hover:bg-gradient-to-b hover:text-white"
-                href="https://www.instagram.com/youthlink/" target="_blank"
+                href="https://www.instagram.com/youthlink/"
+                target="_blank"
               >
                 <FaInstagram />
               </Link>
@@ -118,7 +122,8 @@ export default function Footer() {
             <li>
               <Link
                 className="hover:bg-[#ffcacb] hover:text-[#ff0f1c]"
-                href="https://www.youtube.com/@youthlink" target="_blank"
+                href="https://www.youtube.com/@youthlink"
+                target="_blank"
               >
                 <FaYoutube />
               </Link>

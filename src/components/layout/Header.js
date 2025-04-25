@@ -18,7 +18,6 @@ import {
   IoMdBriefcase,
   IoMdCall,
   IoMdConstruct,
-  IoMdHome,
   IoMdPeople,
 } from "react-icons/io";
 import logoWhiteImage from "/public/logos/logo-white-text.png";
@@ -29,14 +28,16 @@ export default function Header() {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false); // State for tracking nav menu open/close
 
   return (
-    <header className="absolute z-10 w-full px-5 py-4 text-neutral-50 sm:px-8 sm:py-5 lg:px-12 lg:py-6">
+    <header
+      className={`absolute z-10 w-full px-5 py-4 sm:px-8 sm:py-5 lg:px-12 lg:py-6 ${pathname === "/our-work" ? "text-neutral-800" : "text-neutral-50"}`}
+    >
       {/* Header wrapper */}
       <div className="mx-auto flex items-center justify-between xl:max-w-[1200px]">
         {/* Logo */}
         <Link href="/">
           <Image
-            className="md:h-[44px] w-auto h-10"
-            src={logoWhiteImage}
+            className="h-10 w-auto md:h-[44px]"
+            src={pathname === "/" ? logoWhiteImage : logoBlackImage}
             alt="YouthLink logo with white text"
           />
         </Link>
@@ -188,7 +189,8 @@ export default function Header() {
                 <li>
                   <Link
                     className="hover:bg-[#c8ecff] hover:text-[#0075b4]"
-                    href="https://www.linkedin.com/company/youthlink-tech/" target="_blank"
+                    href="https://www.linkedin.com/company/youthlink-tech/"
+                    target="_blank"
                   >
                     <FaLinkedin />
                   </Link>
@@ -196,7 +198,8 @@ export default function Header() {
                 <li>
                   <Link
                     className="hover:bg-black hover:text-white"
-                    href="https://www.twitter.com/youthlink/" target="_blank"
+                    href="https://www.twitter.com/youthlink/"
+                    target="_blank"
                   >
                     <FaXTwitter />
                   </Link>
@@ -204,7 +207,8 @@ export default function Header() {
                 <li>
                   <Link
                     className="hover:bg-[#cfe6ff] hover:text-[#0080ff]"
-                    href="https://www.facebook.com/youthlink/" target="_blank"
+                    href="https://www.facebook.com/youthlink/"
+                    target="_blank"
                   >
                     <FaSquareFacebook />
                   </Link>
@@ -212,7 +216,8 @@ export default function Header() {
                 <li>
                   <Link
                     className="from-[#405de6] via-[#dc2743] to-[#f09433] hover:bg-gradient-to-b hover:text-white"
-                    href="https://www.instagram.com/youthlink/" target="_blank"
+                    href="https://www.instagram.com/youthlink/"
+                    target="_blank"
                   >
                     <FaInstagram />
                   </Link>
@@ -220,7 +225,8 @@ export default function Header() {
                 <li>
                   <Link
                     className="hover:bg-[#ffcacb] hover:text-[#ff0f1c]"
-                    href="https://www.youtube.com/@youthlink" target="_blank"
+                    href="https://www.youtube.com/@youthlink"
+                    target="_blank"
                   >
                     <FaYoutube />
                   </Link>
