@@ -97,12 +97,12 @@ const SideNavbar = () => {
     return (
         <div className="h-screen w-[60%] md:w-64 fixed z-50 drop-shadow-lg bg-custom-blue-1 overflow-y-auto bg-white">
             <div className="px-10 pt-4">
-                <div className="flex items-center gap-1">
+                <Link href={"/"} target="_blank" className="flex items-center gap-1 cursor-pointer">
                     <Image
                         src={logo}
                         alt="YouthLink Logo"
                     />
-                </div>
+                </Link>
             </div>
             <div className="flex flex-col mt-5 gap-2">
                 <>
