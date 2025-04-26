@@ -4,7 +4,7 @@ import useAxiosPublic from '@/hooks/useAxiosPublic';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
@@ -15,7 +15,10 @@ import useBlogKeywords from '@/hooks/useBlogKeywords';
 import useBlogCategories from '@/hooks/useBlogCategories';
 import { FaArrowLeft } from 'react-icons/fa6';
 import { MdOutlineFileUpload } from 'react-icons/md';
-import { RxCross2 } from 'react-icons/rx';
+import { MdDeleteOutline } from "react-icons/md";
+import { Button, Modal, ModalBody, ModalContent, useDisclosure } from '@nextui-org/react';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
 
@@ -41,6 +44,17 @@ const UpdateBlog = ({ params }) => {
   const [blogDetails, setBlogDetails] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filteredTitles, setFilteredTitles] = useState([]);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [menuPortalTarget, setMenuPortalTarget] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [crop, setCrop] = useState({
+    unit: '%',
+    width: 100,
+    height: 100,
+    aspect: 1200 / 700, // Maintain the aspect ratio
+  });
+
+  const imgRef = useRef(null);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -52,7 +66,7 @@ const UpdateBlog = ({ params }) => {
       setValue('category', blog?.category);
       setValue('description', blog?.description);
       setValue('overview', blog?.overview);
-      setImage(blog?.imageURL || null);
+      setImage({ src: blog?.imageURL || null, file: null });
       setValue("embed", blog?.embed);
       setSelectedCategory(blog?.selectedCategoryForFeaturedTitle);
       setValue("featuredTitle", blog?.featuredTitle);
@@ -63,6 +77,10 @@ const UpdateBlog = ({ params }) => {
       setLoading(false);
     };
     fetchBlog();
+
+    if (typeof document !== 'undefined') {
+      setMenuPortalTarget(document.body);
+    }
   }, [params, axiosPublic, setValue]);
 
   let temp = [];
@@ -163,28 +181,68 @@ const UpdateBlog = ({ params }) => {
     setImage(null);
   };
 
-  const uploadImageToImgbb = async (imageFile) => {
+  const handleImageAndModalOff = () => {
+    setImage(null);
+    onOpenChange(false);
+  };
+
+  // Create cropped and resized image with fixed size 1200x700
+  const onCropComplete = async (crop) => {
+    if (imgRef.current && crop.width && crop.height) {
+      const croppedBlob = await getCroppedImage(imgRef.current, crop, 1200, 700);
+      const previewUrl = URL.createObjectURL(croppedBlob);
+      setCroppedImage(previewUrl);
+    }
+  };
+
+  // Function to crop and resize image using Canvas
+  const getCroppedImage = (image, crop, width, height) => {
+    const canvas = document.createElement("canvas");
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+
+    canvas.width = width; // Fixed width: 1200
+    canvas.height = height; // Fixed height: 700
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX, // Cropped X start
+      crop.y * scaleY, // Cropped Y start
+      crop.width * scaleX, // Cropped width
+      crop.height * scaleY, // Cropped height
+      0, // Canvas X start
+      0, // Canvas Y start
+      width, // Fixed output width (1200)
+      height // Fixed output height (700)
+    );
+
+    return new Promise((resolve) => {
+      canvas?.toBlob((blob) => resolve(blob), "image/jpeg");
+    });
+  };
+
+  const uploadImageToImgbb = async (image) => {
     const formData = new FormData();
-    formData.append('image', imageFile);
+    formData.append('image', image.file);
+    formData.append('key', apiKey);
 
     try {
-      const response = await fetch(apiURL, {
-        method: 'POST',
-        body: formData,
+      const response = await axiosPublic.post(apiURL, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-
-      const data = await response.json();
-
-      if (data.data && data.data.url) {
-        return data.data.url; // Imgbb URL of the uploaded image
+      if (response.data && response.data.data && response.data.data.url) {
+        return response.data.data.url; // Return the single image URL
       } else {
-        console.error('Error uploading image:', data);
-        return null;
+        toast.error('Failed to get image URL from response.');
       }
     } catch (error) {
-      console.error('Error:', error);
-      return null;
+      toast.error(`Upload failed: ${error.response?.data?.error?.message || error.message}`);
     }
+    return null;
   };
 
   const onSubmit = async (data) => {
@@ -212,8 +270,10 @@ const UpdateBlog = ({ params }) => {
     let imageURL = blogDetails.imageURL || '';
 
     // If a new image is uploaded, upload it to Imgbb
-    if (image && image.file) {
-      imageURL = await uploadImageToImgbb(image.file);
+    if (croppedImage) {
+      // imageURL = await uploadImageToImgbb(image.file);
+      const croppedBlob = await fetch(croppedImage).then((res) => res.blob());
+      imageURL = await uploadImageToImgbb({ file: croppedBlob });
       if (!imageURL) {
         toast.error('Image upload failed, cannot proceed.');
       }
@@ -299,6 +359,7 @@ const UpdateBlog = ({ params }) => {
 
               <div className='grid grid-cols-1 lg:col-span-7 gap-8 mt-3 py-3 h-fit'>
                 <div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+
                   <div>
                     <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C] pb-2'>Title *</label>
                     <input id='title' {...register("title", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
@@ -308,17 +369,15 @@ const UpdateBlog = ({ params }) => {
                   </div>
 
                   <div>
+
                     <label htmlFor='overview' className='flex justify-start font-medium text-[#EA580C] pb-2'>Blog overview *</label>
-                    <Controller
-                      name="overview"
-                      control={control}
-                      defaultValue=""
-                      rules={{ required: true }}
-                      render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-                    />
+
+                    <textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#EA580C] transition-colors duration-1000' id='overview' {...register('overview', { required: true })} rows={7} cols={50} />
+
                     {errors.overview?.type === "required" && (
                       <p className="text-red-600 text-left pt-1">This field is required</ p>
                     )}
+
                   </div>
 
                   <div>
@@ -336,7 +395,13 @@ const UpdateBlog = ({ params }) => {
                   </div>
 
                 </div>
+
+              </div>
+
+              <div className='grid grid-cols-1 lg:col-span-5 gap-8 mt-3 py-3 h-fit'>
+
                 <div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+
                   <div>
                     <label htmlFor='category' className='flex justify-start font-medium text-[#EA580C] pb-2'>Change Categories</label>
                     <Controller
@@ -348,6 +413,9 @@ const UpdateBlog = ({ params }) => {
                           isMulti
                           {...field}
                           options={options2}
+                          menuPortalTarget={menuPortalTarget}
+                          styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                          menuPlacement="auto"
                           onChange={(selected) => {
                             if (selected.length > 3) {
                               toast.error("You can select up to 3 items only.");
@@ -364,6 +432,7 @@ const UpdateBlog = ({ params }) => {
                       <p className="text-red-600 text-left pt-1">Category is required</p>
                     )}
                   </div>
+
                   <div>
                     <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C] pb-2'>Change Keywords</label>
                     <Controller
@@ -374,6 +443,9 @@ const UpdateBlog = ({ params }) => {
                         <CreatableSelect
                           isMulti
                           {...field}
+                          menuPortalTarget={menuPortalTarget}
+                          styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                          menuPlacement="auto"
                           options={options}
                           onChange={(selected) => {
                             if (selected.length > 5) {
@@ -391,19 +463,18 @@ const UpdateBlog = ({ params }) => {
                       <p className="text-red-600 text-left pt-1">Keyword is required</p>
                     )}
                   </div>
-                </div>
-              </div>
 
-              <div className='grid grid-cols-1 lg:col-span-5 gap-8 mt-3 py-3 h-fit'>
+                </div>
 
                 <div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+
                   <div>
                     <label htmlFor='embed' className='flex justify-start font-medium text-[#EA580C] mt-3 pb-2'>Upload embed video code</label>
                     <textarea className='w-full p-3 mb-4 border rounded-md outline-none focus:border-[#EA580C] transition-colors duration-1000' id='embed' {...register('embed')} rows={7} cols={50} />
                   </div>
 
                   <div className='flex flex-col gap-4 mt-6'>
-                    <input
+                    {/* <input
                       id='imageUpload'
                       type='file'
                       className='hidden'
@@ -441,7 +512,97 @@ const UpdateBlog = ({ params }) => {
                           <RxCross2 size={24} />
                         </button>
                       </div>
-                    )}
+                    )} */}
+
+                    <div onClick={onOpen}
+                      className='flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed border-gray-300 p-6 bg-gray-50 hover:bg-gray-100 cursor-pointer transition duration-200'>
+
+                      {image ? (
+                        // Show the uploaded image preview
+                        <Image
+                          src={croppedImage || image.src}
+                          alt='Uploaded image'
+                          width={3000}
+                          height={3000}
+                          className='w-full min-h-[200px] max-h-[200px] rounded-md object-contain'
+                        />
+                      ) : (
+                        // Show the upload icon and text if no image is uploaded
+                        <>
+                          <MdOutlineFileUpload size={60} />
+                          <div className='space-y-1.5 text-center'>
+                            <h5 className='whitespace-nowrap text-lg font-medium tracking-tight'>Upload content</h5>
+                            <p className='text-sm text-gray-500'>Photo should be in PNG, JPEG, or JPG format</p>
+                          </div>
+                        </>
+                      )}
+
+                    </div>
+
+                    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="xl">
+                      <ModalContent>
+                        <ModalBody>
+                          <div className='flex flex-col gap-4 mt-12 px-6'>
+
+                            {image ? (
+                              <div className='relative'>
+                                <ReactCrop
+                                  crop={crop}
+                                  onChange={(newCrop) => setCrop(newCrop)}
+                                  onComplete={onCropComplete}
+                                  aspect={1200 / 700}
+                                  minWidth={1200}
+                                  maxWidth={1200}
+                                  maxHeight={700}
+                                  minHeight={700}
+                                  keepSelection={true}
+                                >
+                                  <img ref={imgRef} src={image.src} alt="Uploaded image" />
+                                </ReactCrop>
+                                <button
+                                  onClick={handleImageRemove}
+                                  className='absolute top-1 right-1 rounded-full p-1 bg-red-600 hover:bg-red-700 text-white font-bold'
+                                >
+                                  <MdDeleteOutline size={24} />
+                                </button>
+                              </div>
+                            ) :
+                              <div>
+                                <input
+                                  id='imageUpload'
+                                  type='file'
+                                  className='hidden'
+                                  onChange={handleImageChange}
+                                />
+                                <label
+                                  htmlFor='imageUpload'
+                                  className='flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed border-gray-300 p-6 bg-gray-50 hover:bg-gray-100 cursor-pointer transition duration-200'
+                                >
+                                  <MdOutlineFileUpload size={60} />
+                                  <div className='space-y-1.5 text-center'>
+                                    <h5 className='whitespace-nowrap text-lg font-medium tracking-tight'>
+                                      Upload content
+                                    </h5>
+                                    <p className='text-sm text-gray-500'>
+                                      Photo Should be in PNG, JPEG or JPG format
+                                    </p>
+                                  </div>
+                                </label>
+                              </div>
+                            }
+                            {imageError && <p className='text-red-600 text-left pt-1'>Image uploading is required</p>}
+                          </div>
+                        </ModalBody>
+                        <div className="flex justify-end gap-4 p-4">
+                          <Button onClick={handleImageAndModalOff} className='bg-gray-100 text-black' variant="flat">
+                            Cancel
+                          </Button>
+                          <Button onClick={() => onOpenChange(false)} color="primary" variant="flat">
+                            Save
+                          </Button>
+                        </div>
+                      </ModalContent>
+                    </Modal>
 
                   </div>
 
@@ -467,7 +628,7 @@ const UpdateBlog = ({ params }) => {
                         htmlFor="category"
                         className="flex justify-start font-medium text-[#EA580C] pt-6 pb-2"
                       >
-                        Select Category
+                        Select Category for featured post title
                       </label>
                       <select
                         value={selectedCategory}
@@ -533,15 +694,21 @@ const UpdateBlog = ({ params }) => {
                   </div>
 
                 </div>
+
               </div>
 
             </div>
 
             <div className='flex justify-end items-center mt-3'>
 
-              <button type='submit' className={`text-white bg-gray-800 w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>
-                Update
-              </button>
+              <div className='relative'>
+                <div className='fixed bottom-4 right-12 z-50'>
+                  <button type='submit' className={`text-white bg-gray-800 w-fit h-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>
+                    Update
+                  </button>
+                </div>
+              </div>
+
             </div>
 
           </form>
