@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.3.3",
+    "@gsap/react": "^2.1.2",
+    "@lottiefiles/dotlottie-react": "^0.13.0",
     "@next/env": "^14.2.3",
     "@nextui-org/react": "^2.4.8",
     "@tailwindcss/typography": "^0.5.13",
@@ -18,7 +20,9 @@
     "axios": "^1.6.8",
     "firebase": "^10.11.1",
     "framer-motion": "^11.11.13",
+    "gsap": "^3.12.7",
     "lottie-react": "^2.4.0",
+    "lottie-web": "^5.12.2",
     "marked": "^12.0.2",
     "next": "14.2.3",
     "react": "^18",

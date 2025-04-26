@@ -134,9 +134,26 @@ body {
     @apply text-neutral-400;
   }
 
+  /* For images of item details section */
+  .item-details img {
+    @apply rounded-lg;
+  }
+
   /* For list items of item details section */
   .item-details li {
     @apply ml-8 text-neutral-400 before:mr-2 before:content-["•"] first:mt-3;
+  }
+
+  .share-links li {
+    @apply relative flex size-[26px] cursor-pointer items-center justify-center rounded-md text-[14px] text-neutral-200 before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-md before:bg-white/5 before:backdrop-blur-2xl before:transition-[background] before:duration-300 before:ease-in-out before:content-[''] before:hover:bg-white/25 [&_a]:flex [&_a]:size-[26px] [&_a]:items-center [&_a]:justify-center;
+  }
+
+  a.is-visible {
+    @apply text-neutral-100 hover:text-white;
+  }
+
+  a.not-visible {
+    @apply text-neutral-400 hover:text-neutral-200;
   }
 }
 

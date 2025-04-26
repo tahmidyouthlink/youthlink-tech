@@ -1,0 +1,15 @@
+.parallax img {
+  @apply absolute inset-0 h-dvh w-dvw object-cover;
+}
+
+.parallax::after {
+  @apply absolute bottom-0 left-0 right-0 z-[1] h-52 translate-y-1/4 bg-[linear-gradient(to_top,#f5f5f5,#f5f5f5,transparent)] content-[''];
+}
+
+.story::after {
+  @apply absolute left-0 right-0 top-0 z-[100] h-36 bg-[linear-gradient(to_bottom,#f5f5f5,#f5f5f5,transparent)] content-[''];
+}
+
+#work-hero h1 .word {
+  @apply [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)];
+}
