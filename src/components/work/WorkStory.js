@@ -30,115 +30,117 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
 
   useGSAP(
     () => {
-      const headingElements = document.querySelectorAll("#work-story h3");
+      if (typeof document !== "undefined") {
+        const headingElements = document.querySelectorAll("#work-story h3");
 
-      headingElements.forEach((heading) => {
-        const processNode = (node) => {
-          if (node.nodeType === Node.TEXT_NODE) {
-            // Handle normal text (words without extra styling)
-            const text = node.textContent || "";
-            const fragment = document.createDocumentFragment();
+        headingElements.forEach((heading) => {
+          const processNode = (node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              // Handle normal text (words without extra styling)
+              const text = node.textContent || "";
+              const fragment = document.createDocumentFragment();
 
-            text.split(" ").forEach((word, index) => {
+              text.split(" ").forEach((word, index) => {
+                const wordSpan = document.createElement("span");
+                wordSpan.className = "word-wrapper";
+
+                word.split("").forEach((char) => {
+                  const charSpan = document.createElement("span");
+                  charSpan.className = "scroll-text";
+                  charSpan.textContent = char;
+                  wordSpan.appendChild(charSpan);
+                });
+
+                fragment.appendChild(wordSpan);
+
+                // Preserve spaces after words
+                if (index < text.split(" ").length - 1) {
+                  fragment.appendChild(document.createTextNode(" "));
+                }
+              });
+
+              node.replaceWith(fragment);
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+              // Handle existing <span> elements (words with gradient text)
+              const element = node;
+              const originalClass = element.className;
+
+              const text = element.textContent || "";
               const wordSpan = document.createElement("span");
-              wordSpan.className = "word-wrapper";
+              wordSpan.className = `${originalClass} word-wrapper scroll-text`; // Keep gradient styling
 
-              word.split("").forEach((char) => {
+              text.split("").forEach((char) => {
                 const charSpan = document.createElement("span");
-                charSpan.className = "scroll-text";
+                charSpan.className = "";
                 charSpan.textContent = char;
                 wordSpan.appendChild(charSpan);
               });
 
-              fragment.appendChild(wordSpan);
+              element.replaceWith(wordSpan); // Replace original <span> with the wrapped version
+            }
+          };
 
-              // Preserve spaces after words
-              if (index < text.split(" ").length - 1) {
-                fragment.appendChild(document.createTextNode(" "));
-              }
-            });
-
-            node.replaceWith(fragment);
-          } else if (node.nodeType === Node.ELEMENT_NODE) {
-            // Handle existing <span> elements (words with gradient text)
-            const element = node;
-            const originalClass = element.className;
-
-            const text = element.textContent || "";
-            const wordSpan = document.createElement("span");
-            wordSpan.className = `${originalClass} word-wrapper scroll-text`; // Keep gradient styling
-
-            text.split("").forEach((char) => {
-              const charSpan = document.createElement("span");
-              charSpan.className = "";
-              charSpan.textContent = char;
-              wordSpan.appendChild(charSpan);
-            });
-
-            element.replaceWith(wordSpan); // Replace original <span> with the wrapped version
-          }
-        };
-
-        // Process all child nodes of the <h3> element
-        Array.from(heading.childNodes).forEach(processNode);
-      });
-
-      // console.log("chk headingElements", headingElements);
-
-      headingElements.forEach((heading) => {
-        const chars = heading.querySelectorAll(".scroll-text");
-
-        console.log("chk chars", chars);
-
-        gsap.from(chars, {
-          scrollTrigger: {
-            trigger: chars,
-            start: "top 70%",
-            end: "top 30%",
-            scrub: true,
-            // markers: true,
-          },
-          opacity: 0.2,
-          stagger: 0.1,
+          // Process all child nodes of the <h3> element
+          Array.from(heading.childNodes).forEach(processNode);
         });
-      });
 
-      console.log("chk inside useGSAP", {
-        lottieRef,
-        lottieAnimation,
-      });
+        // console.log("chk headingElements", headingElements);
 
-      gsap.to(lottieRef.current, {
-        scrollTrigger: {
-          trigger: "#work-story",
-          scrub: true,
-          // pin: true,
-          start: "top center",
-          end: "bottom top",
-          onUpdate: (self) => {
-            lottieAnimation?.goToAndStop(
-              lottieAnimation?.totalFrames * self.progress,
-              true,
-            );
+        headingElements.forEach((heading) => {
+          const chars = heading.querySelectorAll(".scroll-text");
+
+          console.log("chk chars", chars);
+
+          gsap.from(chars, {
+            scrollTrigger: {
+              trigger: chars,
+              start: "top 70%",
+              end: "top 30%",
+              scrub: true,
+              // markers: true,
+            },
+            opacity: 0.2,
+            stagger: 0.1,
+          });
+        });
+
+        console.log("chk inside useGSAP", {
+          lottieRef,
+          lottieAnimation,
+        });
+
+        gsap.to(lottieRef.current, {
+          scrollTrigger: {
+            trigger: "#work-story",
+            scrub: true,
+            // pin: true,
+            start: "top center",
+            end: "bottom top",
+            onUpdate: (self) => {
+              lottieAnimation?.goToAndStop(
+                lottieAnimation?.totalFrames * self.progress,
+                true,
+              );
+            },
           },
-        },
-      });
+        });
 
-      // ScrollTrigger.create({
-      //   trigger: lottieRef.current,
-      //   scrub: true,
-      //   // pin: true,
-      //   start: "top center",
-      //   end: "bottom top",
-      //   onUpdate: (self) => {
-      //     lottieAnimation?.goToAndStop(
-      //       lottieAnimation?.totalFrames * self.progress,
-      //       true,
-      //     );
-      //   },
-      // });
+        // ScrollTrigger.create({
+        //   trigger: lottieRef.current,
+        //   scrub: true,
+        //   // pin: true,
+        //   start: "top center",
+        //   end: "bottom top",
+        //   onUpdate: (self) => {
+        //     lottieAnimation?.goToAndStop(
+        //       lottieAnimation?.totalFrames * self.progress,
+        //       true,
+        //     );
+        //   },
+        // });
+      }
     },
-    { dependencies: [lottieAnimation] },
+    { dependencies: [gsap, lottieAnimation] },
   );
 
   // console.log("chk dotLottie", dotLottie);

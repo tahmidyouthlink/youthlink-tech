@@ -119,7 +119,7 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
         // });
       }
     },
-    { dependencies: [selectedOption] },
+    { dependencies: [gsap, selectedOption] },
   );
 
   return (
@@ -138,7 +138,7 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
             </h2>
             <div id="samples-categories" className="mt-8 max-w-xl">
               <p className="mb-4 text-neutral-600">
-                Sectors in which we've worked on:
+                Sectors in which we&apos;ve worked on:
               </p>
               <div className="flex h-fit w-[33.3dvw] flex-wrap gap-3">
                 {categories.map((category, categoryIndex) => {
@@ -188,13 +188,13 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
 
                     return (
                       <div
+                        key={"story-hero-img-" + src + index}
                         className={`sample-card relative origin-left rotate-[var(--rotate)] transition-[transform,width,height,filter] delay-150 duration-500 ease-in-out [&:has(img:hover)>div]:delay-[500ms] [&:has(img:hover)>h4]:opacity-100 [&:has(img:hover)>h4]:delay-[500ms] [&:has(img:hover)>img]:min-w-80 [&:has(img:hover)]:z-[1] [&:has(img:hover)]:-translate-y-3 [&:has(img:hover)_div]:opacity-100`}
                         // style={{
                         //   "--rotate": `${rotate[index]}deg`,
                         // }}
                       >
                         <Image
-                          key={index}
                           src={src}
                           alt={`Image ${index + 1}`}
                           width={0}
@@ -213,8 +213,8 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
                             </p>
                           </div>
                           <h4 className="pointer-events-none rounded-md bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] p-2 text-center text-neutral-700">
-                            How we've initiated Bangladesh's first fashion
-                            e-commerce business
+                            How we&apos;ve initiated Bangladesh&apos;s first
+                            fashion e-commerce business
                           </h4>
                         </div>
                       </div>
