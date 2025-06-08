@@ -33,8 +33,8 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <h1 className='font-bold text-xl'>Head Office</h1>
-                  <p className='font-inter text-white'>House - 763, Road - 10, Avenue - 6, Mirpur DOHS</p>
-                  <p className='font-inter text-white'>Dhaka, Bangladesh</p>
+                  <p className='font-inter text-white'>Kha-199/3 & 199/4, Progati Saroni, Middle Badda</p>
+                  <p className='font-inter text-white'>Dhaka - 1212, Bangladesh</p>
                 </div>
               </div>
               <div className='flex items-center gap-4 p-4 lg:p-6 rounded-lg mt-6 bg-gradient-to-r from-white/5 to-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30'>
