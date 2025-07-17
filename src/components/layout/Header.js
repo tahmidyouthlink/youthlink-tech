@@ -73,16 +73,6 @@ export default function Header() {
             <li>
               <Link
                 className={
-                  pathname.startsWith("/industries") ? "active" : undefined
-                }
-                href="/industries"
-              >
-                Industries
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={
                   pathname.startsWith("/about-us") ? "active" : undefined
                 }
                 href="/about-us"
@@ -145,17 +135,6 @@ export default function Header() {
                   >
                     <IoMdConstruct />
                     Services
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className={
-                      pathname.startsWith("/industries") ? "active" : undefined
-                    }
-                    href="/industries"
-                  >
-                    <FaBuilding />
-                    Industries
                   </Link>
                 </li>
                 <li>

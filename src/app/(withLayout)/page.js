@@ -15,17 +15,17 @@ export default function Home() {
     {
       heading: "Transforming Ideas into Digital Reality",
       buttonText: "Our Work",
-      link: "/our-work"
+      link: "/our-work",
     },
     {
       heading: "Innovative Solutions, Tailored for You",
       buttonText: "Our Services",
-      link: "/services"
+      link: "/services",
     },
     {
-      heading: "Digital Solutions for Every Sector",
-      buttonText: "Industries",
-      link: "/industries"
+      heading: "Driven by Passion, Defined by Purpose",
+      buttonText: "Who We Are",
+      link: "/about-us",
     },
   ];
   const INDIVIDUAL_VIDEO_LENGTH_IN_SECONDS = 5;
@@ -117,11 +117,10 @@ export default function Home() {
           return (
             // Slide
             <swiper-slide key={index}>
-
               {/* Content section */}
               <div
                 ref={(element) => (contentsRef.current[index] = element)}
-                className="xl:max-w-[1200px] content-end px-5 pb-10 pt-20 text-white sm:px-8 lg:px-12 xl:mx-auto  xl:px-0 min-h-dvh"
+                className="min-h-dvh content-end px-5 pb-10 pt-20 text-white sm:px-8 lg:px-12 xl:mx-auto xl:max-w-[1200px] xl:px-0"
               >
                 {/* Heading */}
                 <h1
@@ -132,7 +131,7 @@ export default function Home() {
                 {/* Call-to-action button */}
                 <Link
                   href={content?.link}
-                  className={`${index === 0 ? "translate-y-0 opacity-100" : "translate-y-7 opacity-0"} mt-8 w-fit block rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out hover:bg-[50%_100%] sm:mb-12`}
+                  className={`${index === 0 ? "translate-y-0 opacity-100" : "translate-y-7 opacity-0"} mt-8 block w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out hover:bg-[50%_100%] sm:mb-12`}
                 >
                   {content.buttonText}
                 </Link>

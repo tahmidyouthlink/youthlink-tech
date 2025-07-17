@@ -30,9 +30,6 @@ export default function Footer() {
               <Link href="/careers">Careers</Link>
             </li>
             <li>
-              <Link href="/industries">Industries</Link>
-            </li>
-            <li>
               <Link href="/blog">Blog</Link>
             </li>
             <li>
