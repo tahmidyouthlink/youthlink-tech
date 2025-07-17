@@ -1,60 +1,45 @@
-import React from 'react';
-import { FaLocationDot } from 'react-icons/fa6';
-import { MdEmail } from 'react-icons/md';
-import { IoIosCall } from 'react-icons/io';
-import Form from '@/components/ContactForm/Form';
+import React from "react";
+import { FaLocationDot } from "react-icons/fa6";
+import { MdEmail } from "react-icons/md";
+import { IoIosCall } from "react-icons/io";
+import Form from "@/components/ContactForm/Form";
 
 const ContactUs = () => {
   return (
-    <div className='w-full h-full'>
-      <div
-        style={{
-          backgroundImage: 'url("/abstract-photo/Our_Work_3.3_gradient_bg_abstract.jpg")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-        className="bg-fixed"
-      >
-        <div className='max-w-[1200px] mx-auto pb-12 px-5 md:px-8 2xl:px-0'>
-          <h6 className='text-[#EAB308] font-semibold text-xs md:text-sm pt-28 md:pt-44'>CONTACT</h6>
-          <h1 className='text-white font-bold text-2xl md:text-3xl lg:text-5xl pt-4 w-3/4 lg:w-1/2'>Seamless Communication, Global Impact.</h1>
-        </div>
-        <div className='max-w-[1200px] mx-auto px-5 md:px-8 2xl:px-0'>
-          <div className='pb-12 lg:pb-24 lg:mt-24 flex flex-col-reverse lg:flex-row gap-16 text-black'>
-            <div className='flex-1 p-4 md:p-12 rounded-lg space-y-4 lg:space-y-6 md:bg-gradient-to-r from-white/5 to-white/10 backdrop-filter backdrop-blur-md bg-opacity-30'>
-              <h1 className='text-2xl md:text-3xl font-bold text-white'>Send us a message</h1>
-              <p className='font-inter text-sm md:text-base text-white'>For more information about YouthLink, fill out the form below.</p>
-              <Form />
+    <div className="bg-neutral-100 pt-24">
+      <div className="mx-auto max-w-[1200px] px-5 md:px-8 2xl:px-0">
+        <h1 className="text-xl font-bold text-neutral-700 md:text-2xl lg:text-3xl">
+          Connect
+        </h1>
+        <div className="flex flex-col-reverse gap-10 pb-12 lg:mt-5 lg:flex-row lg:pb-16">
+          <div className="flex-1 space-y-4 rounded-lg border-2 border-neutral-100/30 bg-white/60 p-5 backdrop-blur-2xl md:bg-gradient-to-r md:p-7 lg:space-y-6">
+            <Form />
+          </div>
+          <div className="flex-1 text-neutral-500">
+            <div className="z-10 flex items-center gap-4 rounded-lg border-2 border-neutral-100/30 bg-white/60 p-7 backdrop-blur-2xl lg:p-7">
+              <div className="rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] p-3 text-white">
+                <FaLocationDot size={26} />
+              </div>
+              <div>
+                <p>Kha-199/3 & 199/4, Progati Saroni, Middle Badda</p>
+                <p>Dhaka - 1212, Bangladesh</p>
+              </div>
             </div>
-            <div className='flex-1 text-white'>
-              <div className='flex items-center gap-4 p-4 lg:p-6 rounded-lg bg-gradient-to-r from-white/5 to-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30'>
-                <div className='p-3 bg-[#EAB3084D] text-[#EAB308] rounded-full'>
-                  <FaLocationDot size={26} />
-                </div>
-                <div>
-                  <h1 className='font-bold text-xl'>Head Office</h1>
-                  <p className='font-inter text-white'>Kha-199/3 & 199/4, Progati Saroni, Middle Badda</p>
-                  <p className='font-inter text-white'>Dhaka - 1212, Bangladesh</p>
-                </div>
+            <div className="z-10 mt-6 flex items-center gap-4 rounded-lg border-2 border-neutral-100/30 bg-white/60 p-5 backdrop-blur-2xl lg:p-7">
+              <div className="rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] p-3 text-white">
+                <MdEmail size={26} />
               </div>
-              <div className='flex items-center gap-4 p-4 lg:p-6 rounded-lg mt-6 bg-gradient-to-r from-white/5 to-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30'>
-                <div className='p-3 bg-[#EAB3084D] text-[#EAB308] rounded-full'>
-                  <MdEmail size={26} />
-                </div>
-                <div>
-                  <h1 className='font-bold text-xl'>Email Support</h1>
-                  <p className='font-inter text-white'>info@youthlink.tech</p>
-                </div>
+              <div>
+                <p>info@youthlink.tech</p>
               </div>
-              <div className='flex items-center gap-4 p-4 lg:p-6 rounded-lg mt-6 bg-gradient-to-r from-white/5 to-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30'>
-                <div className='p-3 bg-[#EAB3084D] text-[#EAB308] rounded-full'>
-                  <IoIosCall size={26} />
-                </div>
-                <div>
-                  <h1 className='font-bold text-xl'>Let's Talk</h1>
-                  <p className='font-inter text-white'>Phone : +6221.2002.2012</p>
-                  <p className='font-inter text-white'>Fax : +6221.2002.2012</p>
-                </div>
+            </div>
+            <div className="z-10 mt-6 flex items-center gap-4 rounded-lg border-2 border-neutral-100/30 bg-white/60 p-5 backdrop-blur-2xl lg:p-7">
+              <div className="rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] p-3 text-white">
+                <IoIosCall size={26} />
+              </div>
+              <div>
+                <p>Phone: +6221.2002.2012</p>
+                <p>Fax: +6221.2002.2012</p>
               </div>
             </div>
           </div>

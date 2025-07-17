@@ -97,7 +97,7 @@ export default function Header() {
                 }
                 href="/contact-us"
               >
-                Contact
+                Connect
               </Link>
             </li>
           </ul>
