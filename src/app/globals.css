@@ -116,22 +116,22 @@ body {
 
   /* For main headings of item details section */
   .item-details > div > h3 {
-    @apply text-4xl font-medium text-[#f7f7f7];
+    @apply text-4xl font-medium text-neutral-700;
   }
 
   /* For sub headings of item details section */
   .item-details > div > div > h3 {
-    @apply mb-2 text-xl text-neutral-300;
+    @apply mb-2 text-xl text-neutral-700;
   }
 
   /* For larger texts of item details section */
   .item-details .ql-size-large {
-    @apply text-xl text-neutral-400;
+    @apply text-xl text-neutral-600;
   }
 
   /* For normal texts of item details section */
   .item-details p {
-    @apply text-neutral-400;
+    @apply text-neutral-600;
   }
 
   /* For images of item details section */
@@ -141,7 +141,7 @@ body {
 
   /* For list items of item details section */
   .item-details li {
-    @apply ml-8 text-neutral-400 before:mr-2 before:content-["•"] first:mt-3;
+    @apply ml-8 text-neutral-600 before:mr-2 before:content-["•"] first:mt-3;
   }
 
   .share-links li {
