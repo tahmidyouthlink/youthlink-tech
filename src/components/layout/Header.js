@@ -29,7 +29,7 @@ export default function Header() {
 
   return (
     <header
-      className={`absolute z-10 w-full px-5 py-4 sm:px-8 sm:py-5 lg:px-12 lg:py-6 ${pathname === "/our-work" ? "text-neutral-800" : "text-neutral-50"}`}
+      className={`absolute z-10 w-full px-5 py-4 sm:px-8 sm:py-5 lg:px-12 lg:py-6 ${pathname === "/" ? "text-neutral-50" : "text-neutral-800"}`}
     >
       {/* Header wrapper */}
       <div className="mx-auto flex items-center justify-between xl:max-w-[1200px]">
