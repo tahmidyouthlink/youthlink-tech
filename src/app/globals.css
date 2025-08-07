@@ -144,6 +144,14 @@ body {
     @apply ml-8 text-neutral-600 before:mr-2 before:content-["•"] first:mt-3;
   }
 
+  .services-details h3 {
+    @apply max-w-2xl text-3xl font-semibold text-neutral-600;
+  }
+
+  .services-details h3 > span.gradient {
+    @apply bg-[linear-gradient(to_right,theme(colors.orange.500),theme(colors.yellow.400))] bg-clip-text text-transparent;
+  }
+
   .share-links li {
     @apply relative flex size-[26px] cursor-pointer items-center justify-center rounded-md text-[14px] text-neutral-200 before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-md before:bg-white/5 before:backdrop-blur-2xl before:transition-[background] before:duration-300 before:ease-in-out before:content-[''] before:hover:bg-white/25 [&_a]:flex [&_a]:size-[26px] [&_a]:items-center [&_a]:justify-center;
   }
