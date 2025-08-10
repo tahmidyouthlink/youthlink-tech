@@ -177,7 +177,7 @@ export default function Header() {
                 <li>
                   <Link
                     className="hover:bg-black hover:text-white"
-                    href="https://www.twitter.com/youthlink/"
+                    href="https://x.com/YouthLinkTech"
                     target="_blank"
                   >
                     <FaXTwitter />
@@ -186,7 +186,7 @@ export default function Header() {
                 <li>
                   <Link
                     className="hover:bg-[#cfe6ff] hover:text-[#0080ff]"
-                    href="https://www.facebook.com/youthlink/"
+                    href="https://www.facebook.com/ylinkbd"
                     target="_blank"
                   >
                     <FaSquareFacebook />
@@ -195,19 +195,10 @@ export default function Header() {
                 <li>
                   <Link
                     className="from-[#405de6] via-[#dc2743] to-[#f09433] hover:bg-gradient-to-b hover:text-white"
-                    href="https://www.instagram.com/youthlink/"
+                    href="https://www.instagram.com/youthlinktech"
                     target="_blank"
                   >
                     <FaInstagram />
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="hover:bg-[#ffcacb] hover:text-[#ff0f1c]"
-                    href="https://www.youtube.com/@youthlink"
-                    target="_blank"
-                  >
-                    <FaYoutube />
                   </Link>
                 </li>
                 <li>
