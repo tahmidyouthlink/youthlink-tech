@@ -2,7 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
-export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
+export default function WorkSamples({
+  gsap,
+  useGSAP,
+  selectedOption,
+  setSelectedOption,
+}) {
   const imgSrcs = [
     "/work/cards/beast.jpg",
     "/work/cards/crow.webp",
@@ -38,26 +43,13 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
           defaults: { autoAlpha: 0, duration: 0.5, ease: "power1.inOut" },
         });
 
-        // const appendedEl = document.querySelector(
-        //   "#work-samples #cards-container",
-        // );
-        // appendedEl.style.display = "none";
-
         tl.set("#samples-inside-wrapper", { autoAlpha: 1 })
           .set("#work-samples #cards-container", { display: "hidden" })
-          // .set("#samples-container", {
-          //   autoAlpha: 1,
-          //   y: -50,
-          // })
           .set("#samples-container .sample-card", {
             autoAlpha: 1,
             rotate: 0,
             marginLeft: -192,
           })
-          // .to("#samples-container", {
-          //   autoAlpha: 1,
-          //   y: 0,
-          // })
           .from("#work-samples h2", { y: 35 })
           .from(
             "#samples-categories p",
@@ -106,17 +98,6 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
             },
             "<0.25",
           );
-        // .fromTo(
-        //   "#samples-container",
-        //   { autoAlpha: 1, marginRight: -208 },
-        //   { autoAlpha: 1, marginRight: -104 },
-        //   "<0.25",
-        // );
-        // .from("#work-hero p", { y: 35 })
-        // .from("#work-hero a", {
-        //   x: -35,
-        //   stagger: { amount: 0.35 },
-        // });
       }
     },
     { dependencies: [gsap, selectedOption] },
@@ -146,18 +127,6 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
                     <p
                       className={`rounded-full ${categoryIndex === 0 ? "bg-neutral-700 text-neutral-100 ring-neutral-500" : "bg-neutral-200 hover:bg-neutral-300"} cursor-pointer select-none px-3.5 py-1.5 text-xs text-[#272727] ring-1 ring-neutral-300 backdrop-blur-xl transition-[background-color,color] duration-500 ease-in-out`}
                       key={categoryIndex}
-                      // onClick={() => {
-                      //   if (categoryIndex !== activeCategoryIndex) {
-                      //     setItems(
-                      //       unfilteredItems.filter((item) =>
-                      //         item.category.some(
-                      //           (cat) => cat.value === category || category === "All",
-                      //         ),
-                      //       ),
-                      //     );
-                      //     setActiveCategoryIndex(categoryIndex);
-                      //   }
-                      // }}
                     >
                       {category}
                     </p>
@@ -184,15 +153,10 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
               >
                 <div className="flex [&:has(img:hover)_:not(div:hover)_img]:grayscale">
                   {imgSrcs.map((src, index) => {
-                    // const rotate = [-24, -24, -24, -24, -24, -24, -24]; // Rotation angles
-
                     return (
                       <div
                         key={"story-hero-img-" + src + index}
                         className={`sample-card relative origin-left rotate-[var(--rotate)] transition-[transform,width,height,filter] delay-150 duration-500 ease-in-out [&:has(img:hover)>div]:delay-[500ms] [&:has(img:hover)>h4]:opacity-100 [&:has(img:hover)>h4]:delay-[500ms] [&:has(img:hover)>img]:min-w-80 [&:has(img:hover)]:z-[1] [&:has(img:hover)]:-translate-y-3 [&:has(img:hover)_div]:opacity-100`}
-                        // style={{
-                        //   "--rotate": `${rotate[index]}deg`,
-                        // }}
                       >
                         <Image
                           src={src}
@@ -225,13 +189,6 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
                 <div
                   id="samples-left-nav-btn"
                   className={`absolute left-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out ${9 < 2 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
-                  // onClick={() => {
-                  //   items?.length &&
-                  //     setItems((prevItems) => [
-                  //       prevItems[prevItems.length - 1],
-                  //       ...prevItems.slice(0, prevItems.length - 1),
-                  //     ]);
-                  // }}
                 >
                   <FaChevronLeft className="h-5 object-contain text-neutral-100 transition-[color] duration-500 ease-in-out" />
                 </div>
@@ -239,10 +196,6 @@ export default function WorkSamples({ gsap, useGSAP, selectedOption }) {
                 <div
                   id="samples-right-nav-btn"
                   className={`absolute right-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out ${9 < 2 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
-                  // onClick={() => {
-                  //   items?.length &&
-                  //     setItems((prevItems) => [...prevItems.slice(1), prevItems[0]]);
-                  // }}
                 >
                   <FaChevronRight className="h-5 object-contain text-neutral-100 transition-[color] duration-500 ease-in-out" />
                 </div>

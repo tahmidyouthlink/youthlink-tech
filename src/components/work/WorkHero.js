@@ -16,7 +16,6 @@ const rotate = [-24, -18, -12, -6, 0, 6, 12, 18, 24];
 
 export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
   const sampleTl = useRef(null);
-  const storyTl = useRef(null);
 
   useGSAP(
     () => {
@@ -32,7 +31,6 @@ export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
       });
 
       tl.set("#work-hero", { autoAlpha: 1 })
-        // .set("#cards-container, .hero-card, #work-hero p, #work-hero button", { autoAlpha: 1 })
         .set("#cards-container", { marginRight: -192 })
         .from("#work-hero h1", { y: 35 })
         .from(
@@ -72,11 +70,6 @@ export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
         defaults: { duration: 0.5, ease: "power1.inOut", delay: 0 },
       });
 
-      storyTl.current = gsap.timeline({
-        paused: true,
-        defaults: { duration: 0.5, ease: "power1.inOut", delay: 0 },
-      });
-
       const handleSectionTransition = () => {
         if (typeof document !== "undefined") {
           const heroCardsContainer = document.getElementById("cards-container");
@@ -92,8 +85,6 @@ export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
           appendedEl.style.position = "absolute";
           appendedEl.style.bottom = "0";
           appendedEl.style.right = "96px";
-          // appendedEl.style.height = "208px";
-          // appendedEl.style.width = "208px";
 
           setSelectedOption("samples");
           Flip.from(state, {
@@ -104,20 +95,10 @@ export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
       };
 
       sampleTl.current
-        // .to(".hero-card", {
-        //   marginLeft: -192,
-        //   stagger: { amount: 0.5 },
-        // })
         .to("#work-hero h1, #work-hero p, #work-hero button", {
           y: "-100dvh",
           autoAlpha: 0,
         })
-        // .to("#cards-container", { y: "50%" }, "<")
-        // .set(".hero-card", { delay: 0 })
-        // .to(".hero-card img", {
-        //   height: 192,
-        //   width: 192,
-        // })
         .to(
           ".hero-card",
           {
@@ -125,23 +106,6 @@ export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
             marginLeft: -192,
             delay: 0,
             onComplete: () => handleSectionTransition(),
-          },
-          "<",
-        );
-
-      storyTl.current
-        .to("#work-hero h1, #work-hero p", {
-          y: -50,
-          autoAlpha: 0,
-          stagger: { amount: 0.5 },
-        })
-        .to(
-          ".hero-card, #work-hero button",
-          {
-            x: 50,
-            autoAlpha: 0,
-            stagger: { amount: 0.5 },
-            onComplete: () => setSelectedOption("story"),
           },
           "<",
         );
@@ -193,22 +157,12 @@ export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
         <p className="mb-5 mt-20 text-center">
           Become a part of our journey. Let&apos;s conquer the world together.
         </p>
-        <div className="flex justify-center gap-5">
-          <button
-            // onClick={() => setSelectedOption("samples")}
-            onClick={() => sampleTl.current?.play()}
-            className={`rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] px-5 py-2.5 text-sm font-medium text-white transition-[background-position] duration-700 ease-in-out hover:bg-[235%_100%]`}
-          >
-            Glimpse of our work
-          </button>
-          <button
-            // onClick={() => setSelectedOption("story")}
-            onClick={() => storyTl.current?.play()}
-            className={`px-5 py-2.5 text-sm font-medium transition-[color] duration-300 ease-in-out hover:text-yellow-600`}
-          >
-            How we do it
-          </button>
-        </div>
+        <button
+          onClick={() => sampleTl.current?.play()}
+          className={`mx-auto block rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] px-5 py-2.5 text-sm font-medium text-white transition-[background-position] duration-700 ease-in-out hover:bg-[235%_100%]`}
+        >
+          Get a glimpse of our work
+        </button>
       </div>
     </div>
   );
