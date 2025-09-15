@@ -143,7 +143,7 @@ export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
                   width={0}
                   height={0}
                   sizes="350px"
-                  className="size-48 cursor-pointer rounded-xl object-cover transition-[filter] delay-150 duration-500 ease-in-out"
+                  className="size-48 cursor-pointer rounded-xl object-cover transition-[filter,width] delay-150 duration-500 ease-in-out"
                 />
                 <div className="absolute -top-5 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-full rotate-45 bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] opacity-0 transition-opacity duration-300 ease-in-out"></div>
                 <h4 className="pointer-events-none absolute -top-6 left-0 w-80 -translate-y-full rounded-md bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] p-2 text-center text-neutral-700 opacity-0 transition-opacity duration-300 ease-in-out">
