@@ -273,7 +273,7 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
         });
       }
     },
-    { dependencies: [gsap, lottieAnimation] },
+    { dependencies: [gsap, lottieAnimation, activeOptionIndexes] },
   );
 
   return (
