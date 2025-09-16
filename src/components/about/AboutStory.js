@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import lottie from "lottie-web";
 
 export default function AboutStory({ gsap, useGSAP, ScrollTrigger }) {
   const quotes = [
@@ -16,22 +15,32 @@ export default function AboutStory({ gsap, useGSAP, ScrollTrigger }) {
   const lottieRef = useRef(null);
 
   useEffect(() => {
-    const lottieAnimationInstance = lottie.loadAnimation({
-      container: lottieRef.current,
-      renderer: "svg",
-      loop: false,
-      autoplay: false,
-      path: "/about/group-meeting.json",
+    let lottieAnimationInstance;
+    let isMounted = true;
+
+    import("lottie-web").then(({ default: lottie }) => {
+      if (!isMounted) return;
+
+      lottieAnimationInstance = lottie.loadAnimation({
+        container: lottieRef.current,
+        renderer: "svg",
+        loop: false,
+        autoplay: false,
+        path: "/about/group-meeting.json",
+      });
+
+      setLottieAnimation(lottieAnimationInstance);
     });
 
-    setLottieAnimation(lottieAnimationInstance);
-
-    return () => lottieAnimationInstance.destroy();
-  }, [setLottieAnimation]);
+    return () => {
+      isMounted = false;
+      if (lottieAnimationInstance) lottieAnimationInstance.destroy();
+    };
+  }, []);
 
   useGSAP(
     () => {
-      if (typeof document !== "undefined") {
+      if (typeof document !== "undefined" && !!lottieAnimation) {
         const headingElements = document.querySelectorAll("#about-story h3");
 
         headingElements.forEach((heading) => {
