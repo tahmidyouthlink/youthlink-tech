@@ -144,7 +144,7 @@ export default function Footer() {
               id="email"
               placeholder="Enter email address"
             />
-            <button className="w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-3.5 py-2 text-xs font-medium text-white transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out hover:bg-[50%_100%] md:text-sm">
+            <button className="w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] px-3.5 py-2 text-xs font-medium text-white transition-[background-position] delay-75 duration-700 ease-in-out hover:bg-[235%_100%] md:text-sm">
               Subscribe
             </button>
           </form>

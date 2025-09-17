@@ -131,7 +131,7 @@ export default function Home() {
                 {/* Call-to-action button */}
                 <Link
                   href={content?.link}
-                  className={`${index === 0 ? "translate-y-0 opacity-100" : "translate-y-7 opacity-0"} mt-8 block w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out hover:bg-[50%_100%] sm:mb-12`}
+                  className={`${index === 0 ? "translate-y-0 opacity-100" : "translate-y-7 opacity-0"} mt-8 block w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] px-5 py-2.5 text-sm font-medium transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out hover:bg-[235%_100%] sm:mb-12`}
                 >
                   {content.buttonText}
                 </Link>

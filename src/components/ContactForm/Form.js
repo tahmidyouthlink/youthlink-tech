@@ -115,7 +115,7 @@ const Form = () => {
               ></textarea>
             </div>
           </div>
-          <button className="mx-auto block w-1/3 rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] py-3.5 text-sm font-medium text-white transition-[background-position] duration-700 ease-in-out hover:bg-[235%_100%]">
+          <button className="mx-auto block w-1/3 min-w-40 rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] py-3.5 text-sm font-medium text-white transition-[background-position] duration-700 ease-in-out hover:bg-[235%_100%]">
             Send Message
           </button>
         </div>
