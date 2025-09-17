@@ -246,8 +246,6 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
         headingElements.forEach((heading) => {
           const chars = heading.querySelectorAll(".scroll-text");
 
-          console.log("chk chars", chars);
-
           gsap.from(chars, {
             scrollTrigger: {
               trigger: chars,
@@ -258,11 +256,6 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
             opacity: 0.2,
             stagger: 0.1,
           });
-        });
-
-        console.log("chk inside useGSAP", {
-          lottieRef,
-          lottieAnimation,
         });
 
         gsap.to(lottieRef.current, {
