@@ -3,16 +3,20 @@
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import WorkParallax from "@/components/work/WorkParallax";
-import WorkStory from "@/components/work/WorkStory";
+import ServicesParallax from "@/components/services/ServicesParallax";
+import ServicesStory from "@/components/services/ServicesStory";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function OurWork() {
   return (
     <main className="bg-neutral-100">
-      <WorkParallax gsap={gsap} useGSAP={useGSAP} />
-      <WorkStory gsap={gsap} useGSAP={useGSAP} ScrollTrigger={ScrollTrigger} />
+      <ServicesParallax gsap={gsap} useGSAP={useGSAP} />
+      <ServicesStory
+        gsap={gsap}
+        useGSAP={useGSAP}
+        ScrollTrigger={ScrollTrigger}
+      />
     </main>
   );
 }
