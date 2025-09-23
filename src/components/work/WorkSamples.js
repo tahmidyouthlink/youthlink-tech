@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
@@ -8,6 +9,8 @@ export default function WorkSamples({
   selectedOption,
   setSelectedOption,
 }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const imgSrcs = [
     "/work/cards/beast.jpg",
     "/work/cards/crow.webp",
@@ -103,6 +106,27 @@ export default function WorkSamples({
     { dependencies: [gsap, selectedOption] },
   );
 
+  useGSAP(
+    () => {
+      if (selectedOption === "samples") {
+        const tl = gsap.timeline({
+          defaults: { stagger: 0.1, duration: 0.5, ease: "power1.inOut" },
+        });
+
+        tl.to("#samples-container .sample-card", {
+          autoAlpha: (i) => (i >= currentIndex ? 1 : 0),
+        }).to(
+          "#samples-container .inner-wrapper",
+          {
+            x: -(currentIndex * (192 - 32)),
+          },
+          "<",
+        );
+      }
+    },
+    { dependencies: [currentIndex, gsap, selectedOption] },
+  );
+
   return (
     <div className="overflow-hidden">
       <div
@@ -151,7 +175,7 @@ export default function WorkSamples({
                 id="samples-container"
                 className="relative mt-14 max-w-[40dvw]"
               >
-                <div className="flex [&:has(img:hover)_:not(div:hover)_img]:grayscale">
+                <div className="inner-wrapper flex [&:has(img:hover)_:not(div:hover)_img]:grayscale">
                   {imgSrcs.map((src, index) => {
                     return (
                       <div
@@ -188,14 +212,22 @@ export default function WorkSamples({
                 {/* Left navigation button */}
                 <div
                   id="samples-left-nav-btn"
-                  className={`absolute left-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out ${9 < 2 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
+                  className={`absolute left-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out ${currentIndex === 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
+                  onClick={() =>
+                    currentIndex > 0 &&
+                    setCurrentIndex((prevIndex) => prevIndex - 3)
+                  }
                 >
                   <FaChevronLeft className="h-5 object-contain text-neutral-100 transition-[color] duration-500 ease-in-out" />
                 </div>
                 {/* Right navigation button */}
                 <div
                   id="samples-right-nav-btn"
-                  className={`absolute right-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out ${9 < 2 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
+                  className={`absolute right-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out ${currentIndex + 3 >= imgSrcs.length ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
+                  onClick={() =>
+                    currentIndex + 3 < imgSrcs.length &&
+                    setCurrentIndex((prevIndex) => prevIndex + 3)
+                  }
                 >
                   <FaChevronRight className="h-5 object-contain text-neutral-100 transition-[color] duration-500 ease-in-out" />
                 </div>
