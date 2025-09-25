@@ -6,10 +6,12 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 export default function WorkSamples({
   gsap,
   useGSAP,
+  Flip,
   selectedOption,
   setSelectedOption,
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedWorkIndex, setSelectedWorkIndex] = useState(null);
 
   const imgSrcs = [
     "/work/cards/beast.jpg",
@@ -33,24 +35,24 @@ export default function WorkSamples({
 
   useGSAP(
     () => {
-      if (selectedOption === "samples") {
+      if (selectedOption === "samples" && selectedWorkIndex === null) {
         const tl = gsap.timeline({
           delay: 1,
           scrollTrigger: {
             trigger: "#work-samples",
             start: `top center`,
             end: `bottom top`,
-            toggleActions: "restart reset restart reset",
             once: true,
           },
           defaults: { autoAlpha: 0, duration: 0.5, ease: "power1.inOut" },
         });
 
         tl.set("#samples-inside-wrapper", { autoAlpha: 1 })
-          .set("#work-samples #cards-container", { display: "hidden" })
-          .set("#samples-container .sample-card", {
+          .set("#work-hero", { display: "none" })
+          .set("#work-samples #hero-cards-container", { display: "none" })
+          .set("#work-samples .samples-container .sample-card", {
             autoAlpha: 1,
-            rotate: 0,
+            rotation: 0,
             marginLeft: -192,
           })
           .from("#work-samples h2", { y: 35 })
@@ -60,10 +62,10 @@ export default function WorkSamples({
             "<",
           )
           .to(
-            "#samples-container .sample-card",
+            "#work-samples .samples-container .sample-card",
             {
               autoAlpha: 1,
-              rotate: -24,
+              rotation: -24,
               marginLeft: (i) => (i === 0 ? 0 : -32),
               stagger: { amount: 0.5 },
             },
@@ -102,21 +104,87 @@ export default function WorkSamples({
             "<0.25",
           );
       }
+
+      if (selectedOption === "samples" && selectedWorkIndex !== null) {
+        const tl = gsap.timeline({
+          defaults: { duration: 0.5, ease: "power1.inOut" },
+        });
+
+        const handleSectionTransition = () => {
+          if (typeof document !== "undefined") {
+            const selectedSampleCards = [
+              ...document.querySelectorAll(
+                "#work-samples .samples-container .sample-card",
+              ),
+            ][selectedWorkIndex];
+            const selectedSampleCardImg =
+              selectedSampleCards.querySelector("img");
+            const state = Flip.getState(selectedSampleCardImg);
+            const detailsCoverContainer =
+              document.getElementById("work-details-cover");
+            detailsCoverContainer.appendChild(selectedSampleCardImg);
+
+            const appendedEl = document.querySelector(
+              "#work-details #work-details-cover > img",
+            );
+            appendedEl.style.height = "calc(100dvh-92px-80px)";
+            appendedEl.style.width = "100%";
+            appendedEl.style.transitionDelay = "0ms";
+
+            setSelectedOption({
+              label: "details",
+              work: { img: imgSrcs[selectedWorkIndex] },
+            });
+            Flip.from(state, {
+              delay: 0.25,
+              duration: 0.5,
+              ease: "power1.inOut",
+            });
+          }
+        };
+
+        tl.set("#work-samples .samples-container .sample-card", {
+          zIndex: (i) => (i === selectedWorkIndex ? 1 : 0),
+        })
+          .set("#work-details", { display: "flex" })
+          .to(
+            "#samples-left-nav-btn, #samples-right-nav-btn, #samples-inside-wrapper > h2, #samples-categories p, #samples-cta > p, #samples-cta > a",
+            {
+              y: -50,
+              autoAlpha: 0,
+              stagger: {
+                amount: 0.5,
+              },
+              duration: 0.5,
+              ease: "power1.inOut",
+            },
+          )
+          .to(
+            "#work-samples .samples-container .sample-card",
+            {
+              autoAlpha: (i) => (i === selectedWorkIndex ? 1 : 0),
+              duration: 0.5,
+              ease: "power1.out",
+              onComplete: () => handleSectionTransition(),
+            },
+            "<",
+          );
+      }
     },
-    { dependencies: [gsap, selectedOption] },
+    { dependencies: [gsap, selectedOption, selectedWorkIndex] },
   );
 
   useGSAP(
     () => {
-      if (selectedOption === "samples") {
+      if (selectedOption === "samples" && selectedWorkIndex === null) {
         const tl = gsap.timeline({
           defaults: { stagger: 0.1, duration: 0.5, ease: "power1.inOut" },
         });
 
-        tl.to("#samples-container .sample-card", {
+        tl.to("#work-samples .samples-container .sample-card", {
           autoAlpha: (i) => (i >= currentIndex ? 1 : 0),
         }).to(
-          "#samples-container .inner-wrapper",
+          "#work-samples .samples-container .inner-wrapper",
           {
             x: -(currentIndex * (192 - 32)),
           },
@@ -124,11 +192,11 @@ export default function WorkSamples({
         );
       }
     },
-    { dependencies: [currentIndex, gsap, selectedOption] },
+    { dependencies: [currentIndex, gsap, selectedOption, selectedWorkIndex] },
   );
 
   return (
-    <div className="overflow-hidden">
+    <div className="absolute left-0 top-0 w-full overflow-hidden">
       <div
         id="work-samples"
         className="flex min-h-dvh items-center justify-center px-5 pt-[92px] text-white sm:px-8 lg:px-12 xl:mx-auto xl:max-w-[1200px] xl:px-0"
@@ -158,8 +226,8 @@ export default function WorkSamples({
                 })}
               </div>
             </div>
-            <div id="samples-cta" className="-mt-14 flex gap-20">
-              <div className="grow self-end">
+            <div className="-mt-14 flex gap-20">
+              <div id="samples-cta" className="grow self-end">
                 <p className="my-5 max-w-sm">
                   Every great success begins with belief—let us help transform
                   your vision into reality.
@@ -171,25 +239,24 @@ export default function WorkSamples({
                   Reach out to us
                 </Link>
               </div>
-              <div
-                id="samples-container"
-                className="relative mt-14 max-w-[40dvw]"
-              >
+              <div className="samples-container relative mt-14 max-w-[40dvw]">
                 <div className="inner-wrapper flex [&:has(img:hover)_:not(div:hover)_img]:grayscale">
                   {imgSrcs.map((src, index) => {
                     return (
                       <div
                         key={"story-hero-img-" + src + index}
-                        className={`sample-card relative origin-left rotate-[var(--rotate)] transition-[transform,width,height,filter] delay-150 duration-500 ease-in-out [&:has(img:hover)>div]:delay-[500ms] [&:has(img:hover)>h4]:opacity-100 [&:has(img:hover)>h4]:delay-[500ms] [&:has(img:hover)>img]:min-w-80 [&:has(img:hover)]:z-[1] [&:has(img:hover)]:-translate-y-3 [&:has(img:hover)_div]:opacity-100`}
+                        className={`sample-card relative origin-left rotate-[var(--rotate)] transition-[transform,width,height,filter] delay-150 duration-500 ease-in-out [&:has(div>img:hover)>div:has(img)]:min-w-80 [&:has(div>img:hover)>div:not(:has(img))]:delay-[500ms] [&:has(div>img:hover)>h4]:opacity-100 [&:has(div>img:hover)>h4]:delay-[500ms] [&:has(div>img:hover)]:z-[1] [&:has(div>img:hover)]:-translate-y-3 [&:has(div>img:hover)_div:not(:has(img))]:opacity-100`}
+                        onClick={() => setSelectedWorkIndex(index)}
                       >
-                        <Image
-                          src={src}
-                          alt={`Image ${index + 1}`}
-                          width={0}
-                          height={0}
-                          sizes="350px"
-                          className="size-48 min-w-48 cursor-pointer rounded-xl object-cover transition-[transform,width,min-width,height,filter] delay-150 duration-500 ease-in-out"
-                        />
+                        <div className="relative size-48 min-w-48 cursor-pointer transition-[transform,width,min-width,height] delay-150 duration-500 ease-in-out">
+                          <Image
+                            src={src}
+                            alt={`Image ${index + 1}`}
+                            fill
+                            sizes="350px"
+                            className="absolute inset-0 rounded-xl object-cover transition-[filter] delay-150 duration-500 ease-in-out"
+                          />
+                        </div>
                         <div className="absolute -top-5 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-full rotate-45 bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] opacity-0 transition-opacity duration-300 ease-in-out"></div>
                         <div className="absolute -top-6 left-0 w-80 -translate-y-full space-y-3 opacity-0 transition-opacity duration-300 ease-in-out">
                           <div className="flex gap-2 text-xs">
@@ -212,7 +279,7 @@ export default function WorkSamples({
                 {/* Left navigation button */}
                 <div
                   id="samples-left-nav-btn"
-                  className={`absolute left-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out ${currentIndex === 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
+                  className={`absolute left-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[background-position] delay-75 duration-700 ease-in-out ${currentIndex === 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
                   onClick={() =>
                     currentIndex > 0 &&
                     setCurrentIndex((prevIndex) => prevIndex - 3)
@@ -223,7 +290,7 @@ export default function WorkSamples({
                 {/* Right navigation button */}
                 <div
                   id="samples-right-nav-btn"
-                  className={`absolute right-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[opacity,transform,background-position] delay-75 duration-700 ease-in-out ${currentIndex + 3 >= imgSrcs.length ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
+                  className={`absolute right-0 top-1/2 z-[1] flex size-[74px] -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] opacity-100 transition-[background-position] delay-75 duration-700 ease-in-out ${currentIndex + 3 >= imgSrcs.length ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-white hover:bg-[235%_100%]"}`}
                   onClick={() =>
                     currentIndex + 3 < imgSrcs.length &&
                     setCurrentIndex((prevIndex) => prevIndex + 3)

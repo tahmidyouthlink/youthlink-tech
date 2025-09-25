@@ -144,11 +144,13 @@ body {
     @apply ml-8 text-neutral-600 before:mr-2 before:content-["•"] first:mt-3;
   }
 
-  .services-details h3 {
+  .services-details h3,
+  #works-details-quotes h3 {
     @apply max-w-2xl text-3xl font-semibold text-neutral-600;
   }
 
-  .services-details h3 > span.gradient {
+  .services-details h3 > span.gradient,
+  #works-details-quotes h3 > span.gradient {
     @apply bg-[linear-gradient(to_right,theme(colors.orange.500),theme(colors.yellow.400))] bg-clip-text text-transparent;
   }
 

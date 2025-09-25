@@ -14,109 +14,118 @@ const imgSrcs = [
 ];
 const rotate = [-24, -18, -12, -6, 0, 6, 12, 18, 24];
 
-export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
+export default function WorkHero({
+  gsap,
+  useGSAP,
+  Flip,
+  selectedOption,
+  setSelectedOption,
+}) {
   const sampleTl = useRef(null);
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({
-        delay: 0.5,
-        scrollTrigger: {
-          trigger: "#work-hero",
-          start: `top center`,
-          end: `bottom top`,
-          toggleActions: "restart reset restart reset",
-        },
-        defaults: { autoAlpha: 0, duration: 0.5, ease: "power1.inOut" },
-      });
-
-      tl.set("#work-hero", { autoAlpha: 1 })
-        .set("#cards-container", { marginRight: -192 })
-        .from("#work-hero h1", { y: 35 })
-        .from(
-          "#cards-container",
-          { y: "50dvh", rotate: 60, duration: 0.75 },
-          "<",
-        )
-        .fromTo(
-          ".hero-card",
-          {
-            autoAlpha: 1,
-            rotate: 0,
-            marginLeft: -192,
-            stagger: { amount: 0.5 },
+      if (selectedOption === "hero") {
+        const tl = gsap.timeline({
+          delay: 0.5,
+          scrollTrigger: {
+            trigger: "#work-hero",
+            start: `top center`,
+            end: `bottom top`,
           },
-          {
-            autoAlpha: 1,
-            rotate: (i) => rotate[i],
-            marginLeft: -96,
-            stagger: { amount: 0.5 },
-          },
-        )
-        .fromTo(
-          "#cards-container",
-          { autoAlpha: 1, marginRight: -192 },
-          { autoAlpha: 1, marginRight: -96 },
-          "<0.25",
-        )
-        .from("#work-hero p", { y: 35 })
-        .from("#work-hero button", {
-          x: -35,
-          stagger: { amount: 0.35 },
+          defaults: { autoAlpha: 0, duration: 0.5, ease: "power1.inOut" },
         });
 
-      sampleTl.current = gsap.timeline({
-        paused: true,
-        defaults: { duration: 0.5, ease: "power1.inOut", delay: 0 },
-      });
-
-      const handleSectionTransition = () => {
-        if (typeof document !== "undefined") {
-          const heroCardsContainer = document.getElementById("cards-container");
-          const state = Flip.getState(heroCardsContainer);
-          const samplesBottomContainer = document.getElementById(
-            "samples-outside-wrapper",
-          );
-          samplesBottomContainer.appendChild(heroCardsContainer);
-
-          const appendedEl = document.querySelector(
-            "#work-samples #cards-container",
-          );
-          appendedEl.style.position = "absolute";
-          appendedEl.style.bottom = "0";
-          appendedEl.style.right = "96px";
-
-          setSelectedOption("samples");
-          Flip.from(state, {
-            duration: 1,
-            ease: "power1.inOut",
+        tl.set("#work-hero", { autoAlpha: 1 })
+          .set("#hero-cards-container", { marginRight: -192 })
+          .from("#work-hero h1", { y: 35 })
+          .from(
+            "#hero-cards-container",
+            { y: "50dvh", rotate: 60, duration: 0.75 },
+            "<",
+          )
+          .fromTo(
+            ".hero-card",
+            {
+              autoAlpha: 1,
+              rotate: 0,
+              marginLeft: -192,
+              stagger: { amount: 0.5 },
+            },
+            {
+              autoAlpha: 1,
+              rotate: (i) => rotate[i],
+              marginLeft: -96,
+              stagger: { amount: 0.5 },
+            },
+          )
+          .fromTo(
+            "#hero-cards-container",
+            { autoAlpha: 1, marginRight: -192 },
+            { autoAlpha: 1, marginRight: -96 },
+            "<0.25",
+          )
+          .from("#work-hero p", { y: 35 })
+          .from("#work-hero button", {
+            x: -35,
+            stagger: { amount: 0.35 },
           });
-        }
-      };
 
-      sampleTl.current
-        .to("#work-hero h1, #work-hero p, #work-hero button", {
-          y: "-100dvh",
-          autoAlpha: 0,
-        })
-        .to(
-          ".hero-card",
-          {
-            rotate: 0,
-            marginLeft: -192,
-            delay: 0,
-            onComplete: () => handleSectionTransition(),
-          },
-          "<",
-        );
+        sampleTl.current = gsap.timeline({
+          paused: true,
+          defaults: { duration: 0.5, ease: "power1.inOut", delay: 0 },
+        });
+
+        const handleSectionTransition = () => {
+          if (typeof document !== "undefined") {
+            const heroCardsContainer = document.getElementById(
+              "hero-cards-container",
+            );
+            const state = Flip.getState(heroCardsContainer);
+            const samplesBottomContainer = document.getElementById(
+              "samples-outside-wrapper",
+            );
+            samplesBottomContainer.appendChild(heroCardsContainer);
+
+            const appendedEl = document.querySelector(
+              "#work-samples #hero-cards-container",
+            );
+            appendedEl.style.position = "absolute";
+            appendedEl.style.bottom = "0";
+            appendedEl.style.right = "96px";
+
+            setSelectedOption("samples");
+            Flip.from(state, {
+              duration: 1,
+              ease: "power1.inOut",
+            });
+          }
+        };
+
+        sampleTl.current
+          .to("#work-hero h1, #work-hero p, #work-hero button", {
+            y: "-200dvh",
+            autoAlpha: 0,
+          })
+          .to(
+            ".hero-card",
+            {
+              rotate: 0,
+              marginLeft: -192,
+              delay: 0,
+              onComplete: () => handleSectionTransition(),
+            },
+            "<",
+          );
+      }
     },
-    { dependencies: [Flip, gsap, setSelectedOption] },
+    { dependencies: [Flip, gsap, selectedOption, setSelectedOption] },
   );
 
   return (
     <div
       id="work-hero"
-      className="invisible -mt-[100dvh] flex min-h-dvh items-center justify-center overflow-hidden pt-[92px]"
+      className="invisible absolute left-0 top-0 flex min-h-dvh w-full items-center justify-center overflow-hidden pt-[92px]"
     >
       <div>
         <h1 className="mx-auto mb-14 max-w-2xl text-center text-6xl font-semibold text-neutral-700 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]">
@@ -127,7 +136,7 @@ export default function WorkHero({ gsap, useGSAP, Flip, setSelectedOption }) {
           Solution Needed.
         </h1>
         <div
-          id="cards-container"
+          id="hero-cards-container"
           className="flex items-center justify-center [&:has(img:hover)_:not(div:hover)_img]:grayscale"
         >
           {imgSrcs.map((src, index) => {
