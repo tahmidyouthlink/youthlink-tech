@@ -1,9 +1,44 @@
+import { useState } from "react";
 import Link from "next/link";
 
-export default function WorkDetails({ gsap, useGSAP, selectedOption }) {
+export default function WorkDetails({
+  gsap,
+  useGSAP,
+  selectedOption,
+  setSelectedOption,
+}) {
+  const [isViewAllClicked, setIsViewAllClicked] = useState(false);
+
   useGSAP(
     () => {
-      if (selectedOption.label === "details") {
+      if (isViewAllClicked) {
+        gsap.to(
+          "#work-details-inside-wrapper h1, #work-details-inside-wrapper p, #work-details-inside-wrapper a, #work-details-inside-wrapper button, #works-details-quotes h3",
+          {
+            y: -50,
+            autoAlpha: 0,
+            stagger: { amount: 0.5 },
+          },
+        );
+        gsap.to("#work-details-cover img", {
+          scale: 0.9,
+          autoAlpha: 0,
+          onComplete: () => {
+            gsap.set("#work-samples", { display: "flex" });
+            const detailsImg = document.querySelector(
+              "#work-details-cover img",
+            );
+            const imgCardElement = document.querySelector(
+              "#work-samples .samples-container .sample-card:not(:has(img)) div:first-child",
+            );
+            imgCardElement.appendChild(detailsImg);
+
+            gsap.set("#work-details", { display: "none" });
+            setSelectedOption("samples");
+            setIsViewAllClicked(false);
+          },
+        });
+      } else if (selectedOption.label === "details") {
         const tl = gsap.timeline({
           delay: 0.5,
           scrollTrigger: {
@@ -21,19 +56,33 @@ export default function WorkDetails({ gsap, useGSAP, selectedOption }) {
           })
           .set("#work-hero", { display: "none" })
           .set("#work-samples", { display: "none" })
-          .from("#work-details-inside-wrapper h1", { autoAlpha: 0, x: -50 })
-          .from(
+          .fromTo(
+            "#work-details-inside-wrapper h1",
+            { autoAlpha: 0, x: -50 },
+            { autoAlpha: 1, x: 0 },
+          )
+          .fromTo(
             "#work-details-inside-wrapper p",
             { autoAlpha: 0, x: -50 },
+            { autoAlpha: 1, x: 0 },
             "<0.25",
           )
-          .from("#work-details-inside-wrapper a", { autoAlpha: 0, x: 50 })
-          .from(
+          .fromTo(
+            "#work-details-inside-wrapper a",
+            { autoAlpha: 0, x: 50 },
+            { autoAlpha: 1, x: 0 },
+          )
+          .fromTo(
             "#work-details-inside-wrapper button",
             { autoAlpha: 0, x: 50 },
+            { autoAlpha: 1, x: 0 },
             "<0.15",
           )
-          .from("#works-details-quotes h3", { autoAlpha: 0, x: -50 });
+          .fromTo(
+            "#works-details-quotes h3",
+            { autoAlpha: 0, x: -50 },
+            { autoAlpha: 1, x: 0 },
+          );
 
         const headingElements = document.querySelectorAll(
           "#works-details-quotes h3",
@@ -106,7 +155,7 @@ export default function WorkDetails({ gsap, useGSAP, selectedOption }) {
         });
       }
     },
-    { dependencies: [gsap, selectedOption] },
+    { dependencies: [gsap, isViewAllClicked, selectedOption] },
   );
 
   return (
@@ -140,7 +189,10 @@ export default function WorkDetails({ gsap, useGSAP, selectedOption }) {
                   >
                     Let&apos;s start a project
                   </Link>
-                  <button className="rounded-full px-5 py-2.5 text-sm font-medium text-neutral-600 ring-2 ring-orange-400">
+                  <button
+                    onClick={() => setIsViewAllClicked(true)}
+                    className="rounded-full px-5 py-2.5 text-sm font-medium text-neutral-600 ring-2 ring-orange-400"
+                  >
                     View all work
                   </button>
                 </div>

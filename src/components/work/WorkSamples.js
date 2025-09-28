@@ -44,27 +44,55 @@ export default function WorkSamples({
             end: `bottom top`,
             once: true,
           },
-          defaults: { autoAlpha: 0, duration: 0.5, ease: "power1.inOut" },
+          defaults: { duration: 0.5, ease: "power1.inOut" },
         });
 
         tl.set("#samples-inside-wrapper", { autoAlpha: 1 })
+          .set(
+            "#samples-categories p, #work-samples .samples-container .sample-card, #samples-left-nav-btn, #samples-right-nav-btn",
+            { y: 0 },
+          )
+          .set("#work-samples .samples-container .sample-card img", {
+            scale: 1,
+            autoAlpha: 1,
+          })
           .set("#work-hero", { display: "none" })
           .set("#work-samples #hero-cards-container", { display: "none" })
-          .set("#work-samples .samples-container .sample-card", {
-            autoAlpha: 1,
-            rotation: 0,
-            marginLeft: -192,
-          })
-          .from("#work-samples h2", { y: 35 })
-          .from(
-            "#samples-categories p",
-            { x: -25, stagger: { amount: 0.5 } },
-            "<",
-          )
-          .to(
-            "#work-samples .samples-container .sample-card",
+          .fromTo(
+            "#work-samples h2",
+            {
+              autoAlpha: 0,
+              y: 35,
+            },
             {
               autoAlpha: 1,
+              y: 0,
+            },
+          )
+          .fromTo(
+            "#samples-categories p",
+            {
+              autoAlpha: 0,
+              x: -25,
+              stagger: { amount: 0.5 },
+            },
+            {
+              autoAlpha: 1,
+              x: 0,
+              stagger: { amount: 0.5 },
+            },
+            "<",
+          )
+          .fromTo(
+            "#work-samples .samples-container .sample-card",
+            {
+              zIndex: 0,
+              rotation: 0,
+              marginLeft: -192,
+              stagger: { amount: 0.5 },
+            },
+            {
+              zIndex: 0,
               rotation: -24,
               marginLeft: (i) => (i === 0 ? 0 : -32),
               stagger: { amount: 0.5 },
@@ -95,10 +123,16 @@ export default function WorkSamples({
             },
             "<0.25",
           )
-          .from(
+          .fromTo(
             "#samples-cta p, #samples-cta a",
             {
+              autoAlpha: 0,
               y: 35,
+              stagger: { amount: 0.5 },
+            },
+            {
+              autoAlpha: 1,
+              y: 0,
               stagger: { amount: 0.5 },
             },
             "<0.25",
@@ -135,6 +169,7 @@ export default function WorkSamples({
               label: "details",
               work: { img: imgSrcs[selectedWorkIndex] },
             });
+            setSelectedWorkIndex(null);
             Flip.from(state, {
               delay: 0.25,
               duration: 0.5,

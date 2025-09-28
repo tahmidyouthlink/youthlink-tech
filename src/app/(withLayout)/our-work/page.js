@@ -20,6 +20,7 @@ export default function OurWork() {
         gsap={gsap}
         useGSAP={useGSAP}
         selectedOption={selectedOption}
+        setSelectedOption={setSelectedOption}
       />
       <WorkSamples
         gsap={gsap}
