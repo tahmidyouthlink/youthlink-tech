@@ -20,7 +20,7 @@
     "axios": "^1.6.8",
     "firebase": "^10.11.1",
     "framer-motion": "^11.11.13",
-    "gsap": "^3.12.7",
+    "gsap": "^3.13.0",
     "lottie-react": "^2.4.0",
     "lottie-web": "^5.12.2",
     "marked": "^12.0.2",
