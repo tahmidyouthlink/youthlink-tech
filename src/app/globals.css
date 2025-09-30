@@ -146,7 +146,7 @@ body {
 
   .services-details h3,
   #works-details-quotes h3 {
-    @apply max-w-2xl text-3xl font-semibold text-neutral-600;
+    @apply max-w-2xl text-xl font-semibold text-neutral-600 sm:text-3xl;
   }
 
   .services-details h3 > span.gradient,

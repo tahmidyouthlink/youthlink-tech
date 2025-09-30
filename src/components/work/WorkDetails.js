@@ -33,7 +33,15 @@ export default function WorkDetails({
             );
             imgCardElement.appendChild(detailsImg);
 
+            const appendedEl = imgCardElement.querySelector("img");
+            appendedEl.style.position = "absolute";
+            appendedEl.style.height = "100%";
+
             gsap.set("#work-details", { display: "none" });
+            gsap.set("#work-samples .samples-container", { autoAlpha: 0 });
+            gsap.set("#work-samples .samples-container .sample-card", {
+              autoAlpha: 1,
+            });
             setSelectedOption("samples");
             setIsViewAllClicked(false);
           },
@@ -161,16 +169,16 @@ export default function WorkDetails({
   return (
     <div
       id="work-details"
-      className="pointer-events-none hidden min-h-dvh w-fit items-center justify-center px-5 pb-20 pt-[92px] text-white sm:px-8 lg:px-12 xl:mx-auto xl:max-w-[1200px] xl:px-0"
+      className="pointer-events-none hidden min-h-lvh w-fit items-center justify-center px-5 pb-20 pt-[92px] text-white sm:px-8 lg:px-12 xl:mx-auto xl:max-w-[1200px] xl:px-0"
     >
       <div id="work-details-outside-wrapper" className="w-full">
         <div
           id="work-details-inside-wrapper"
-          className="relative z-[1] max-w-full gap-x-16 space-y-24 px-5 sm:px-8 lg:px-12 xl:mx-auto xl:grid xl:max-w-[1200px] xl:grid-cols-5 xl:space-y-0 xl:px-0"
+          className="relative z-[1] flex max-w-full flex-col gap-y-10 lg:grid lg:grid-cols-2 lg:gap-x-16 xl:grid-cols-5"
         >
-          <section className="invisible sm:ml-32 md:ml-52 lg:ml-72 xl:col-span-3 xl:ml-0 xl:w-auto">
-            <div className="flex min-h-[calc(100dvh-92px)] flex-col justify-around">
-              <h1 className="text-4xl font-semibold uppercase text-neutral-700 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] xl:text-5xl/[1.25]">
+          <section className="invisible lg:col-span-1 lg:w-auto xl:col-span-3">
+            <div className="min-h-[calc(100lvh-40lvh-92px-40px)] max-lg:space-y-16 sm:min-h-[calc(100lvh-50lvh-92px-40px)] lg:flex lg:min-h-[calc(100lvh-92px)] lg:flex-col lg:justify-center lg:max-xl:gap-y-40 xl:justify-around">
+              <h1 className="text-xl font-semibold uppercase text-neutral-700 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:text-4xl xl:text-5xl/[1.25]">
                 How we&apos;ve initiated{" "}
                 <span className="bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500))] bg-clip-text text-transparent">
                   our country&apos;s first
@@ -187,7 +195,8 @@ export default function WorkDetails({
                     href="/contact-us"
                     className="rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] px-5 py-2.5 text-sm font-medium text-white transition-[background-position] duration-700 ease-in-out hover:bg-[235%_100%]"
                   >
-                    Let&apos;s start a project
+                    Let&apos;s start{" "}
+                    <span className="max-sm:hidden">a project</span>
                   </Link>
                   <button
                     onClick={() => setIsViewAllClicked(true)}
@@ -200,7 +209,7 @@ export default function WorkDetails({
             </div>
             <div
               id="works-details-quotes"
-              className="flex flex-col gap-y-[40dvw] [&_h3:first-child]:mt-[10dvw]"
+              className="flex flex-col gap-y-[55lvh] [&_h3:first-child]:mt-[10dvw]"
               dangerouslySetInnerHTML={{
                 __html: `<h3>We help you make <span class="gradient">strategic digital choices</span> that unlock long-term value and business success. Our team stays focused on your needs.</h3>
               <h3>Using proven methods like <span class="gradient">BHAG and OGSM</span>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>
@@ -216,7 +225,7 @@ export default function WorkDetails({
           </section>
           <section
             id="work-details-cover"
-            className="h-[calc(100dvh-92px-80px)] sm:mr-32 md:mr-52 lg:mr-0 lg:w-2/3 xl:sticky xl:bottom-0 xl:top-[92px] xl:col-span-2 xl:w-auto"
+            className="max-lg:order-first lg:sticky lg:top-1/2 lg:col-span-1 lg:h-[50lvh] lg:w-auto lg:max-xl:-translate-y-1/2 xl:bottom-0 xl:top-[92px] xl:col-span-2 xl:h-[calc(100lvh-92px-80px)]"
           ></section>
         </div>
       </div>
