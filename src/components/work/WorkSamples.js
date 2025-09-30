@@ -352,7 +352,7 @@ export default function WorkSamples({
               <p className="mb-4 text-neutral-600">
                 Sectors in which we&apos;ve worked on:
               </p>
-              <div className="flex h-fit flex-wrap gap-3 xl:w-[33.3dvw]">
+              <div className="flex h-fit flex-wrap gap-3 xl:max-w-lg">
                 {categories.map((category, categoryIndex) => {
                   return (
                     <p
@@ -365,7 +365,7 @@ export default function WorkSamples({
                 })}
               </div>
             </div>
-            <div className="mt-28 flex gap-8 max-xl:flex-col sm:mt-36 sm:gap-16 xl:-mt-14 xl:gap-20">
+            <div className="mt-28 flex gap-8 max-xl:flex-col sm:mt-36 sm:gap-16 xl:mt-0 xl:gap-20">
               <div id="samples-cta" className="grow self-end max-xl:order-last">
                 <p className="my-5 max-w-72 sm:max-w-sm">
                   Every great success begins with belief—let us help transform
@@ -379,7 +379,7 @@ export default function WorkSamples({
                 </Link>
               </div>
               <div
-                className="samples-container relative max-w-[40dvw] sm:mt-14"
+                className="samples-container relative max-w-xl sm:mt-14"
                 style={{
                   "--small-card-width": `${SMALL_CARD_WIDTH}px`,
                   "--large-card-width": `${LARGE_CARD_WIDTH}px`,
