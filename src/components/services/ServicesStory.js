@@ -290,8 +290,8 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
 
           return (
             <div key={serviceIndex}>
-              <div className="relative flex h-full justify-center bg-cover pb-20 pt-36 text-neutral-600">
-                <div className="z-[1] max-w-full gap-x-32 space-y-24 px-5 sm:px-8 lg:px-12 xl:mx-auto xl:flex xl:max-w-[1200px] xl:space-y-0 xl:px-0">
+              <div className="relative flex h-full justify-center bg-cover pb-20 text-neutral-600 xl:pt-36">
+                <div className="z-[1] max-w-full gap-x-32 space-y-28 px-5 sm:px-8 lg:px-12 xl:mx-auto xl:flex xl:max-w-[1200px] xl:space-y-0 xl:px-0">
                   <section className="h-fit space-y-11 sm:mr-32 md:mr-52 lg:mr-0 lg:w-2/3 xl:sticky xl:top-40 xl:w-[420px]">
                     <div className="space-y-2">
                       <h2 className="text-4xl font-semibold max-xl:line-clamp-2 sm:text-5xl">
@@ -325,7 +325,7 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
                     </div>
                   </section>
                   <section
-                    className="services-details relative flex min-h-full flex-col items-end justify-center gap-[30dvw] sm:ml-32 md:ml-52 lg:ml-72 xl:ml-0 xl:w-3/5"
+                    className="services-details relative flex min-h-full flex-col gap-[40lvh] sm:ml-32 md:ml-52 lg:ml-72 xl:ml-0 xl:w-3/5 xl:items-end xl:justify-center xl:gap-[80lvh]"
                     dangerouslySetInnerHTML={{
                       __html: service.options[activeIndex]?.details,
                     }}
