@@ -2,14 +2,14 @@ import { useState, useRef, useEffect } from "react";
 
 export default function AboutStory({ gsap, useGSAP, ScrollTrigger }) {
   const quotes = [
-    '<h3>We help you make <span class="gradient">strategic digital choices</span> that unlock long-term value and business success. Our team stays focused on your needs.</h3>',
-    '<h3>Using proven methods like <span class="gradient">BHAG and OGSM</span>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>',
-    '<h3>With our <span class="gradient">RESI approach</span>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>',
-    '<h3>We modernize your digital environment to be <span class="gradient">scalable, efficient, and future-ready</span>. Technology drives your growth.</h3>',
-    '<h3>Our consulting services reduce <span class="gradient">complexity and platform costs</span> while boosting performance. Efficiency is our priority.</h3>',
-    '<h3>With 23+ years of experience, we <span class="gradient">strategically blend legacy systems</span> with modern technology. Experience delivers smart solutions.</h3>',
-    '<h3>We guide you through <span class="gradient">AI integration</span> to unlock automation, personalization, and smarter decisions. AI transforms your business.</h3>',
-    '<h3>Our focus is on <span class="gradient">business value and operational efficiency</span> using cutting-edge AI models. Innovation leads the way.</h3>',
+    "<h3>We help you make <strong>strategic digital choices</strong> that unlock long-term value and business success. Our team stays focused on your needs.</h3>",
+    "<h3>Using proven methods like <strong>BHAG and OGSM</strong>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>",
+    "<h3>With our <strong>RESI approach</strong>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>",
+    "<h3>We modernize your digital environment to be <strong>scalable, efficient, and future-ready</strong>. Technology drives your growth.</h3>",
+    "<h3>Our consulting services reduce <strong>complexity and platform costs</strong> while boosting performance. Efficiency is our priority.</h3>",
+    "<h3>With 23+ years of experience, we <strong>strategically blend legacy systems</strong> with modern technology. Experience delivers smart solutions.</h3>",
+    "<h3>We guide you through <strong>AI integration</strong> to unlock automation, personalization, and smarter decisions. AI transforms your business.</h3>",
+    "<h3>Our focus is on <strong>business value and operational efficiency</strong> using cutting-edge AI models. Innovation leads the way.</h3>",
   ];
   const [lottieAnimation, setLottieAnimation] = useState(null);
   const lottieRef = useRef(null);
@@ -71,13 +71,12 @@ export default function AboutStory({ gsap, useGSAP, ScrollTrigger }) {
 
               node.replaceWith(fragment);
             } else if (node.nodeType === Node.ELEMENT_NODE) {
-              // Handle existing <span> elements (words with gradient text)
+              // Handle existing <strong> elements (words with gradient text)
               const element = node;
-              const originalClass = element.className;
 
               const text = element.textContent || "";
               const wordSpan = document.createElement("span");
-              wordSpan.className = `${originalClass} word-wrapper scroll-text`; // Keep gradient styling
+              wordSpan.className = "gradient word-wrapper scroll-text";
 
               text.split("").forEach((char) => {
                 const charSpan = document.createElement("span");

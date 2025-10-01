@@ -11,25 +11,25 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
         {
           heading: "Digital Strategy",
           details: `
-          <h3>We help you make <span class="gradient">strategic digital choices</span> that unlock long-term value and business success. Our team stays focused on your needs.</h3>
-          <h3>Using proven methods like <span class="gradient">BHAG and OGSM</span>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>
-          <h3>With our <span class="gradient">RESI approach</span>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>
+          <h3>We help you make <strong>strategic digital choices</strong> that unlock long-term value and business success. Our team stays focused on your needs.</h3>
+          <h3>Using proven methods like <strong>BHAG and OGSM</strong>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>
+          <h3>With our <strong>RESI approach</strong>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>
         `,
         },
         {
           heading: "Platform Consulting",
           details: `
-          <h3>We modernize your digital environment to be <span class="gradient">scalable, efficient, and future-ready</span>. Technology drives your growth.</h3>
-          <h3>Our consulting services reduce <span class="gradient">complexity and platform costs</span> while boosting performance. Efficiency is our priority.</h3>
-          <h3>With 23+ years of experience, we <span class="gradient">strategically blend legacy systems</span> with modern technology. Experience delivers smart solutions.</h3>
+          <h3>We modernize your digital environment to be <strong>scalable, efficient, and future-ready</strong>. Technology drives your growth.</h3>
+          <h3>Our consulting services reduce <strong>complexity and platform costs</strong> while boosting performance. Efficiency is our priority.</h3>
+          <h3>With 23+ years of experience, we <strong>strategically blend legacy systems</strong> with modern technology. Experience delivers smart solutions.</h3>
         `,
         },
         {
           heading: "AI Consulting",
           details: `
-          <h3>We guide you through <span class="gradient">AI integration</span> to unlock automation, personalization, and smarter decisions. AI transforms your business.</h3>
-          <h3>Our focus is on <span class="gradient">business value and operational efficiency</span> using cutting-edge AI models. Innovation leads the way.</h3>
-          <h3>Stay ahead of the curve with <span class="gradient">expert AI consulting</span> tailored to your goals. We keep you competitive.</h3>
+          <h3>We guide you through <strong>AI integration</strong> to unlock automation, personalization, and smarter decisions. AI transforms your business.</h3>
+          <h3>Our focus is on <strong>business value and operational efficiency</strong> using cutting-edge AI models. Innovation leads the way.</h3>
+          <h3>Stay ahead of the curve with <strong>expert AI consulting</strong> tailored to your goals. We keep you competitive.</h3>
         `,
         },
       ],
@@ -42,25 +42,25 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
         {
           heading: "Customer Centric Design",
           details: `
-          <h3>Designing around the <span class="gradient">customer journey</span> leads to higher engagement and loyalty. Customers always come first.</h3>
-          <h3>We identify pain points through <span class="gradient">data and interviews</span> and design seamless digital experiences. Listening is key to success.</h3>
-          <h3>Boost conversion and growth with our <span class="gradient">customer-first approach</span> to design. We build lasting relationships.</h3>
+          <h3>Designing around the <strong>customer journey</strong> leads to higher engagement and loyalty. Customers always come first.</h3>
+          <h3>We identify pain points through <strong>data and interviews</strong> and design seamless digital experiences. Listening is key to success.</h3>
+          <h3>Boost conversion and growth with our <strong>customer-first approach</strong> to design. We build lasting relationships.</h3>
         `,
         },
         {
           heading: "Brand Driven Design",
           details: `
-          <h3>We build <span class="gradient">distinctive digital identities</span> that capture your brand essence. Your brand tells a story.</h3>
-          <h3>Using insights and data, we <span class="gradient">differentiate your brand</span> in a crowded digital landscape. Stand out from the crowd.</h3>
-          <h3>Every design choice supports <span class="gradient">strategic positioning and user impact</span>. Strategy drives design decisions.</h3>
+          <h3>We build <strong>distinctive digital identities</strong> that capture your brand essence. Your brand tells a story.</h3>
+          <h3>Using insights and data, we <strong>differentiate your brand</strong> in a crowded digital landscape. Stand out from the crowd.</h3>
+          <h3>Every design choice supports <strong>strategic positioning and user impact</strong>. Strategy drives design decisions.</h3>
         `,
         },
         {
           heading: "Creative Development",
           details: `
-          <h3>We deliver <span class="gradient">scalable front-end solutions</span> that maintain brand consistency across channels. Consistency builds trust.</h3>
-          <h3>With composable design and headless tools, we ensure <span class="gradient">future-proof user experiences</span>. Future-ready is essential.</h3>
-          <h3>Our approach combines <span class="gradient">creativity and technology</span> to support conversion-driven growth. Innovation meets art.</h3>
+          <h3>We deliver <strong>scalable front-end solutions</strong> that maintain brand consistency across channels. Consistency builds trust.</h3>
+          <h3>With composable design and headless tools, we ensure <strong>future-proof user experiences</strong>. Future-ready is essential.</h3>
+          <h3>Our approach combines <strong>creativity and technology</strong> to support conversion-driven growth. Innovation meets art.</h3>
         `,
         },
       ],
@@ -72,33 +72,33 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
         {
           heading: "Ecommerce",
           details: `
-          <h3>We empower businesses with <span class="gradient">custom eCommerce strategies</span> for growth and performance. Growth is our mission.</h3>
-          <h3>From platform selection to SEO, we build <span class="gradient">user-centric shopping experiences</span>. User focus drives results.</h3>
-          <h3>Our technology-agnostic approach ensures <span class="gradient">flexibility and future-readiness</span>. Adaptability is the key.</h3>
+          <h3>We empower businesses with <strong>custom eCommerce strategies</strong> for growth and performance. Growth is our mission.</h3>
+          <h3>From platform selection to SEO, we build <strong>user-centric shopping experiences</strong>. User focus drives results.</h3>
+          <h3>Our technology-agnostic approach ensures <strong>flexibility and future-readiness</strong>. Adaptability is the key.</h3>
         `,
         },
         {
           heading: "PIM / Master Data Management",
           details: `
-          <h3>Gain control over product data with <span class="gradient">reliable PIM and MDM systems</span>. Data is a valuable asset.</h3>
-          <h3>We simplify data architecture to enable <span class="gradient">efficiency and consistency</span>. Simplicity drives success.</h3>
-          <h3>Our services align your data with <span class="gradient">industry standards</span> and drive better decisions. Standards improve quality.</h3>
+          <h3>Gain control over product data with <strong>reliable PIM and MDM systems</strong>. Data is a valuable asset.</h3>
+          <h3>We simplify data architecture to enable <strong>efficiency and consistency</strong>. Simplicity drives success.</h3>
+          <h3>Our services align your data with <strong>industry standards</strong> and drive better decisions. Standards improve quality.</h3>
         `,
         },
         {
           heading: "AI driven Expert systems",
           details: `
-          <h3>Answer complex questions faster with <span class="gradient">AI-powered expert systems</span>. Speed enhances decision-making.</h3>
-          <h3>We train models using your data to create <span class="gradient">intelligent virtual assistants</span>. Smart assistants boost efficiency.</h3>
-          <h3>Our solutions enhance decision-making and <span class="gradient">reduce operational costs</span>. Efficiency lowers expenses.</h3>
+          <h3>Answer complex questions faster with <strong>AI-powered expert systems</strong>. Speed enhances decision-making.</h3>
+          <h3>We train models using your data to create <strong>intelligent virtual assistants</strong>. Smart assistants boost efficiency.</h3>
+          <h3>Our solutions enhance decision-making and <strong>reduce operational costs</strong>. Efficiency lowers expenses.</h3>
         `,
         },
         {
           heading: "Digital Experience Platforms (CMS)",
           details: `
-          <h3>Deliver <span class="gradient">personalized experiences</span> across all customer touchpoints with DXPs. Personalization drives engagement.</h3>
-          <h3>We integrate content, analytics, and automation to create <span class="gradient">unified digital journeys</span>. Integration simplifies management.</h3>
-          <h3>DXPs help you <span class="gradient">make data-driven decisions</span> that improve engagement and ROI. Data fuels growth.</h3>
+          <h3>Deliver <strong>personalized experiences</strong> across all customer touchpoints with DXPs. Personalization drives engagement.</h3>
+          <h3>We integrate content, analytics, and automation to create <strong>unified digital journeys</strong>. Integration simplifies management.</h3>
+          <h3>DXPs help you <strong>make data-driven decisions</strong> that improve engagement and ROI. Data fuels growth.</h3>
         `,
         },
       ],
@@ -110,33 +110,33 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
         {
           heading: "Search Engine Marketing",
           details: `
-          <h3>Improve your visibility with <span class="gradient">data-driven SEO and SEA strategies</span>. Visibility increases opportunities.</h3>
-          <h3>We turn your search engine challenges into <span class="gradient">competitive strengths</span>. Strength wins market share.</h3>
-          <h3>Our SEM services drive <span class="gradient">sustainable traffic and conversion growth</span>. Sustainability is essential.</h3>
+          <h3>Improve your visibility with <strong>data-driven SEO and SEA strategies</strong>. Visibility increases opportunities.</h3>
+          <h3>We turn your search engine challenges into <strong>competitive strengths</strong>. Strength wins market share.</h3>
+          <h3>Our SEM services drive <strong>sustainable traffic and conversion growth</strong>. Sustainability is essential.</h3>
         `,
         },
         {
           heading: "Conversion Rate Optimisation (CRO)",
           details: `
-          <h3>We use <span class="gradient">data-driven A/B testing</span> to improve your conversion rates. Testing drives improvements.</h3>
-          <h3>Our CRO experts focus on <span class="gradient">continuous optimization and real-time insights</span>. Insights guide change.</h3>
-          <h3>Maximize ROI by <span class="gradient">removing friction in user journeys</span>. Smooth journeys increase sales.</h3>
+          <h3>We use <strong>data-driven A/B testing</strong> to improve your conversion rates. Testing drives improvements.</h3>
+          <h3>Our CRO experts focus on <strong>continuous optimization and real-time insights</strong>. Insights guide change.</h3>
+          <h3>Maximize ROI by <strong>removing friction in user journeys</strong>. Smooth journeys increase sales.</h3>
         `,
         },
         {
           heading: "Performance Marketing Campaigns",
           details: `
-          <h3>Launch <span class="gradient">high-impact campaigns</span> on Google, Facebook, Amazon, and more. Impact drives results.</h3>
-          <h3>Every action, creative, and strategy is <span class="gradient">optimized for measurable performance</span>. Performance is measured closely.</h3>
-          <h3>We combine <span class="gradient">engineering and marketing</span> to scale your results efficiently. Efficiency scales growth.</h3>
+          <h3>Launch <strong>high-impact campaigns</strong> on Google, Facebook, Amazon, and more. Impact drives results.</h3>
+          <h3>Every action, creative, and strategy is <strong>optimized for measurable performance</strong>. Performance is measured closely.</h3>
+          <h3>We combine <strong>engineering and marketing</strong> to scale your results efficiently. Efficiency scales growth.</h3>
         `,
         },
         {
           heading: "Marketplaces",
           details: `
-          <h3>Expand your reach with <span class="gradient">automated marketplace integrations</span>. Reach more customers.</h3>
-          <h3>We simplify product feed management for <span class="gradient">Amazon, eBay, and beyond</span>. Management made easy.</h3>
-          <h3>Boost cross-border growth with <span class="gradient">seamless data and inventory syncing</span>. Syncing saves time.</h3>
+          <h3>Expand your reach with <strong>automated marketplace integrations</strong>. Reach more customers.</h3>
+          <h3>We simplify product feed management for <strong>Amazon, eBay, and beyond</strong>. Management made easy.</h3>
+          <h3>Boost cross-border growth with <strong>seamless data and inventory syncing</strong>. Syncing saves time.</h3>
         `,
         },
       ],
@@ -149,9 +149,9 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
         {
           heading: "Conversion Rate Optimisation",
           details: `
-          <h3>Achieve <span class="gradient">measurable growth</span> through continuous CRO improvement. Growth is always possible.</h3>
-          <h3>Analyze user behavior, test ideas, and <span class="gradient">optimize digital performance</span>. Data drives decisions.</h3>
-          <h3>Empower your team with <span class="gradient">real-time dashboards and actionable insights</span>. Insights empower success.</h3>
+          <h3>Achieve <strong>measurable growth</strong> through continuous CRO improvement. Growth is always possible.</h3>
+          <h3>Analyze user behavior, test ideas, and <strong>optimize digital performance</strong>. Data drives decisions.</h3>
+          <h3>Empower your team with <strong>real-time dashboards and actionable insights</strong>. Insights empower success.</h3>
         `,
         },
       ],
@@ -220,13 +220,12 @@ export default function WorkStory({ gsap, useGSAP, ScrollTrigger }) {
 
               node.replaceWith(fragment);
             } else if (node.nodeType === Node.ELEMENT_NODE) {
-              // Handle existing <span> elements (words with gradient text)
+              // Handle existing <strong> elements (words with gradient text)
               const element = node;
-              const originalClass = element.className;
 
               const text = element.textContent || "";
               const wordSpan = document.createElement("span");
-              wordSpan.className = `${originalClass} word-wrapper scroll-text`; // Keep gradient styling
+              wordSpan.className = "gradient word-wrapper scroll-text";
 
               text.split("").forEach((char) => {
                 const charSpan = document.createElement("span");
