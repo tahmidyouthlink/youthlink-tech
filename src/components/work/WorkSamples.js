@@ -460,7 +460,7 @@ export default function WorkSamples({
                             ))}
                           </div>
                           <h4 className="pointer-events-none w-[calc(var(--small-card-width)*1.33334)] rounded-md bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] p-2 text-center text-neutral-700 sm:w-[calc(var(--large-card-width)*1.66667)]">
-                            {work.title}
+                            {work.title.replace(/<\/?[^>]+(>|$)/g, "")}
                           </h4>
                         </div>
                       </div>
