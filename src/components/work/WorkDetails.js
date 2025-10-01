@@ -124,13 +124,12 @@ export default function WorkDetails({
 
               node.replaceWith(fragment);
             } else if (node.nodeType === Node.ELEMENT_NODE) {
-              // Handle existing <span> elements (words with gradient text)
+              // Handle existing <strong> elements (words with gradient text)
               const element = node;
-              const originalClass = element.className;
 
               const text = element.textContent || "";
               const wordSpan = document.createElement("span");
-              wordSpan.className = `${originalClass} word-wrapper scroll-text`; // Keep gradient styling
+              wordSpan.className = "gradient word-wrapper scroll-text";
 
               text.split("").forEach((char) => {
                 const charSpan = document.createElement("span");
@@ -178,13 +177,13 @@ export default function WorkDetails({
         >
           <section className="invisible lg:col-span-1 lg:w-auto xl:col-span-3">
             <div className="min-h-[calc(100lvh-40lvh-92px-40px)] max-lg:space-y-16 sm:min-h-[calc(100lvh-50lvh-92px-40px)] lg:flex lg:min-h-[calc(100lvh-92px)] lg:flex-col lg:justify-center lg:max-xl:gap-y-40 xl:justify-around">
-              <h1 className="text-xl font-semibold uppercase text-neutral-700 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:text-4xl xl:text-5xl/[1.25]">
-                How we&apos;ve initiated{" "}
-                <span className="bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500))] bg-clip-text text-transparent">
-                  our country&apos;s first
-                </span>{" "}
-                fashion e-commerce business
-              </h1>
+              <div
+                className="gradient-text text-xl font-semibold uppercase text-neutral-700 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:text-4xl xl:text-5xl/[1.25]"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    selectedOption.work?.title || "Title for the selected work",
+                }}
+              />
               <div className="space-y-5">
                 <p>
                   Become a part of our journey. Let&apos;s conquer the world
@@ -209,17 +208,9 @@ export default function WorkDetails({
             </div>
             <div
               id="works-details-quotes"
-              className="flex flex-col gap-y-[55lvh] [&_h3:first-child]:mt-[10dvw]"
+              className="flex min-h-[33.33lvh] flex-col gap-y-[55lvh] [&_h3:first-child]:mt-[10dvw]"
               dangerouslySetInnerHTML={{
-                __html: `<h3>We help you make <span class="gradient">strategic digital choices</span> that unlock long-term value and business success. Our team stays focused on your needs.</h3>
-              <h3>Using proven methods like <span class="gradient">BHAG and OGSM</span>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>
-              <h3>With our <span class="gradient">RESI approach</span>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>
-              <h3>We help you make <span class="gradient">strategic digital choices</span> that unlock long-term value and business success. Our team stays focused on your needs.</h3>
-              <h3>Using proven methods like <span class="gradient">BHAG and OGSM</span>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>
-              <h3>With our <span class="gradient">RESI approach</span>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>
-              <h3>We help you make <span class="gradient">strategic digital choices</span> that unlock long-term value and business success. Our team stays focused on your needs.</h3>
-              <h3>Using proven methods like <span class="gradient">BHAG and OGSM</span>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>
-              <h3>With our <span class="gradient">RESI approach</span>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>`,
+                __html: selectedOption.work?.details,
               }}
             />
           </section>

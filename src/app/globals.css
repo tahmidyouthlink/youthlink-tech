@@ -145,12 +145,14 @@ body {
   }
 
   .services-details h3,
-  #works-details-quotes h3 {
+  #works-details-quotes h3,
+  .gradient-text {
     @apply max-w-2xl text-xl font-semibold text-neutral-600 sm:text-3xl;
   }
 
   .services-details h3 > span.gradient,
-  #works-details-quotes h3 > span.gradient {
+  #works-details-quotes h3 > span.gradient,
+  .gradient-text strong {
     @apply bg-[linear-gradient(to_right,theme(colors.orange.500),theme(colors.yellow.400))] bg-clip-text text-transparent;
   }
 

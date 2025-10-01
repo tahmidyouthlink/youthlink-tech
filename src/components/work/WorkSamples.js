@@ -8,6 +8,7 @@ export default function WorkSamples({
   useGSAP,
   Draggable,
   Flip,
+  works,
   selectedOption,
   setSelectedOption,
   cardMesurements,
@@ -22,121 +23,6 @@ export default function WorkSamples({
   const [selectedWorkIndex, setSelectedWorkIndex] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const works = [
-    {
-      imgSrc: "/work/cards/beast.jpg",
-      title: "Beast Mode Activation: Igniting Digital Power Beyond Limits",
-      categories: ["Digital Marketing", "E-Commerce", "Data Strategy"],
-      details: `
-        <h3>We help you make <span class="gradient">strategic digital choices</span> that unlock long-term value and business success. Our team stays focused on your needs.</h3>
-        <h3>Using proven methods like <span class="gradient">BHAG and OGSM</span>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>
-        <h3>With our <span class="gradient">RESI approach</span>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>
-        <h3>We help you make <span class="gradient">strategic digital choices</span> that unlock long-term value and business success. Our team stays focused on your needs.</h3>
-        <h3>Using proven methods like <span class="gradient">BHAG and OGSM</span>, we deliver measurable outcomes that drive growth. Goals guide our every move.</h3>
-        <h3>With our <span class="gradient">RESI approach</span>, we align teams and guide your organization toward sustainable results. Success requires strong collaboration.</h3>
-      `,
-    },
-    {
-      imgSrc: "/work/cards/crow.webp",
-      title: "Crow Funding Revolution: Redefining Growth & Community Impact",
-      categories: ["E-Commerce", "Data Strategy", "Digital Marketing"],
-      details: `
-        <h3>We help you make <span class="gradient">strategic digital choices</span> that empower communities and unlock exponential business growth.</h3>
-        <h3>Our methods <span class="gradient">fuse data-driven insights</span> with people-centric strategies to deliver results that matter.</h3>
-        <h3>Through <span class="gradient">BHAG and OGSM frameworks</span>, every funding strategy aligns with tangible outcomes and scalable success.</h3>
-        <h3>We create ecosystems that <span class="gradient">combine creativity with analytics</span>, reshaping how crowdfunding drives innovation.</h3>
-      `,
-    },
-    {
-      imgSrc: "/work/cards/snatch.jpg",
-      title: "Snatch App Development: Capturing Innovation in Every Swipe",
-      categories: ["Digital Transformation", "E-Commerce"],
-      details: `
-        <h3>With <span class="gradient">Snatch</span>, we engineered seamless app experiences designed for speed, usability, and growth.</h3>
-        <h3>We applied <span class="gradient">RESI principles</span> to align teams across design, development, and deployment.</h3>
-        <h3>Using <span class="gradient">goal-driven methods</span>, we delivered measurable improvements in retention, engagement, and performance.</h3>
-        <h3>Snatch represents <span class="gradient">the next frontier of digital transformation</span>, where mobile innovation meets customer delight.</h3>
-      `,
-    },
-    {
-      imgSrc: "/work/cards/eighteen.jpg",
-      title: "Eighteen Magazine Launch: A Bold Leap into Digital Storytelling",
-      categories: ["Digital Marketing", "Data Strategy"],
-      details: `
-        <h3>We helped <span class="gradient">Eighteen Magazine</span> disrupt the publishing space with a launch strategy rooted in innovation.</h3>
-        <h3>By leveraging <span class="gradient">OGSM frameworks</span>, we built campaigns that drive readership and retention.</h3>
-        <h3>Our <span class="gradient">data-driven storytelling</span> amplified reach and impact across multiple platforms.</h3>
-        <h3>This launch was not just about a magazine—it was <span class="gradient">the start of a content movement</span>.</h3>
-      `,
-    },
-    {
-      imgSrc: "/work/cards/milton-glaser.jpg",
-      title:
-        "Milton Glaser Tribute Campaign: Where Creativity Meets Digital Brilliance",
-      categories: ["Digital Marketing", "Customer Experience"],
-      details: `
-        <h3>We honored <span class="gradient">Milton Glaser’s legacy</span> through a campaign blending creativity and strategy.</h3>
-        <h3>Our team used <span class="gradient">BHAG & OGSM</span> methods to ensure the tribute left a lasting global impact.</h3>
-        <h3>We crafted <span class="gradient">story-driven digital campaigns</span> that celebrated his influence on art, design, and culture.</h3>
-        <h3>This project became a <span class="gradient">case study in meaningful marketing</span>—driving both engagement and inspiration.</h3>
-      `,
-    },
-    {
-      imgSrc: "/work/cards/noir.jpg",
-      title: "Noir Analytics Platform: Illuminating Data in the Dark",
-      categories: ["Data Strategy", "Digital Transformation", "E-Commerce"],
-      details: `
-        <h3><span class="gradient">Noir</span> transformed raw data into actionable strategies with cutting-edge analytics.</h3>
-        <h3>We applied <span class="gradient">RESI collaboration methods</span> to align teams and drive clarity in decision-making.</h3>
-        <h3>Our <span class="gradient">goal-oriented approach</span> helped businesses unlock insights hidden in the data shadows.</h3>
-        <h3>Noir is where <span class="gradient">data meets creativity</span>, enabling smart, sustainable growth.</h3>
-      `,
-    },
-    {
-      imgSrc: "/work/cards/edm.jpg",
-      title:
-        "Bangladesh’s First Fashion E-Commerce Revolution: Setting New Trends",
-      categories: [
-        "E-Commerce",
-        "Digital Transformation",
-        "Customer Experience",
-      ],
-      details: `
-        <h3>We pioneered <span class="gradient">Bangladesh’s first fashion e-commerce movement</span>, changing how people shop.</h3>
-        <h3>By using <span class="gradient">BHAG and OGSM methods</span>, we aligned strategies with business objectives for exponential growth.</h3>
-        <h3>Our <span class="gradient">customer-first approach</span> reshaped user experience, setting new industry benchmarks.</h3>
-        <h3>This project proved how <span class="gradient">digital disruption</span> can redefine an entire market.</h3>
-      `,
-    },
-    {
-      imgSrc: "/work/cards/wet.webp",
-      title: "Wet App: Forecasting Tomorrow with Smart Digital Solutions",
-      categories: [
-        "Digital Transformation",
-        "Data Strategy",
-        "E-Commerce",
-        "Innovation",
-      ],
-      details: `
-        <h3>The <span class="gradient">Wet App</span> pushed weather forecasting into the digital future.</h3>
-        <h3>We integrated <span class="gradient">data-driven insights</span> with user-centric design for maximum adoption.</h3>
-        <h3>Our <span class="gradient">goal-focused execution</span> delivered accurate forecasts and sustainable user engagement.</h3>
-        <h3>This app embodies <span class="gradient">innovation meeting necessity</span>, where data guides everyday life.</h3>
-      `,
-    },
-    {
-      imgSrc: "/work/cards/faces.jpg",
-      title: "Faces of the World Exhibition: Showcasing Stories Beyond Borders",
-      categories: ["Digital Marketing", "Innovation"],
-      details: `
-        <h3><span class="gradient">Faces of the World</span> was more than an exhibition—it was a global conversation.</h3>
-        <h3>We applied <span class="gradient">strategic frameworks</span> to amplify cultural stories and connect diverse audiences.</h3>
-        <h3>Our <span class="gradient">RESI collaboration</span> brought together teams across continents.</h3>
-        <h3>The exhibition created <span class="gradient">lasting digital and cultural impact</span>, building bridges across borders.</h3>
-      `,
-    },
-  ];
-
   const filteredWorks =
     selectedCategory === "All" || selectedCategory === null
       ? works
@@ -146,10 +32,6 @@ export default function WorkSamples({
     "All",
     ...new Set(works.flatMap((work) => work.categories)),
   ];
-
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [selectedCategory]);
 
   useGSAP(
     () => {
@@ -451,6 +333,7 @@ export default function WorkSamples({
         selectedWorkIndex === null &&
         selectedCategory !== null
       ) {
+        setCurrentIndex(0);
         const mm = gsap.matchMedia();
         mm.add(
           {

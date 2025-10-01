@@ -1,17 +1,6 @@
 import { useRef } from "react";
 import Image from "next/image";
 
-const imgSrcs = [
-  "/work/cards/beast.jpg",
-  "/work/cards/crow.webp",
-  "/work/cards/snatch.jpg",
-  "/work/cards/eighteen.jpg",
-  "/work/cards/milton-glaser.jpg",
-  "/work/cards/noir.jpg",
-  "/work/cards/edm.jpg",
-  "/work/cards/wet.webp",
-  "/work/cards/faces.jpg",
-];
 const cardRotations = [-24, -18, -12, -6, 0, 6, 12, 18, 24];
 
 export default function WorkHero({
@@ -19,6 +8,7 @@ export default function WorkHero({
   useGSAP,
   Draggable,
   Flip,
+  works,
   selectedOption,
   setSelectedOption,
   cardMesurements,
@@ -168,7 +158,7 @@ export default function WorkHero({
               const containerEl = document.getElementById(
                 "hero-cards-container",
               );
-              const cardCount = imgSrcs.length;
+              const cardCount = works.length;
               const padding = cardOffset + 40;
               const totalWidth =
                 cardWidth +
@@ -205,7 +195,7 @@ export default function WorkHero({
         Draggable,
         Flip,
         gsap,
-        imgSrcs,
+        works,
         selectedOption,
         setSelectedOption,
       ],
@@ -233,26 +223,27 @@ export default function WorkHero({
             "--large-card-width": `${LARGE_CARD_WIDTH}px`,
           }}
         >
-          {imgSrcs.map((src, index) => {
+          {works.map((work, index) => {
             return (
               <div
-                key={"work-hero-img" + src + index}
+                key={"work-hero-img" + work.title + work.imgSrc + index}
                 className={`hero-card relative shrink-0 space-y-2 [&:has(img:hover)>div]:opacity-100 [&:has(img:hover)>div]:delay-[500ms] [&:has(img:hover)>h4]:opacity-100 [&:has(img:hover)>h4]:delay-[500ms] [&:has(img:hover)>img]:w-[calc(var(--small-card-width)*1.33334)] sm:[&:has(img:hover)>img]:w-[calc(var(--large-card-width)*1.66667)] [&:has(img:hover)]:z-[1] [&:has(img:hover)]:-translate-y-3`}
               >
                 <Image
-                  key={index}
-                  src={src}
-                  alt={`Image ${index + 1}`}
+                  src={work.imgSrc}
+                  alt={work.title}
                   width={0}
                   height={0}
                   sizes="350px"
                   className="size-[var(--small-card-width)] cursor-pointer rounded-xl object-cover transition-[filter,width] delay-150 duration-500 ease-in-out sm:size-[var(--large-card-width)]"
                 />
                 <div className="absolute -top-5 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-full rotate-45 bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] opacity-0 transition-opacity duration-300 ease-in-out"></div>
-                <h4 className="pointer-events-none absolute -top-6 left-0 w-[calc(var(--small-card-width)*1.33334)] -translate-y-full rounded-md bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] p-2 text-center text-neutral-700 opacity-0 transition-opacity duration-300 ease-in-out max-sm:text-[11px]/[1.25] sm:w-[calc(var(--large-card-width)*1.66667)]">
-                  How we&apos;ve initiated Bangladesh&apos;s first fashion
-                  e-commerce business
-                </h4>
+                <h4
+                  className="pointer-events-none absolute -top-6 left-0 w-[calc(var(--small-card-width)*1.33334)] -translate-y-full rounded-md bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] p-2 text-center text-neutral-700 opacity-0 transition-opacity duration-300 ease-in-out max-sm:text-[11px]/[1.25] sm:w-[calc(var(--large-card-width)*1.66667)]"
+                  dangerouslySetInnerHTML={{
+                    __html: work.title.replace(/<\/?[^>]+(>|$)/g, ""),
+                  }}
+                ></h4>
               </div>
             );
           })}
