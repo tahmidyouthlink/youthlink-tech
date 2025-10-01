@@ -99,10 +99,9 @@ const AllWork = () => {
                   className="h-56 w-full rounded-t-3xl object-cover"
                 />
                 <div className="mt-2 p-5">
-                  <p className="font-semibold text-neutral-800">{work?.title}</p>
-                  <div className='lg:h-20'>
-                    <p className='text-neutral-500 pt-2'>{work?.heading}</p>
-                  </div>
+                  <p className="font-semibold text-neutral-800">
+                    <MarkdownPreview content={work?.title} />
+                  </p>
 
                   <div className="mt-6 flex items-center flex-wrap gap-8">
                     <div className='group relative'>
@@ -136,14 +135,13 @@ const AllWork = () => {
               <ModalBody className="modal-body-scroll">
                 <div className='px-7'>
                   <div className='flex justify-center items-center mt-6'>
-                    <Image src={details?.imageURL} alt='image' width={3000} height={3000} />
+                    <Image src={details?.imageURL} alt='image' width={3000} height={3000}
+                      className='h-56 w-full rounded-t-3xl object-cover'
+                    />
                   </div>
                   <div className="text-base px-8 font-black text-center mt-6">
-                    {details?.title}
+                    <MarkdownPreview content={details?.title} />
                   </div>
-                  <p className="mt-4 px-8 text-sm text-center font-medium">
-                    {details?.heading}
-                  </p>
                   <p className="mt-4 px-8 text-sm text-center font-bold">
                     {details?.keyword?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}># {skill?.value}</p>)}
                   </p>
@@ -152,16 +150,8 @@ const AllWork = () => {
                   </div>
                   <p className="text-xs font-medium md:text-sm text-center">Published Date : {details?.formattedDate}</p>
                   <p className="mt-4 text-sm text-center">
-                    <h1 className='gradient-text font-bold py-1'>About The Project</h1>
-                    <MarkdownPreview content={details?.aboutTheProject} />
-                  </p>
-                  <p className="mt-4 text-sm text-center">
-                    <h1 className='gradient-text font-bold py-1'>Our Solution</h1>
-                    <MarkdownPreview content={details?.ourSolution} />
-                  </p>
-                  <p className="mt-4 text-sm text-center">
-                    <h1 className='gradient-text font-bold py-1'>The Results</h1>
-                    <MarkdownPreview content={details?.theResults} />
+                    <h1 className='gradient-text font-bold py-1'>Work Details</h1>
+                    <MarkdownPreview content={details?.details} />
                   </p>
                 </div>
               </ModalBody>
