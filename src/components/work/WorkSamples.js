@@ -415,7 +415,7 @@ export default function WorkSamples({
                   your vision into reality.
                 </p>
                 <Link
-                  href="#"
+                  href="/contact-us"
                   className={`block w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.yellow.500),theme(colors.orange.600))] bg-[length:300%_300%] bg-[170%_100%] px-5 py-2.5 text-sm font-medium text-white transition-[background-position] duration-700 ease-in-out hover:bg-[235%_100%]`}
                 >
                   Reach out to us
