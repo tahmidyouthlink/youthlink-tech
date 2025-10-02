@@ -285,11 +285,19 @@ const UpdateWork = ({ params }) => {
 									</div>
 
 									<div>
-										<label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Keywords</label>
+										<label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C] pb-2'>Change Keywords</label>
 										<Controller
 											name="keyword"
 											defaultValue={selectedKeywords}
 											control={control}
+											rules={{
+												validate: (value) => {
+													if (!value || value.length === 0) {
+														return "At least one keyword is required";
+													}
+													return true;
+												}
+											}}
 											render={({ field }) => (
 												<CreatableSelect
 													isMulti
@@ -303,16 +311,26 @@ const UpdateWork = ({ params }) => {
 												/>
 											)}
 										/>
-										{errors.keyword?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">Keyword is required</p>
+										{errors.keyword && (
+											<p className="text-red-600 text-left text-xs font-semibold pt-1">
+												{errors.keyword.message}
+											</p>
 										)}
 									</div>
 									<div>
-										<label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Categories</label>
+										<label htmlFor='category' className='flex justify-start font-medium text-[#EA580C] pb-2'>Change Categories</label>
 										<Controller
 											name="category"
 											defaultValue={selectedCategories}
 											control={control}
+											rules={{
+												validate: (value) => {
+													if (!value || value.length === 0) {
+														return "At least one category is required";
+													}
+													return true;
+												}
+											}}
 											render={({ field }) => (
 												<CreatableSelect
 													isMulti
@@ -330,8 +348,10 @@ const UpdateWork = ({ params }) => {
 												/>
 											)}
 										/>
-										{errors.category?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">Category is required</p>
+										{errors.category && (
+											<p className="text-red-600 text-left text-xs font-semibold pt-1">
+												{errors.category.message}
+											</p>
 										)}
 									</div>
 

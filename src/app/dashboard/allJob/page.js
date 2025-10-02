@@ -82,12 +82,13 @@ const CareerPage = () => {
       <div className='relative'>
         <div className='fixed bottom-4 right-12 z-50'>
           <Link href={`/dashboard/addCareer`}>
-            <button className='flex items-center font-medium bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white px-4 hover:scale-105 transition duration-300 py-2 rounded-md'>
+            <button className='flex items-center gap-2 text-white w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]'>
               <FiPlus size={20} />
               <h1>Add Career</h1>
             </button>
           </Link>
         </div>
+
         {allJob?.length > 0 ? <>
           <h1 className='px-6 lg:px-12 text-2xl md:text-4xl font-semibold mt-6 lg:mb-8 mb-4'>All vacancies</h1>
           <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>

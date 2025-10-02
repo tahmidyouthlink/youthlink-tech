@@ -88,43 +88,55 @@ const AllWork = () => {
             </button>
           </Link>
         </div>
-        {allWork?.length > 0 ? <><h1 className="px-6 mt-6 lg:px-12 text-2xl md:text-4xl font-semibold">All Works</h1>
-          <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
-            {allWork?.map((work, index) => <div key={index}>
-              <div className="bg-white rounded-2xl drop-shadow relative">
-                <p className="text-xs font-medium md:text-sm absolute right-0 px-4 py-1 rounded-3xl border border-white/20 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 shadow-2xl text-white">{work?.formattedDate}</p>
-                <Image
-                  alt="work images"
-                  src={work?.imageURL} height={2240} width={2000}
-                  className="h-56 w-full rounded-t-3xl object-cover"
-                />
-                <div className="mt-2 p-5">
-                  <p className="font-semibold text-neutral-800">
-                    <MarkdownPreview content={work?.title} />
-                  </p>
 
-                  <div className="mt-6 flex items-center flex-wrap gap-8">
-                    <div className='group relative'>
-                      <Button isIconOnly color='secondary' variant="ghost" onClick={() => { setColumnModalOpen(true); open(work?._id) }}><FaEye size={20} /></Button>
-                      <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">View</span>
+        {
+          allWork?.length > 0 ? <>
+            <h1 className="px-6 mt-6 lg:px-12 text-2xl md:text-4xl font-semibold">
+              All Works
+            </h1>
+            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-6 lg:px-12 mt-4 mb-12'>
+              {allWork?.map((work, index) => <div key={index}>
+                <div className="bg-white rounded-2xl drop-shadow relative flex flex-col h-full">
+                  <p className="text-xs font-medium md:text-sm absolute right-0 px-4 py-1 rounded-3xl border border-white/20 bg-white/10 z-10 backdrop-filter backdrop-blur-md bg-opacity-30 shadow-2xl text-white">{work?.formattedDate}</p>
+                  <Image
+                    alt="work images"
+                    src={work?.imageURL} height={2240} width={2000}
+                    className="h-56 w-full rounded-t-3xl object-cover"
+                  />
+                  {/* content area grows to fill remaining space */}
+                  <div className="mt-2 p-5 flex flex-col flex-1">
+                    {/* clamp the title so it can't make the card taller */}
+                    <div className="mb-4 font-semibold text-neutral-800 line-clamp-3 break-words">
+                      <MarkdownPreview content={work?.title} />
                     </div>
-                    <div className='group relative'>
-                      <Button isIconOnly color="danger" onClick={() => handleDelete(work?._id)}> <MdOutlineDelete size={20} /></Button>
-                      <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Delete</span>
+
+                    <div className="mt-auto flex items-center flex-wrap gap-8">
+                      <div className='group relative'>
+                        <Button isIconOnly color='secondary' variant="ghost" onClick={() => { setColumnModalOpen(true); open(work?._id) }}><FaEye size={20} /></Button>
+                        <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">View</span>
+                      </div>
+                      <div className='group relative'>
+                        <Button isIconOnly color="danger" onClick={() => handleDelete(work?._id)}> <MdOutlineDelete size={20} /></Button>
+                        <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Delete</span>
+                      </div>
+                      <div className='group relative'>
+                        <Link href={`/dashboard/update/${work?._id}`}><Button isIconOnly color="primary" variant="ghost"><MdOutlineModeEditOutline size={20} /></Button></Link>
+                        <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Edit</span>
+                      </div>
+                      {work?.status === "checked" ? <p className='text-blue-700 font-bold'>Approved</p> : <div className='group relative'>
+                        <button onClick={() => handleChecked(work?._id)} className={`${isAdmin ? "block text-red-700 border border-red-700 px-3 text-sm hover:text-white hover:bg-red-700 py-0.5 rounded" : "text-red-700"}`}>Under Review</button>
+                        <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Edit</span>
+                      </div>}
                     </div>
-                    <div className='group relative'>
-                      <Link href={`/dashboard/update/${work?._id}`}><Button isIconOnly color="primary" variant="ghost"><MdOutlineModeEditOutline size={20} /></Button></Link>
-                      <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Edit</span>
-                    </div>
-                    {work?.status === "checked" ? <p className='text-blue-700 font-bold'>Approved</p> : <div className='group relative'>
-                      <button onClick={() => handleChecked(work?._id)} className={`${isAdmin ? "block text-red-700 border border-red-700 px-3 text-sm hover:text-white hover:bg-red-700 py-0.5 rounded" : "text-red-700"}`}>Under Review</button>
-                      <span className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Edit</span>
-                    </div>}
+
                   </div>
                 </div>
-              </div>
-            </div>)}
-          </div></> : <div className='text-2xl font-medium flex justify-center min-h-[80vh] items-center lg:text-3xl'><h1>There is no work posted</h1></div>}
+              </div>)}
+            </div>
+          </> :
+            <div className='text-2xl font-medium flex justify-center min-h-[80vh] items-center lg:text-3xl'><h1>There is no work posted</h1></div>
+        }
+
       </div>
 
       <Modal size='2xl' isOpen={isColumnModalOpen} onClose={() => setColumnModalOpen(false)}>

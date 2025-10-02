@@ -29,7 +29,7 @@ const CareerDetails = ({ params }) => {
         </Link>
       </div>
       <div className='fixed bottom-4 right-12 z-50'>
-        <Link href={`/dashboard/updateJob/${jobDetails?._id}`}><button className="flex items-center font-medium bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white px-4 hover:scale-105 transition duration-300 py-2 rounded-md gap-4">Edit <FaRegEdit size={20} /></button></Link>
+        <Link href={`/dashboard/updateJob/${jobDetails?._id}`}><button className="flex items-center gap-2 text-white w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]">Edit <FaRegEdit size={20} /></button></Link>
       </div>
       <div className='max-w-screen-xl mx-auto px-6'>
         <div className="items-center gap-4 flex flex-col px-6">
