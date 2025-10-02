@@ -3,6 +3,9 @@ import Image from 'next/image';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import useWorks from '@/hooks/useWorks';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+const MarkdownPreview = dynamic(() => import('@/utils/Markdown/MarkdownPreview/MarkdownPreview'), { ssr: false });
 
 const WorkTable = () => {
   const [allWork, isWork] = useWorks();
@@ -38,7 +41,9 @@ const WorkTable = () => {
                             <Image src={work?.imageURL} alt='image' height={100} width={200} />
                           </div>
                         </div>
-                        <div className="font-bold">{work?.title}</div>
+                        <div className="text-base font-semibold">
+                          <MarkdownPreview content={work?.title} />
+                        </div>
                       </div>
                     </td>
                     <td>

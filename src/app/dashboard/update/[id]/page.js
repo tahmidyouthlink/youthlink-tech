@@ -4,12 +4,10 @@ import useAxiosPublic from '@/hooks/useAxiosPublic';
 import useWorks from '@/hooks/useWorks';
 import PrivateRoute from '@/utils/Provider/PrivateRoute';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { ImCross } from 'react-icons/im';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import CreatableSelect from 'react-select/creatable';
@@ -19,18 +17,21 @@ import { FaArrowLeft } from 'react-icons/fa6';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
 
-const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
+import DOMPurify from "dompurify";
+
+const OurWorkEditor = dynamic(() => import('@/utils/Markdown/Editor/OurWorkEditor'), { ssr: false });
+const OurWorkTitleEditor = dynamic(() => import('@/utils/Markdown/Editor/OurWorkTitleEditor'), { ssr: false });
 
 const apiKey = "bcc91618311b97a1be1dd7020d5af85f";
 const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
 const UpdateWork = ({ params }) => {
-	const { register, handleSubmit, formState: { errors }, reset, control, setValue } = useForm();
+	const { handleSubmit, formState: { errors }, reset, control, setValue } = useForm();
 	const [, , refetch] = useWorks();
 	const axiosPublic = useAxiosPublic();
 	const router = useRouter();
 	const [loading, setLoading] = useState(true);
-	const [details, setDetails] = useState({});
+	const [work, setWork] = useState({});
 	const [selectedKeywords, setSelectedKeywords] = useState([]);
 	const [options, setOptions] = useState([]);
 	const [selectedCategories, setSelectedCategories] = useState([]);
@@ -44,14 +45,11 @@ const UpdateWork = ({ params }) => {
 		const fetchWork = async () => {
 			const res = await axiosPublic.get(`/allWork/${params?.id}`);
 			const work = res.data;
-			setDetails(work);
+			setWork(work);
 			setValue('title', work?.title);
-			setValue('projectMission', work?.heading);
+			setValue('details', work?.details);
 			setValue('keyword', work?.keyword);
 			setValue('category', work?.category);
-			setValue('aboutTheProject', work?.aboutTheProject);
-			setValue('ourSolution', work?.ourSolution);
-			setValue('theResults', work?.theResults);
 			setImage(work?.imageURL);
 			setSelectedKeywords(work?.keyword?.map(skill => skill));
 			setSelectedCategories(work?.category?.map(cat => cat));
@@ -148,18 +146,20 @@ const UpdateWork = ({ params }) => {
 	};
 
 	const onSubmit = async (data) => {
-		const title = data.title;
-		const heading = data.heading;
+
+		// Transform all <p> to <h3> just before sending
+		const titleAsH1 = data.title.replace(/<p>(.*?)<\/p>/g, '<h1>$1</h1>');
+		const detailsAsH3 = data.details.replace(/<p>(.*?)<\/p>/g, '<h3>$1</h3>');
+
+		const title = titleAsH1;
+		const details = detailsAsH3;
 		const keyword = selectedKeywords?.map(skill => skill);
 		const category = data.category;
 		const newKeywords = data.keyword.map(k => k.value);
 		const newCategories = data.category.map(c => c.value);
-		const aboutTheProject = data.aboutTheProject;
-		const ourSolution = data.ourSolution;
-		const theResults = data.theResults;
 
 		// Initialize imageUrl with the existing one
-		let imageURL = details?.imageURL || '';
+		let imageURL = work?.imageURL || '';
 
 		// If a new image is uploaded, upload it to Imgbb
 		if (image && image.file) {
@@ -219,7 +219,7 @@ const UpdateWork = ({ params }) => {
 			}
 		}
 
-		const updatedWorkInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL };
+		const updatedWorkInfo = { title, details, keyword, category, imageURL };
 		const res = await axiosPublic.put(`/allWork/${params?.id}`, updatedWorkInfo);
 		if (res.data.modifiedCount > 0) {
 			reset();
@@ -240,9 +240,9 @@ const UpdateWork = ({ params }) => {
 			<div className='min-h-screen'>
 				<div className='max-w-screen-2xl px-6 mx-auto'>
 
-					<div className='max-w-screen-2xl mx-auto pt-3 pb-1 sticky top-0 z-10 bg-white'>
+					<div className='max-w-screen-2xl mx-auto pt-6 pb-1 sticky top-0 z-10 bg-white'>
 						<div className='max-w-screen-xl mx-auto flex items-center justify-between'>
-							<h3 className='w-full font-semibold text-lg md:text-xl lg:text-2xl'>Edit Work Configuration</h3>
+							<h3 className='w-full font-semibold text-lg md:text-xl lg:text-3xl'>Edit Work Configuration</h3>
 							<button className='flex items-center gap-2 text-[10px] md:text-base justify-end w-full' onClick={() => handleGoBack()}> <span className='border border-black hover:scale-105 duration-300 rounded-full p-1 md:p-2'><FaArrowLeft /></span> Go Back</button>
 						</div>
 					</div>
@@ -255,28 +255,49 @@ const UpdateWork = ({ params }) => {
 
 								<div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
 									<div>
-										<label htmlFor='title ' className='flex justify-start font-medium text-[#EA580C] pb-2'>Company Name *</label>
-										<input id='title' {...register("title", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
-										{errors.title?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">Company Name is required</p>
+										<label htmlFor='title' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Work Title *</label>
+										<Controller
+											name='title'
+											control={control}
+											defaultValue=""
+											rules={{
+												validate: (value) => {
+													const strippedText = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] }).trim();
+													if (!strippedText) return "Title is required.";
+													if (strippedText.length < 10) return "Title must be at least 10 characters.";
+													return true;
+												},
+											}}
+											render={({ field }) => (
+												<OurWorkTitleEditor
+													value={field.value}
+													onChange={(value) => {
+														field.onChange(value);
+													}}
+												/>
+											)}
+										/>
+										{errors?.title && (
+											<p className="text-red-600 text-left text-xs font-semibold pt-1">
+												{errors.title.message}
+											</p>
 										)}
 									</div>
-									<div>
-										<label htmlFor='projectMission' className='flex justify-start font-medium text-[#EA580C] pb-2'>Project Mission *</label>
-										<input id='projectMission' {...register("projectMission", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
-										{errors.projectMission?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">Project Mission is required</p>
-										)}
-									</div>
-								</div>
 
-								<div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
 									<div>
-										<label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C]'>Change Keywords</label>
+										<label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C] pb-2'>Change Keywords</label>
 										<Controller
 											name="keyword"
 											defaultValue={selectedKeywords}
 											control={control}
+											rules={{
+												validate: (value) => {
+													if (!value || value.length === 0) {
+														return "At least one keyword is required";
+													}
+													return true;
+												}
+											}}
 											render={({ field }) => (
 												<CreatableSelect
 													isMulti
@@ -290,16 +311,26 @@ const UpdateWork = ({ params }) => {
 												/>
 											)}
 										/>
-										{errors.keyword?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">Keyword is required</p>
+										{errors.keyword && (
+											<p className="text-red-600 text-left text-xs font-semibold pt-1">
+												{errors.keyword.message}
+											</p>
 										)}
 									</div>
 									<div>
-										<label htmlFor='category' className='flex justify-start font-medium text-[#EA580C]'>Change Categories</label>
+										<label htmlFor='category' className='flex justify-start font-medium text-[#EA580C] pb-2'>Change Categories</label>
 										<Controller
 											name="category"
 											defaultValue={selectedCategories}
 											control={control}
+											rules={{
+												validate: (value) => {
+													if (!value || value.length === 0) {
+														return "At least one category is required";
+													}
+													return true;
+												}
+											}}
 											render={({ field }) => (
 												<CreatableSelect
 													isMulti
@@ -317,59 +348,47 @@ const UpdateWork = ({ params }) => {
 												/>
 											)}
 										/>
-										{errors.category?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">Category is required</p>
+										{errors.category && (
+											<p className="text-red-600 text-left text-xs font-semibold pt-1">
+												{errors.category.message}
+											</p>
 										)}
 									</div>
-									<div>
-										<label htmlFor='aboutWork' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Details About This Work *</label>
-										<Controller
-											name="aboutTheProject"
-											control={control}
-											defaultValue=""
-											rules={{ required: true }}
-											render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-										/>
-										{errors.aboutTheProject?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">This field is required</ p>
-										)}
 
-
-									</div>
 								</div>
 
 							</div>
 
 							<div className='grid grid-cols-1 lg:col-span-5 gap-8 mt-3 py-3 h-fit'>
 
-								<div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 gap-4 rounded-lg h-fit'>
-
-									<div>
-										<label htmlFor='ourSolution' className='flex justify-start font-medium text-[#EA580C] pb-2'>Our Solution *</label>
-										<Controller
-											name="ourSolution"
-											control={control}
-											defaultValue=""
-											rules={{ required: true }}
-											render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-										/>
-										{errors.ourSolution?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">This field is required</ p>
+								<div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+									<label htmlFor='details' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Details About This Work *</label>
+									<Controller
+										name='details'
+										control={control}
+										defaultValue=""
+										rules={{
+											validate: (value) => {
+												const strippedText = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] }).trim();
+												if (!strippedText) return "Details is required.";
+												if (strippedText.length < 30) return "Details must be at least 30 characters.";
+												return true;
+											},
+										}}
+										render={({ field }) => (
+											<OurWorkEditor
+												value={field.value}
+												onChange={(value) => {
+													field.onChange(value);
+												}}
+											/>
 										)}
-									</div>
-									<div>
-										<label htmlFor='theResults' className='flex justify-start font-medium text-[#EA580C] pb-2'>The Results *</label>
-										<Controller
-											name="theResults"
-											control={control}
-											defaultValue=""
-											rules={{ required: true }}
-											render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-										/>
-										{errors.theResults?.type === "required" && (
-											<p className="text-red-600 text-left pt-1">This field is required</ p>
-										)}
-									</div>
+									/>
+									{errors?.details && (
+										<p className="text-red-600 text-left text-xs font-semibold pt-1">
+											{errors.details.message}
+										</p>
+									)}
 								</div>
 
 								<div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
@@ -394,7 +413,7 @@ const UpdateWork = ({ params }) => {
 												</p>
 											</div>
 										</label>
-										{imageError && <p className="text-red-600">Blog thumbnail is required</p>}
+										{imageError && <p className="text-red-600">Work thumbnail is required</p>}
 
 										{image && (
 											<div className='relative'>

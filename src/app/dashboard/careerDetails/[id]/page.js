@@ -5,10 +5,10 @@ import Image from 'next/image';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ImCross } from 'react-icons/im';
 import { FaRegEdit } from 'react-icons/fa';
-import Iframe from '@/components/Iframe/Iframe';
 import useJobs from '@/hooks/useJobs';
+import { useRouter } from 'next/navigation';
+import { FaArrowLeft } from 'react-icons/fa6';
 
 const MarkdownPreview = dynamic(() => import('@/utils/Markdown/MarkdownPreview/MarkdownPreview'), { ssr: false });
 
@@ -16,6 +16,11 @@ const CareerDetails = ({ params }) => {
 
   const [allJob, isJob] = useJobs();
   const jobDetails = allJob?.find(job => job?._id === params?.id);
+  const router = useRouter();
+
+  const handleGoBack = () => {
+    router.push("/dashboard/allJob");
+  };
 
   if (isJob) {
     return <Loading />
@@ -23,15 +28,13 @@ const CareerDetails = ({ params }) => {
 
   return (
     <PrivateRoute>
-      <div className='fixed right-2 top-2'>
-        <Link href={'/dashboard'}>
-          <ImCross className='hover:scale-105' size={20} />
-        </Link>
+      <div className='fixed right-6 top-6'>
+        <button className='flex items-center gap-2 text-[10px] md:text-base justify-end w-full' onClick={() => handleGoBack()}> <span className='border border-black hover:scale-105 duration-300 rounded-full p-1 md:p-2'><FaArrowLeft /></span> Go Back</button>
       </div>
       <div className='fixed bottom-4 right-12 z-50'>
-        <Link href={`/dashboard/updateJob/${jobDetails?._id}`}><button className="flex items-center font-medium bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white px-4 hover:scale-105 transition duration-300 py-2 rounded-md gap-4">Edit <FaRegEdit size={20} /></button></Link>
+        <Link href={`/dashboard/updateJob/${jobDetails?._id}`}><button className="flex items-center gap-2 text-white w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]">Edit <FaRegEdit size={20} /></button></Link>
       </div>
-      <div className='max-w-screen-xl mx-auto px-6'>
+      <div className='max-w-screen-lg mx-auto px-6'>
         <div className="items-center gap-4 flex flex-col px-6">
           <div className="text-base px-8 font-black text-center mt-6">
             {jobDetails?.title}
@@ -54,22 +57,22 @@ const CareerDetails = ({ params }) => {
             <h1><span className='font-bold'>{jobDetails?.recruiterEmail}</span></h1>
           </p>
           <p className="mt-4 text-sm text-center">
-            <h1 className='gradient-text font-bold py-1'>Job Description</h1>
+            <h1 className='text-3xl font-bold py-1'>Job Description</h1>
 
             <MarkdownPreview content={jobDetails?.jobDescription} />
           </p>
           <p className="mt-4 text-sm text-center">
-            <h1 className='gradient-text font-bold py-1'>Key Responsibilities</h1>
+            <h1 className='text-3xl font-bold py-1'>Key Responsibilities</h1>
 
             <MarkdownPreview content={jobDetails?.keyResponsibilities} />
           </p>
           <p className="mt-4 text-sm text-center">
-            <h1 className='gradient-text font-bold py-1'>Preferred Qualifications</h1>
+            <h1 className='text-3xl font-bold py-1'>Preferred Qualifications</h1>
 
             <MarkdownPreview content={jobDetails?.preferredQualifications} />
           </p>
           <p className="mb-4 text-sm text-center">
-            <h1 className='gradient-text font-bold py-1'>Skills Required</h1>
+            <h1 className='text-3xl font-bold py-1'>Skills Required</h1>
             {jobDetails?.skillsRequired?.map((skill, index) => <p key={index} className={`text-neutral-400 px-8`}>{skill?.value}</p>)}
           </p>
         </div>

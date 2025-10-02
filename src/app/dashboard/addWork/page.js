@@ -17,13 +17,15 @@ import { RxCross2 } from 'react-icons/rx';
 import useWorkCategories from '@/hooks/useWorkCategories';
 import useWorkKeywords from '@/hooks/useWorkKeywords';
 import Image from 'next/image';
+import DOMPurify from "dompurify";
 
-const Editor = dynamic(() => import('@/utils/Markdown/Editor/Editor'), { ssr: false });
+const OurWorkEditor = dynamic(() => import('@/utils/Markdown/Editor/OurWorkEditor'), { ssr: false });
+const OurWorkTitleEditor = dynamic(() => import('@/utils/Markdown/Editor/OurWorkTitleEditor'), { ssr: false });
 const apiKey = "bcc91618311b97a1be1dd7020d5af85f";
 const apiURL = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
 const AddWork = () => {
-  const { register, handleSubmit, formState: { errors }, reset, control, setValue, trigger } = useForm();
+  const { handleSubmit, formState: { errors }, reset, control, setValue, trigger } = useForm();
   const [, , refetch] = useWorks();
   const axiosPublic = useAxiosPublic();
   const [isAdmin, pending] = useAdmin();
@@ -122,11 +124,13 @@ const AddWork = () => {
 
   const onSubmit = async (data) => {
     try {
-      const title = data.title;
-      const heading = data.projectMission;
-      const aboutTheProject = data.aboutTheProject;
-      const ourSolution = data.ourSolution;
-      const theResults = data.theResults;
+
+      // Transform all <p> to <h3> just before sending
+      const titleAsH1 = data.title.replace(/<p>(.*?)<\/p>/g, '<h1>$1</h1>');
+      const detailsAsH3 = data.details.replace(/<p>(.*?)<\/p>/g, '<h3>$1</h3>');
+
+      const title = titleAsH1;
+      const details = detailsAsH3;
       const keyword = data.keyword;
       const category = data.category;
       const newKeywords = data.keyword.map(k => k.value);
@@ -198,7 +202,8 @@ const AddWork = () => {
         }
       }
 
-      const workInfo = { title, heading, keyword, category, aboutTheProject, ourSolution, theResults, imageURL, status, formattedDate };
+      const workInfo = { title, keyword, details, category, imageURL, status, formattedDate };
+
       const res = await axiosPublic.post("/addWork", workInfo);
       if (res?.data?.insertedId) {
         reset();
@@ -220,9 +225,9 @@ const AddWork = () => {
       <div className='min-h-screen'>
         <div className='max-w-screen-2xl px-6 mx-auto'>
 
-          <div className='max-w-screen-2xl mx-auto pt-3 pb-1 sticky top-0 z-10 bg-white'>
+          <div className='max-w-screen-2xl mx-auto pt-6 pb-1 sticky top-0 z-10 bg-white'>
             <div className='max-w-screen-xl mx-auto flex items-center justify-between'>
-              <h3 className='w-full font-semibold text-lg md:text-xl lg:text-2xl'>Work Configuration</h3>
+              <h3 className='w-full font-semibold text-lg md:text-xl lg:text-3xl'>Work Configuration</h3>
               <button className='flex items-center gap-2 text-[10px] md:text-base justify-end w-full' onClick={() => handleGoBack()}> <span className='border border-black hover:scale-105 duration-300 rounded-full p-1 md:p-2'><FaArrowLeft /></span> Go Back</button>
             </div>
           </div>
@@ -235,22 +240,34 @@ const AddWork = () => {
 
                 <div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
                   <div>
-                    <label htmlFor='title ' className='flex justify-start font-medium text-[#EA580C] pb-2'>Company Name *</label>
-                    <input id='title' {...register("title", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
-                    {errors.title?.type === "required" && (
-                      <p className="text-red-600 text-left pt-1">Company Name is required</p>
+                    <label htmlFor='title' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Work Title *</label>
+                    <Controller
+                      name='title'
+                      control={control}
+                      defaultValue=""
+                      rules={{
+                        validate: (value) => {
+                          const strippedText = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] }).trim();
+                          if (!strippedText) return "Title is required.";
+                          if (strippedText.length < 10) return "Title must be at least 10 characters.";
+                          return true;
+                        },
+                      }}
+                      render={({ field }) => (
+                        <OurWorkTitleEditor
+                          value={field.value}
+                          onChange={(value) => {
+                            field.onChange(value);
+                          }}
+                        />
+                      )}
+                    />
+                    {errors?.title && (
+                      <p className="text-red-600 text-left text-xs font-semibold pt-1">
+                        {errors.title.message}
+                      </p>
                     )}
                   </div>
-                  <div>
-                    <label htmlFor='projectMission' className='flex justify-start font-medium text-[#EA580C] pb-2'>Project Mission *</label>
-                    <input id='projectMission' {...register("projectMission", { required: true })} className="bg-gradient-to-r from-white to-gray-50 w-full p-3 border border-gray-300 outline-none focus:border-[#EA580C] transition-colors duration-1000 rounded-md" type="text" />
-                    {errors.projectMission?.type === "required" && (
-                      <p className="text-red-600 text-left pt-1">Project Mission is required</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className='flex flex-col gap-4 bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
                   <div>
                     <label htmlFor='keyword' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Keywords *</label>
                     <Controller
@@ -277,7 +294,7 @@ const AddWork = () => {
                       )}
                     />
                     {errors.keyword && (
-                      <p className="text-red-600 text-left pt-1">Keywords are required</p>
+                      <p className="text-red-600 text-left text-xs font-semibold pt-1">Keywords are required</p>
                     )}
                   </div>
                   <div>
@@ -306,23 +323,8 @@ const AddWork = () => {
                       )}
                     />
                     {errors.category && (
-                      <p className="text-red-600 text-left pt-1">Categories are required</p>
+                      <p className="text-red-600 text-left text-xs font-semibold pt-1">Categories are required</p>
                     )}
-                  </div>
-                  <div>
-                    <label htmlFor='aboutWork' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Details About This Work *</label>
-                    <Controller
-                      name="aboutTheProject"
-                      control={control}
-                      defaultValue=""
-                      rules={{ required: true }}
-                      render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-                    />
-                    {errors.aboutTheProject?.type === "required" && (
-                      <p className="text-red-600 text-left pt-1">This field is required</ p>
-                    )}
-
-
                   </div>
                 </div>
 
@@ -330,34 +332,34 @@ const AddWork = () => {
 
               <div className='grid grid-cols-1 lg:col-span-5 gap-8 mt-3 py-3 h-fit'>
 
-                <div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 gap-4 rounded-lg h-fit'>
-
-                  <div>
-                    <label htmlFor='ourSolution' className='flex justify-start font-medium text-[#EA580C] pb-2'>Our Solution *</label>
-                    <Controller
-                      name="ourSolution"
-                      control={control}
-                      defaultValue=""
-                      rules={{ required: true }}
-                      render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-                    />
-                    {errors.ourSolution?.type === "required" && (
-                      <p className="text-red-600 text-left pt-1">This field is required</ p>
+                <div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
+                  <label htmlFor='details' className='flex justify-start font-medium text-[#EA580C] pt-2 pb-2'>Details About This Work *</label>
+                  <Controller
+                    name='details'
+                    control={control}
+                    defaultValue=""
+                    rules={{
+                      validate: (value) => {
+                        const strippedText = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] }).trim();
+                        if (!strippedText) return "Details is required.";
+                        if (strippedText.length < 30) return "Details must be at least 30 characters.";
+                        return true;
+                      },
+                    }}
+                    render={({ field }) => (
+                      <OurWorkEditor
+                        value={field.value}
+                        onChange={(value) => {
+                          field.onChange(value);
+                        }}
+                      />
                     )}
-                  </div>
-                  <div>
-                    <label htmlFor='theResults' className='flex justify-start font-medium text-[#EA580C] pb-2'>The Results *</label>
-                    <Controller
-                      name="theResults"
-                      control={control}
-                      defaultValue=""
-                      rules={{ required: true }}
-                      render={({ field }) => <Editor value={field.value} onChange={field.onChange} />}
-                    />
-                    {errors.theResults?.type === "required" && (
-                      <p className="text-red-600 text-left pt-1">This field is required</ p>
-                    )}
-                  </div>
+                  />
+                  {errors?.details && (
+                    <p className="text-red-600 text-left text-xs font-semibold pt-1">
+                      {errors.details.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className='flex flex-col bg-[#ffffff] drop-shadow p-5 md:p-7 rounded-lg h-fit'>
