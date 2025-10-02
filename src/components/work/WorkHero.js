@@ -226,11 +226,11 @@ export default function WorkHero({
           {works.map((work, index) => {
             return (
               <div
-                key={"work-hero-img" + work.title + work.imgSrc + index}
+                key={"work-hero-img-" + work._id}
                 className={`hero-card relative shrink-0 space-y-2 [&:has(img:hover)>div]:opacity-100 [&:has(img:hover)>div]:delay-[500ms] [&:has(img:hover)>h4]:opacity-100 [&:has(img:hover)>h4]:delay-[500ms] [&:has(img:hover)>img]:w-[calc(var(--small-card-width)*1.33334)] sm:[&:has(img:hover)>img]:w-[calc(var(--large-card-width)*1.66667)] [&:has(img:hover)]:z-[1] [&:has(img:hover)]:-translate-y-3`}
               >
                 <Image
-                  src={work.imgSrc}
+                  src={work.imageURL}
                   alt={work.title}
                   width={0}
                   height={0}

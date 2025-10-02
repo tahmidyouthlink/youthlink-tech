@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={`${ubuntu.className} bg-black max-sm:text-sm`}>
+      <body className={`${ubuntu.className} max-sm:text-sm`}>
         <ReactTanstackProvider>
           <NextUIProvider>
             <AuthProvider>{children}</AuthProvider>

@@ -26,11 +26,13 @@ export default function WorkSamples({
   const filteredWorks =
     selectedCategory === "All" || selectedCategory === null
       ? works
-      : works.filter((work) => work.categories.includes(selectedCategory));
+      : works.filter((work) =>
+          work.category.some((cat) => cat.value === selectedCategory),
+        );
 
   const categories = [
     "All",
-    ...new Set(works.flatMap((work) => work.categories)),
+    ...new Set(works.flatMap((work) => work.category.map((cat) => cat.value))),
   ];
 
   useGSAP(
@@ -432,13 +434,13 @@ export default function WorkSamples({
                   {filteredWorks.map((work, index) => {
                     return (
                       <div
-                        key={"work-sample-card-" + work.title + index}
+                        key={"work-sample-card-" + work._id}
                         className={`sample-card relative shrink-0 origin-left [&:has(div>img:hover)>div:has(img)]:w-[calc(var(--small-card-width)*1.33334)] sm:[&:has(div>img:hover)>div:has(img)]:w-[calc(var(--large-card-width)*1.66667)] [&:has(div>img:hover)>div:not(:has(img))]:delay-[500ms] [&:has(div>img:hover)>h4]:opacity-100 [&:has(div>img:hover)>h4]:delay-[500ms] [&:has(div>img:hover)]:z-[1] [&:has(div>img:hover)]:-translate-y-3 [&:has(div>img:hover)_div:not(:has(img))]:opacity-100`}
                         onClick={() => setSelectedWorkIndex(index)}
                       >
                         <div className="relative size-[var(--small-card-width)] cursor-pointer transition-[transform,width,min-width,height] delay-150 duration-500 ease-in-out sm:size-[var(--large-card-width)]">
                           <Image
-                            src={work.imgSrc}
+                            src={work.imageURL}
                             alt={work.title}
                             fill
                             sizes="350px"
@@ -448,14 +450,17 @@ export default function WorkSamples({
                         <div className="absolute -top-5 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-full rotate-45 bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] opacity-0 transition-opacity duration-300 ease-in-out"></div>
                         <div className="pointer-events-none absolute -top-6 left-0 w-80 -translate-y-full space-y-3 opacity-0 transition-opacity duration-300 ease-in-out">
                           <div className="flex gap-2 text-xs">
-                            {work.categories.map((category, categoryIndex) => (
+                            {work.category.map((category, categoryIndex) => (
                               <p
                                 key={
-                                  "work-category-" + category + categoryIndex
+                                  "work-category-" +
+                                  work._id +
+                                  category.label +
+                                  categoryIndex
                                 }
                                 className="pointer-events-none text-nowrap rounded-full bg-[linear-gradient(to_right,theme(colors.orange.200),theme(colors.orange.200))] p-3 text-center text-neutral-700"
                               >
-                                {category}
+                                {category.label}
                               </p>
                             ))}
                           </div>
