@@ -226,7 +226,7 @@ const AddCareer = () => {
 
 				<div className='max-w-screen-2xl px-6 mx-auto'>
 
-					<div className='max-w-screen-2xl mx-auto pt-3 pb-1 sticky top-0 z-10 bg-white'>
+					<div className='max-w-screen-2xl mx-auto pt-6 pb-1 sticky top-0 z-10 bg-white'>
 						<div className='max-w-screen-xl mx-auto flex items-center justify-between'>
 							<h3 className='w-full font-semibold text-lg md:text-xl lg:text-2xl'>Job Configuration</h3>
 							<button className='flex items-center gap-2 text-[10px] md:text-base justify-end w-full' onClick={() => handleGoBack()}> <span className='border border-black hover:scale-105 duration-300 rounded-full p-1 md:p-2'><FaArrowLeft /></span> Go Back</button>
@@ -457,7 +457,7 @@ const AddCareer = () => {
 
 						<div className='flex justify-end items-center mt-3'>
 
-							<button type='submit' className={`bg-gradient-to-t from-[#EA580C] to-[#EAB308] text-white py-2 px-4 text-sm md:text-base rounded-md cursor-pointer font-medium flex items-center gap-2`}>
+							<button type='submit' className={`flex items-center gap-2 text-white w-fit rounded-full bg-[linear-gradient(to_right,theme(colors.orange.600),theme(colors.orange.600),theme(colors.yellow.500),theme(colors.yellow.500))] bg-[length:300%_100%] bg-[200%_100%] px-5 py-2.5 text-sm font-medium transition-[background-position] duration-700 ease-in-out hover:bg-[50%_100%]`}>
 								Submit
 							</button>
 						</div>
