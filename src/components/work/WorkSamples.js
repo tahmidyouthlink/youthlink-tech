@@ -175,11 +175,11 @@ export default function WorkSamples({
               const containerEl = document.querySelector(
                 "#work-samples .samples-container",
               );
-              const cardCount = filteredWorks.length;
+              const cardCount = works.length;
               const padding = cardOffset + 40;
               const totalWidth =
                 cardWidth +
-                (cardCount - 1) * (cardWidth - cardOffset) +
+                (cardCount - 1) * (cardWidth - cardOffset / 3) +
                 padding * 2;
 
               requestAnimationFrame(() => {
@@ -287,7 +287,7 @@ export default function WorkSamples({
         },
       );
     },
-    { dependencies: [gsap, selectedOption, selectedWorkIndex] },
+    { dependencies: [gsap, selectedOption, selectedWorkIndex, works.length] },
   );
 
   useGSAP(
@@ -346,7 +346,7 @@ export default function WorkSamples({
             isDesktop: "(min-width: 1280px)",
           },
           (ctx) => {
-            const { isMobile } = ctx.conditions;
+            const { isMobile, isDesktop } = ctx.conditions;
             const cardWidth = isMobile ? SMALL_CARD_WIDTH : LARGE_CARD_WIDTH;
             const cardOffset = isMobile ? SMALL_CARD_OFFSET : LARGE_CARD_OFFSET;
 
@@ -369,12 +369,52 @@ export default function WorkSamples({
                 ease: "power1.inOut",
               },
             );
+
+            // Drag/swipe support on smaller screens only
+            if (!isDesktop) {
+              const containerEl = document.querySelector(
+                "#work-samples .samples-container",
+              );
+              const cardCount = filteredWorks.length;
+              const padding = cardOffset + 40;
+              const totalWidth =
+                cardWidth +
+                (cardCount - 1) * (cardWidth - cardOffset / 3) +
+                padding * 2;
+
+              requestAnimationFrame(() => {
+                const visibleWidth = containerEl.offsetWidth;
+                const maxDrag = Math.max(totalWidth - visibleWidth, 0);
+
+                gsap.set(containerEl, {
+                  paddingLeft: padding,
+                  paddingRight: padding,
+                });
+
+                Draggable.create(containerEl, {
+                  type: "x",
+                  inertia: true,
+                  edgeResistance: 0.5,
+                  dragResistance: 0.15,
+                  bounds: { minX: -maxDrag, maxX: 0 },
+                  cursor: "grab",
+                  activeCursor: "grabbing",
+                  throwProps: true,
+                });
+              });
+            }
           },
         );
       }
     },
     {
-      dependencies: [gsap, selectedCategory, selectedOption, selectedWorkIndex],
+      dependencies: [
+        filteredWorks.length,
+        gsap,
+        selectedCategory,
+        selectedOption,
+        selectedWorkIndex,
+      ],
     },
   );
 
