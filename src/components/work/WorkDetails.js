@@ -152,8 +152,8 @@ export default function WorkDetails({
           gsap.from(chars, {
             scrollTrigger: {
               trigger: chars,
-              start: "top 70%",
-              end: "top 30%",
+              start: "top 65%",
+              end: "top 45%",
               scrub: true,
             },
             opacity: 0.2,
@@ -175,7 +175,7 @@ export default function WorkDetails({
           id="work-details-inside-wrapper"
           className="relative z-[1] flex max-w-full flex-col gap-y-10 lg:grid lg:grid-cols-2 lg:gap-x-16 xl:grid-cols-5"
         >
-          <section className="invisible lg:col-span-1 lg:w-auto xl:col-span-3">
+          <section className="invisible space-y-[15lvh] lg:col-span-1 lg:w-auto xl:col-span-3">
             <div className="min-h-[calc(100lvh-40lvh-92px-40px)] max-lg:space-y-16 sm:min-h-[calc(100lvh-50lvh-92px-40px)] lg:flex lg:min-h-[calc(100lvh-92px)] lg:flex-col lg:justify-center lg:max-xl:gap-y-40 xl:justify-around">
               <div
                 className="gradient-text text-xl font-semibold uppercase text-neutral-700 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:text-4xl xl:text-5xl/[1.25]"
@@ -208,7 +208,7 @@ export default function WorkDetails({
             </div>
             <div
               id="works-details-quotes"
-              className="flex min-h-[33.33lvh] flex-col gap-y-[55lvh] [&_h3:first-child]:mt-[10dvw]"
+              className="flex min-h-[33.33lvh] flex-col gap-y-[25lvh] xl:gap-y-[50lvh] min-[1800px]:gap-y-[40lvh] [&_h3:nth-child(even)]:ml-auto [&_h3:nth-child(odd)]:mr-auto [&_h3]:w-[90%] [&_h3]:sm:w-3/4"
               dangerouslySetInnerHTML={{
                 __html: selectedOption.work?.details,
               }}
@@ -216,7 +216,7 @@ export default function WorkDetails({
           </section>
           <section
             id="work-details-cover"
-            className="max-lg:order-first lg:sticky lg:top-1/2 lg:col-span-1 lg:h-[50lvh] lg:w-auto lg:max-xl:-translate-y-1/2 xl:bottom-0 xl:top-[92px] xl:col-span-2 xl:h-[calc(100lvh-92px-80px)]"
+            className="max-lg:order-first lg:sticky lg:top-1/2 lg:col-span-1 lg:h-[50lvh] lg:w-auto lg:max-xl:-translate-y-1/2 xl:top-[92px] xl:col-span-2 xl:h-[calc(100lvh-92px-80px)] xl:max-[1800px]:bottom-0 min-[1800px]:top-1/2 min-[1800px]:h-[60lvh] min-[1800px]:-translate-y-1/2"
           ></section>
         </div>
       </div>

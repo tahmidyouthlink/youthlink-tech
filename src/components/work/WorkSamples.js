@@ -488,8 +488,8 @@ export default function WorkSamples({
                           />
                         </div>
                         <div className="absolute -top-5 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-full rotate-45 bg-[linear-gradient(to_right,theme(colors.yellow.200),theme(colors.yellow.200))] opacity-0 transition-opacity duration-300 ease-in-out"></div>
-                        <div className="pointer-events-none absolute -top-6 left-0 w-80 -translate-y-full space-y-3 opacity-0 transition-opacity duration-300 ease-in-out">
-                          <div className="flex gap-2 text-xs">
+                        <div className="pointer-events-none absolute -top-6 left-0 w-[calc(var(--small-card-width)*2)] -translate-y-full space-y-3 opacity-0 transition-opacity duration-300 ease-in-out sm:w-[var(--large-card-width)]">
+                          <div className="flex gap-2 text-xs max-sm:flex-wrap">
                             {work.category.map((category, categoryIndex) => (
                               <p
                                 key={
@@ -498,7 +498,7 @@ export default function WorkSamples({
                                   category.label +
                                   categoryIndex
                                 }
-                                className="pointer-events-none text-nowrap rounded-full bg-[linear-gradient(to_right,theme(colors.orange.200),theme(colors.orange.200))] p-3 text-center text-neutral-700"
+                                className="pointer-events-none text-nowrap rounded-full bg-[linear-gradient(to_right,theme(colors.orange.200),theme(colors.orange.200))] px-3 py-1.5 text-center text-neutral-700 max-sm:text-[10px]/[1] sm:p-3"
                               >
                                 {category.label}
                               </p>

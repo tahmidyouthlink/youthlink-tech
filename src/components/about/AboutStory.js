@@ -99,8 +99,8 @@ export default function AboutStory({ gsap, useGSAP, ScrollTrigger }) {
           gsap.from(chars, {
             scrollTrigger: {
               trigger: chars,
-              start: "top 70%",
-              end: "top 30%",
+              start: "top 65%",
+              end: "top 45%",
               scrub: true,
             },
             opacity: 0.2,
@@ -134,7 +134,7 @@ export default function AboutStory({ gsap, useGSAP, ScrollTrigger }) {
         ref={lottieRef}
         className="sticky left-0 top-0 h-dvh w-full opacity-20"
       ></div>
-      <section className="relative -mt-[100dvh] min-h-full space-y-[90dvw] px-5 py-32 sm:space-y-[75dvw] sm:px-8 lg:space-y-[70dvw] lg:px-12 xl:mx-auto xl:max-w-[1200px] xl:space-y-[25dvw] xl:px-0">
+      <section className="relative -mt-[100dvh] min-h-full space-y-[25lvh] px-5 py-32 sm:px-8 lg:px-12 xl:mx-auto xl:max-w-[1200px] xl:space-y-[50lvh] xl:px-0 min-[1800px]:gap-y-[40lvh]">
         {quotes.map((quote, quoteIndex) => (
           <div
             key={quoteIndex}
